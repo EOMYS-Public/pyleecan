@@ -32,6 +32,7 @@ class TestPHoleM54(object):
         ]
         self.matlib.index_first_mat_mach = 3
         self.widget = PHoleM54(self.test_obj.hole[0], matlib=self.matlib)
+        self.widget.emit_save()
 
     @classmethod
     def setup_class(cls):
@@ -88,3 +89,4 @@ class TestPHoleM54(object):
 
         assert self.widget.hole.R1 == 0.36
         assert self.test_obj.hole[0].R1 == 0.36
+

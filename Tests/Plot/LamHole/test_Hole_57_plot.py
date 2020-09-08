@@ -78,3 +78,15 @@ class Test_Hole_57_plot(object):
         fig.savefig(join(save_path, "test_Lam_Hole_57_s57_RotorN01.png"))
         # 2 for lam + (3*2)*8 for holes + 16 vents
         assert len(fig.axes[0].patches) == 42
+
+    def test_Lam_Hole_57_N01_is_simplified(self):
+        """Test machine plot hole 57 with W1 = 0 and both magnets"""
+        self.test_obj.rotor.hole[0].W1 = 0
+        self.test_obj.rotor.hole[0].magnet_0 = Magnet()
+        self.test_obj.rotor.hole[0].magnet_1 = Magnet()
+        self.test_obj.rotor.hole[0].build_geometry(is_simplified = True)
+        self.test_obj.rotor.plot()
+        fig = plt.gcf()
+        fig.savefig(join(save_path, "test_Lam_Hole_57_s57_RotorN01.png"))
+        # 2 for lam + (3*2)*8 for holes + 16 vents
+        assert len(fig.axes[0].patches) == 42

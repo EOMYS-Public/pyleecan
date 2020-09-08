@@ -32,7 +32,7 @@ from Tests.Plot.LamWind import wind_mat
 
 @pytest.mark.PLOT
 class Test_Plot_not_display(object):
-    def Test_Plot_not_displayable(self):
+    def test_Plot_not_displayable(self):
         """Test machine plot with is_display set to False"""
         print("\nTest plot not displayable")
         plt.close("all")
