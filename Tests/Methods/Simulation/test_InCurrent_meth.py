@@ -177,7 +177,7 @@ class Test_InCurrent_meth(object):
         output = Output(simu=test_dict["test_obj"])
         with pytest.raises(InputError) as context:
             output.simu.input.gen_input()
-            assert test_dict["exp"] == str(context.exception)
+        # TODO    assert test_dict["exp"] == str(context.exception)
 
     def test_InputCurrent_Ok(self):
         """Check that the input current can return a correct output"""

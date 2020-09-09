@@ -34,20 +34,30 @@ def comp_wind_sym(wind_mat):
         k = 1
         is_sym = False
         while k <= Zs and not is_sym:
-            # We shift the array arround the slot and check if it's the same
+            print(array_equal(wind_mat2[:, q], roll(wind_mat2[:, q], shift=k)))
+            # We shift the array arround the slot and check if it's the samS
+            print("##################################################################")
+            print(wind_mat2[:, q])
+            print("-----------------------------")
+            print(roll(wind_mat2[:, q], shift=k))
+            print("##################################################################")
             if array_equal(wind_mat2[:, q], roll(wind_mat2[:, q], shift=k)):
                 is_sym = True
             else:
                 k += 1
-        # least common multiple to find common periodicity between different phase
+        # least common multiple to find common periodicity between different phase TODO
+        print(k)
         Nperslot = lcm(Nperslot, k)
 
+    print(Nperslot)
+    print(Zs)
     # If Nperslot > Zs no symmetry
     if Nperslot > 0 and Nperslot < Zs:
         # nb of periods of the winding (2 means 180°)
         Nperw = Zs / float(Nperslot)
         # if Zs cannot be divided by Nperslot (non integer)
         if Nperw % 1 != 0:
+            print("odkzpqodkqzpodkqzpodkpqzokdpqzokdpozk")
             Nperw = 1
 
     # Check for anti symmetries in the elementary winding pattern
