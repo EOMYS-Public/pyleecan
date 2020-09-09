@@ -133,3 +133,11 @@ class Test_SlotW61_meth(object):
         b = test_dict["Aw"]
         msg = "Return " + str(a) + " expected " + str(b)
         assert abs((a - b) / a - 0) < DELTA, msg
+
+    @pytest.mark.parametrize("test_dict", slotW61_test)
+    def test_build_geometry_wind_is_stator_true(self, test_dict):
+        """Check that the computation of the average angle is correct"""
+        test_obj = test_dict["test_obj"]
+        result = test_obj.slot.build_geometry_wind(Nrad = 1, Ntan = 2)
+        a = result
+        assert "WindS_R0_T0_S0" == a[0].label
