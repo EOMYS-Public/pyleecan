@@ -142,3 +142,5 @@ class Test_Slot_10_plot(object):
             mid = line.get_middle()
             plt.text(mid.real, mid.imag, str(mesh_dict[line.label]))
         fig.savefig(join(save_path, "test_Lam_Wind_s10_Tooth_out.png"))
+
+        test_obj.rotor.comp_wind_function(alpha_mmf0 = 1)
