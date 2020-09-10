@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for pyleecan\Methods\Slot\HoleM58\build_geometry.py: 96%</title>
+    <title>Coverage for pyleecan\Methods\Slot\HoleM58\build_geometry.py: 100%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>pyleecan\Methods\Slot\HoleM58\build_geometry.py</b> :
-            <span class="pc_cov">96%</span>
+            <span class="pc_cov">100%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             92 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">88 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">4 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">92 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -255,9 +255,9 @@
     <p id="t202" class="run"><span class="n"><a href="#t202">202</a></span><span class="t">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">magnet_0</span><span class="op">.</span><span class="nam">type_magnetization</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t203" class="run"><span class="n"><a href="#t203">203</a></span><span class="t">            <span class="nam">type_mag</span> <span class="op">=</span> <span class="str">"_Radial"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t204" class="pln"><span class="n"><a href="#t204">204</a></span><span class="t">        <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t205" class="mis show_mis"><span class="n"><a href="#t205">205</a></span><span class="t">            <span class="nam">type_mag</span> <span class="op">=</span> <span class="str">"_Parallel"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t205" class="run"><span class="n"><a href="#t205">205</a></span><span class="t">            <span class="nam">type_mag</span> <span class="op">=</span> <span class="str">"_Parallel"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t206" class="pln"><span class="n"><a href="#t206">206</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t207" class="mis show_mis"><span class="n"><a href="#t207">207</a></span><span class="t">        <span class="nam">type_mag</span> <span class="op">=</span> <span class="str">"None"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t207" class="run"><span class="n"><a href="#t207">207</a></span><span class="t">        <span class="nam">type_mag</span> <span class="op">=</span> <span class="str">"None"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t208" class="run"><span class="n"><a href="#t208">208</a></span><span class="t">    <span class="nam">magnet_label</span> <span class="op">=</span> <span class="str">"HoleMagnet"</span> <span class="op">+</span> <span class="nam">st</span> <span class="op">+</span> <span class="nam">type_mag</span> <span class="op">+</span> <span class="str">"_N_R0_T0_S0"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t209" class="run"><span class="n"><a href="#t209">209</a></span><span class="t">    <span class="nam">S2</span> <span class="op">=</span> <span class="nam">SurfLine</span><span class="op">(</span><span class="nam">line_list</span><span class="op">=</span><span class="nam">curve_list_mag</span><span class="op">,</span> <span class="nam">label</span><span class="op">=</span><span class="nam">magnet_label</span><span class="op">,</span> <span class="nam">point_ref</span><span class="op">=</span><span class="nam">point_ref</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t210" class="pln"><span class="n"><a href="#t210">210</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -293,8 +293,8 @@
     <p id="t240" class="run"><span class="n"><a href="#t240">240</a></span><span class="t">        <span class="nam">S3</span><span class="op">.</span><span class="nam">label</span> <span class="op">=</span> <span class="nam">S3</span><span class="op">.</span><span class="nam">label</span> <span class="op">+</span> <span class="str">"_R0_T1_S0"</span>  <span class="com"># Hole</span>&nbsp;</span><span class="r"></span></p>
     <p id="t241" class="run"><span class="n"><a href="#t241">241</a></span><span class="t">        <span class="nam">surf_list</span> <span class="op">=</span> <span class="op">[</span><span class="nam">S1</span><span class="op">,</span> <span class="nam">S2</span><span class="op">,</span> <span class="nam">S3</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t242" class="pln"><span class="n"><a href="#t242">242</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t243" class="mis show_mis"><span class="n"><a href="#t243">243</a></span><span class="t">        <span class="nam">S4</span><span class="op">.</span><span class="nam">label</span> <span class="op">=</span> <span class="nam">S1</span><span class="op">.</span><span class="nam">label</span> <span class="op">+</span> <span class="str">"_R0_T0_S0"</span>  <span class="com"># Hole</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t244" class="mis show_mis"><span class="n"><a href="#t244">244</a></span><span class="t">        <span class="nam">surf_list</span> <span class="op">=</span> <span class="op">[</span><span class="nam">S4</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t243" class="run"><span class="n"><a href="#t243">243</a></span><span class="t">        <span class="nam">S4</span><span class="op">.</span><span class="nam">label</span> <span class="op">=</span> <span class="nam">S1</span><span class="op">.</span><span class="nam">label</span> <span class="op">+</span> <span class="str">"_R0_T0_S0"</span>  <span class="com"># Hole</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t244" class="run"><span class="n"><a href="#t244">244</a></span><span class="t">        <span class="nam">surf_list</span> <span class="op">=</span> <span class="op">[</span><span class="nam">S4</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t245" class="pln"><span class="n"><a href="#t245">245</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t246" class="pln"><span class="n"><a href="#t246">246</a></span><span class="t">    <span class="com"># Apply the transformations</span>&nbsp;</span><span class="r"></span></p>
     <p id="t247" class="run"><span class="n"><a href="#t247">247</a></span><span class="t">    <span class="key">for</span> <span class="nam">surf</span> <span class="key">in</span> <span class="nam">surf_list</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -307,7 +307,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.2.1</a>,
-            created at 2020-09-08 11:05 +0200
+            created at 2020-09-10 13:22 +0200
         </p>
     </div>
 </div>
