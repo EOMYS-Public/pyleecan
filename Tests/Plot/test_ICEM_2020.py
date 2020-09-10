@@ -21,6 +21,7 @@ from pyleecan.Classes.OptiProblem import OptiProblem
 from pyleecan.Classes.ImportMatrixVal import ImportMatrixVal
 from pyleecan.Classes.ImportGenVectLin import ImportGenVectLin
 from pyleecan.Classes.OptiGenAlgNsga2Deap import OptiGenAlgNsga2Deap
+from pyleecan.Methods.Machine.Winding import WindingError 
 
 import numpy as np
 import random
@@ -439,6 +440,12 @@ def test_WindingUD():
     fig.savefig(join(save_path, "fig_16_WindingUD.png"))
     fig.savefig(join(save_path, "fig_16_WindingUD.svg"), format="svg")
     assert len(fig.axes[0].patches) == 73
+
+    machine.stator.winding = WindingDW1L(qs=3, p=3)
+    machine.stator.slot = None
+    """Check that comp_connection_mat can raise a WindingError"""
+    with pytest.raises(WindingError) as context:
+        machine.stator.winding.comp_connection_mat(Zs = None)
 
 
 def test_BoreFlower():
