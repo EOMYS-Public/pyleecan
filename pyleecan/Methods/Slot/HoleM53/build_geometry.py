@@ -93,8 +93,8 @@ def build_geometry(self, alpha=0, delta=0, is_simplified=False):
     # magnet_0 surface
     curve_list_mag = list()
     if is_simplified:
-        curve_list_air.append(Segment(Z5, Z9))
-        curve_list_air.append(Segment(Z2, Z10))
+        curve_list_mag.append(Segment(Z5, Z9))
+        curve_list_mag.append(Segment(Z2, Z10))
     else:
         curve_list_mag.append(Segment(Z3, Z4))
         curve_list_mag.append(Segment(Z4, Z9))
@@ -139,8 +139,8 @@ def build_geometry(self, alpha=0, delta=0, is_simplified=False):
     # magnet_1 surface
     curve_list_mag = list()
     if is_simplified:
-        curve_list_air.append(Segment(Z5s, Z9s))
-        curve_list_air.append(Segment(Z2s, Z10s))
+        curve_list_mag.append(Segment(Z5s, Z9s))
+        curve_list_mag.append(Segment(Z2s, Z10s))
     else:
         curve_list_mag.append(Segment(Z3s, Z4s))
         curve_list_mag.append(Segment(Z4s, Z9s))
