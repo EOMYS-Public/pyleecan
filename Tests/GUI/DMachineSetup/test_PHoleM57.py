@@ -30,7 +30,11 @@ class TestPHoleM57(object):
         self.test_obj.hole.append(
             HoleM57(H1=0.11, H2=0.12, W0=0.13, W1=0.14, W2=0.15, W3=0.17, W4=0.19)
         )
+        self.test_obj.hole.append(
+            HoleM57(H1=0.11, H2=0.12, W0=0.13, W1=0.14, W2=0.15, W3=0.17, W4=0.19, magnet_0=None)
+        )
         self.widget = PHoleM57(self.test_obj.hole[0])
+        self.widget2 = PHoleM57(self.test_obj.hole[1])
 
     @classmethod
     def setup_class(cls):
@@ -129,3 +133,8 @@ class TestPHoleM57(object):
 
         assert self.widget.hole.H2 == 0.36
         assert self.test_obj.hole[0].H2 == 0.36
+
+    def test_emit(self):
+        """Check that emit_save is working"""
+        self.widget2.emit_save()
+        assert True

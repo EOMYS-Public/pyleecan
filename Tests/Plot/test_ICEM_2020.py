@@ -23,6 +23,7 @@ from pyleecan.Classes.ImportGenVectLin import ImportGenVectLin
 from pyleecan.Classes.OptiGenAlgNsga2Deap import OptiGenAlgNsga2Deap
 from pyleecan.Methods.Machine.Winding import WindingError
 from pyleecan.Methods.Machine.WindingCW2LT.comp_connection_mat import WindingT1DefMsError
+from pyleecan.Methods.Machine.WindingCW1L.comp_connection_mat import WindingT2DefNtError
 
 import numpy as np
 import random
@@ -266,6 +267,21 @@ def test_MachineUD():
     """Check that comp_connection_mat can raise a WindingError"""
 
     lam4.winding = WindingCW2LT(qs=3, p=3)
+    lam4.slot = None
+    with pytest.raises(WindingError) as context:
+        lam4.winding.comp_connection_mat(Zs = None)
+
+    # FOR WindingCW1L comp_connection_mat
+
+    """Check that comp_connection_mat can raise a WindingT2DefNtError"""
+
+    lam4.winding = WindingCW1L(qs=2, p=3)
+    lam4.slot = SlotW10(Zs=12, W0=25e-3, W1=25e-3, W2=1e-3, H0=0, H1=0, H2=W4 * 0.75)
+    with pytest.raises(WindingT2DefNtError) as context:
+        lam4.winding.comp_connection_mat(Zs = 17)
+    """Check that comp_connection_mat can raise a WindingError"""
+
+    lam4.winding = WindingCW1L(qs=3, p=3)
     lam4.slot = None
     with pytest.raises(WindingError) as context:
         lam4.winding.comp_connection_mat(Zs = None)
