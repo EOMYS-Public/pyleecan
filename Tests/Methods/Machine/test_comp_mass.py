@@ -130,7 +130,7 @@ M_test[-1]["Mmach"] = 33.38
 
 @pytest.mark.parametrize("test_dict", M_test)
 def test_comp_surface_rotor(test_dict):
-    """Check that the computation of the surface is correct"""
+    """Check that the computation of the surface is correct   INTERNAL"""
     result = test_dict["test_obj"].rotor.comp_surfaces()
 
     a = result["Slam"]
@@ -149,6 +149,14 @@ def test_comp_surface_rotor(test_dict):
         msg = "For Smag, Return " + str(a) + " expected " + str(b)
         assert a == pytest.approx(b, rel=DELTA), msg
 
+    a = result["Syoke"]
+
+    """Check that the computation of the surface is correct   EXTERNAL"""
+    test_dict["test_obj"].rotor.is_internal = False
+    result = test_dict["test_obj"].rotor.comp_surfaces()
+    
+    assert result["Syoke"] != a
+    test_dict["test_obj"].rotor.is_internal = True
 
 @pytest.mark.parametrize("test_dict", M_test)
 def test_comp_surface_stator(test_dict):
@@ -171,6 +179,14 @@ def test_comp_surface_stator(test_dict):
         msg = "Return " + str(a) + " expected " + str(b)
         assert a == pytest.approx(b, rel=DELTA), msg
 
+    a = result["Syoke"]
+
+    """Check that the computation of the surface is correct   EXTERNAL"""
+    test_dict["test_obj"].stator.is_internal = False
+    result = test_dict["test_obj"].stator.comp_surfaces()
+    
+    assert result["Syoke"] == a
+    test_dict["test_obj"].stator.is_internal = True
 
 @pytest.mark.parametrize("test_dict", M_test)
 def test_comp_volume_rotor(test_dict):
