@@ -144,3 +144,21 @@ class Test_Slot_10_plot(object):
         fig.savefig(join(save_path, "test_Lam_Wind_s10_Tooth_out.png"))
 
         test_obj.rotor.comp_wind_function(alpha_mmf0 = 1)
+
+        test_obj.stator.slot = SlotW10(
+            Zs=6,
+            W0=50e-1,
+            W1=80e-1,
+            W2=50e-1,
+            H0=15e-1,
+            H1=25e-1,
+            H2=140e-1,
+            H1_is_rad=False,
+        )
+
+        lines = test_obj.stator.slot.build_geometry_half_tooth(is_top=False)
+        surf = SurfLine(line_list=lines)
+        surf.plot_lines()
+        fig = plt.gcf()
+        fig.savefig(join(save_path, "test_Lam_Wind_s10_Tooth_bottom_out.png"))
+        
