@@ -123,6 +123,17 @@ class Test_HoleM53_meth(object):
         b = test_dict["W5"]
         msg = "Return " + str(a) + " expected " + str(b)
         assert abs((a - b) / a - 0) < DELTA, msg
+
+        # Test that Z11 = Zlist[0]
+
+        test_obj2 = LamHole(is_internal=True, Rext=80.2e-3, Rint=0)
+        test_obj2.hole = list()
+        test_obj2.hole.append(
+                HoleM53(Zh=8, H0=0.00000000000000000000002, H1=0.00000001, H2=0.01, H3=0.003, W1=0, W2=0, W3=0.01, W4=2.28)
+        )
+        a = test_obj2.hole[0].comp_W5()
+        assert -0.0014380265690122837 == a
+
     
     @pytest.mark.parametrize("test_dict", HoleM53_test)
     def test_build_geometry(self, test_dict):

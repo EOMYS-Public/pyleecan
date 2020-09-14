@@ -10,6 +10,8 @@ from pyleecan.Methods.Slot.Slot.comp_surface import comp_surface
 from pyleecan.Methods.Slot.Slot.comp_angle_opening import comp_angle_opening
 from pyleecan.Methods.Slot.SlotWind.comp_surface_wind import comp_surface_wind
 
+from pyleecan.Methods.Slot.SlotW27.check import S27_W01CheckError, S27_W12CheckError, S27_W03CheckError
+
 # For AlmostEqual
 DELTA = 1e-4
 
@@ -174,3 +176,29 @@ class Test_SlotW27_meth(object):
             a = result[i].end
             b = curve_list[i].end
             assert abs((a - b) / a - 0) < DELTA
+
+    def test_check(self):
+        """Check that the check function is raising error"""
+
+        test_obj = SlotW27(
+            Zs=6, H0=0.05, W0=30e-3, H1=0.125, W1=0.06, H2=0.05, W2=0.09, W3=0.04
+        )
+
+        test_obj.W0 = 0.05
+        test_obj.W1 = 0.04
+        with pytest.raises(S27_W01CheckError) as context:
+            test_obj.check()
+        
+        test_obj.W0 = 0.01
+        test_obj.W1 = 0.04
+        test_obj.W2 = 0.03
+        with pytest.raises(S27_W12CheckError) as context:
+            test_obj.check()
+
+
+        test_obj.W3 = 0.00015
+        test_obj.W0 = 0.01
+        test_obj.W1 = 0.04
+        test_obj.W2 = 0.05
+        with pytest.raises(S27_W03CheckError) as context:
+            test_obj.check()
