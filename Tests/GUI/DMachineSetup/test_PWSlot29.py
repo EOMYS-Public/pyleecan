@@ -126,3 +126,5 @@ class TestPWSlot29(object):
         assert self.widget.check(self.test_obj) == "PWSlot29 check"
         self.test_obj.slot = SlotW29(H0=0.10, H1=0.11, H2=None, W0=0.13, W1=0.14, W2=0.15)
         assert self.widget.check(self.test_obj) == "PWSlot29 check"
+        self.test_obj.slot = SlotW29(H0=0.10, H1=0.11, H2=0.12, W0=None, W1=0.14, W2=0.15)
+        assert self.widget.check(self.test_obj) == "PWSlot29 check"
