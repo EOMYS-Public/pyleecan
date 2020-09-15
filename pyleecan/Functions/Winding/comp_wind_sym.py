@@ -33,33 +33,37 @@ def comp_wind_sym(wind_mat):
         k = 0
         stri = ""
         while k < Zs:
-            stri = stri + str(int(wind_mat2[k, q]))
+            stri = stri + str(int(wind_mat2[k, q]))     #Combining all value from a phase in a string to use principal_period
             k += 1
-        Nperslot = lcm(Nperslot, principal_period(stri))
+        Nperslot = lcm(Nperslot, principal_period(stri, Zs))
 
-    if Nperslot == 1 or Nperslot == Zs:
+    if Nperslot == Zs:
         Nperw == 1
     else:
         Nperw = int(Zs / Nperslot)
 
     # Check for anti symmetries in the elementary winding pattern
     if (
-        Nperw % 2 == 0
+        (Nperslot % 2 == 0 or Nperslot == 1)
         and norm(
             wind_mat2[0 : Nperw // 2, :] + wind_mat2[Nperw // 2 : Nperw, :]
         )
         == 0
     ):
         is_asym_wind = True
-        Nperw = Nperw * 2
+        Nperslot = Nperslot * 2
     else:
         is_asym_wind = False
 
-    return Nperw, is_asym_wind
+    if Nperslot == Zs:
+        Nperslot = 0
 
-def principal_period(s):
+    return Nperslot, is_asym_wind    # We are currently returning Nperslot because it contains the true number of electrical period.
+
+def principal_period(s, Zs):
+    """Method allowing to count how many period is in a string"""
     i = (s+s).find(s, 1, -1)
-    return 1 if i == -1 else s.count(s[:i])
+    return Zs if i == -1 else s.count(s[:i])
 
 def gcd(a, b):
     """Return the greatest common divisor of a and b

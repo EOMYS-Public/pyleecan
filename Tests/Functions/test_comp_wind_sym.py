@@ -87,7 +87,7 @@ class Test_comp_wind_sym(object):
          [ 0.,  0., -9.]]]])
 
         print(arr.shape)
-        assert (24, True) == comp_wind_sym(arr)
+        assert (4*2, True) == comp_wind_sym(arr)   # 4*2 because there is 4 period but asym is true so *2
 
 
         arr = np.array([[[
@@ -114,4 +114,4 @@ class Test_comp_wind_sym(object):
             [ 1.,  1.,  1.],
             [ 2.,  2.,  2.]
         ]]])
-        assert (1, False) == comp_wind_sym(arr)
+        assert (0, False) == comp_wind_sym(arr)
