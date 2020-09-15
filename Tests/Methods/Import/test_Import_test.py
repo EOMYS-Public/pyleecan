@@ -139,7 +139,7 @@ ImportMatrix_test.append(
         "test_obj": ImportMatrixXls(
             file_path=test_file,
             sheet="Test1",
-            usecols=None,
+            usecols="",
             skiprows=2,
             is_transpose=True,
         ),

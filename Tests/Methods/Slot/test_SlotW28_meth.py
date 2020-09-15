@@ -9,6 +9,7 @@ from pyleecan.Methods.Slot.Slot.comp_height import comp_height
 from pyleecan.Methods.Slot.Slot.comp_surface import comp_surface
 from pyleecan.Methods.Slot.Slot.comp_angle_opening import comp_angle_opening
 from pyleecan.Methods.Slot.SlotWind.comp_surface_wind import comp_surface_wind
+from pyleecan.Methods.Slot.SlotW28.check import S28_ZsCheckError
 
 # For AlmostEqual
 DELTA = 1e-4
@@ -119,3 +120,24 @@ class Test_SlotW28_meth(object):
         b = test_dict["Aw"]
         msg = "Return " + str(a) + " expected " + str(b)
         assert abs((a - b) / a - 0) < DELTA, msg
+
+    @pytest.mark.parametrize("test_dict", slotW28_test)
+    def test_check(self, test_dict):
+        """Check that the check method is correctly working"""
+        test_obj = test_dict["test_obj"]
+        test_obj.slot.check()
+
+        if test_obj.is_internal == True:
+            assert test_obj.slot.R1 == 0.0035
+        else:
+            assert test_obj.slot.R1 == 0.01
+
+    def test_check_error(self):
+        """Check that the check method is correctly raising an error"""
+        lam = LamSlot(is_internal=False, Rint=85e-3)
+        lam.slot = SlotW28(Zs=1000, W0=7e-3, R1=10e-3, H0=5e-3, H3=30e-3, W3=5e-3)
+
+        with pytest.raises(S28_ZsCheckError) as context:
+            lam.slot.check()
+            
+    

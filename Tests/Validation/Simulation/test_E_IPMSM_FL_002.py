@@ -16,6 +16,8 @@ import pytest
 from pyleecan.Functions.load import load
 from pyleecan.definitions import DATA_DIR
 
+from pyleecan.Methods.Simulation.Input import InputError 
+
 IPMSM_A = load(join(DATA_DIR, "Machine", "IPMSM_A.json"))
 
 
@@ -40,6 +42,9 @@ def test_E_IPMSM_FL_002():
             is_symmetry_a=True, sym_a=4, is_antiper_a=True, Nt_tot=10
         ),
     )
+
+    with pytest.raises(InputError) as context:
+        simu.elec.run()
 
     simu.mag = None
     simu.force = None

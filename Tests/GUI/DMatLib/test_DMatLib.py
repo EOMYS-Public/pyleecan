@@ -70,13 +70,13 @@ class TestDMatLib(object):
         self.widget = DMatLib(matlib)
 
     @classmethod
-    def setUpClass(cls):
+    def setup_class(cls):
         """Start the app for the test"""
         print("\nStart Test DMatLib")
         cls.app = QtWidgets.QApplication(sys.argv)
 
     @classmethod
-    def tearDownClass(cls):
+    def teardown_class(cls):
         """Exit the app after the test"""
         cls.app.quit()
         rmtree(tmp_folder)
