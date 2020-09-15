@@ -181,3 +181,14 @@ class TestSBar(object):
         self.widget.c_bar_type.setCurrentIndex(0)
         assert type(self.widget.w_bar) is PCondType21
         assert type(self.test_obj.rotor.winding.conductor) is CondType21
+
+    
+    def test_init_PCondType21(self):
+        self.test_obj.rotor = LamSquirrelCage(Hscr=0.21, Lscr=0.22)
+        self.test_obj.rotor.slot = SlotW22(H0=0.001, H2=0.01, W0=0.1, W2=0.2)
+        self.test_obj.rotor.winding.Lewout = 0.23
+        self.test_obj.rotor.ring_mat.name = "test2"
+        self.test_obj.rotor.winding.conductor = None
+        self.widget = PCondType21(machine=self.test_obj, matlib=self.matlib)
+        assert type(self.test_obj.rotor.winding.conductor) is CondType21
+        self.widget.emit_save()
