@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for pyleecan\Functions\FEMM\create_FEMM_materials.py: 92%</title>
+    <title>Coverage for pyleecan\Functions\FEMM\create_FEMM_materials.py: 86%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>pyleecan\Functions\FEMM\create_FEMM_materials.py</b> :
-            <span class="pc_cov">92%</span>
+            <span class="pc_cov">86%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             71 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">65 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">6 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">61 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">10 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -155,10 +155,10 @@
     <p id="t102" class="run"><span class="n"><a href="#t102">102</a></span><span class="t">            <span class="nam">prop_dict</span><span class="op">[</span><span class="nam">label</span><span class="op">]</span> <span class="op">=</span> <span class="str">"Airgap"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t103" class="run"><span class="n"><a href="#t103">103</a></span><span class="t">        <span class="key">elif</span> <span class="str">"Ventilation"</span> <span class="key">in</span> <span class="nam">label</span><span class="op">:</span>  <span class="com"># Ventilation</span>&nbsp;</span><span class="r"></span></p>
     <p id="t104" class="pln"><span class="n"><a href="#t104">104</a></span><span class="t">            <span class="com"># Check if the property already exist in FEMM</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t105" class="run"><span class="n"><a href="#t105">105</a></span><span class="t">            <span class="key">if</span> <span class="str">"Air"</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">materials</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t106" class="run"><span class="n"><a href="#t106">106</a></span><span class="t">                <span class="nam">femm</span><span class="op">.</span><span class="nam">mi_addmaterial</span><span class="op">(</span><span class="str">"Air"</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t107" class="run"><span class="n"><a href="#t107">107</a></span><span class="t">                <span class="nam">materials</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="str">"Air"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t108" class="run"><span class="n"><a href="#t108">108</a></span><span class="t">            <span class="nam">prop_dict</span><span class="op">[</span><span class="nam">label</span><span class="op">]</span> <span class="op">=</span> <span class="str">"Air"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t105" class="mis show_mis"><span class="n"><a href="#t105">105</a></span><span class="t">            <span class="key">if</span> <span class="str">"Air"</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">materials</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t106" class="mis show_mis"><span class="n"><a href="#t106">106</a></span><span class="t">                <span class="nam">femm</span><span class="op">.</span><span class="nam">mi_addmaterial</span><span class="op">(</span><span class="str">"Air"</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t107" class="mis show_mis"><span class="n"><a href="#t107">107</a></span><span class="t">                <span class="nam">materials</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="str">"Air"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t108" class="mis show_mis"><span class="n"><a href="#t108">108</a></span><span class="t">            <span class="nam">prop_dict</span><span class="op">[</span><span class="nam">label</span><span class="op">]</span> <span class="op">=</span> <span class="str">"Air"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t109" class="run"><span class="n"><a href="#t109">109</a></span><span class="t">        <span class="key">elif</span> <span class="str">"Hole_"</span> <span class="key">in</span> <span class="nam">label</span><span class="op">:</span>  <span class="com"># Hole but not HoleMagnet</span>&nbsp;</span><span class="r"></span></p>
     <p id="t110" class="pln"><span class="n"><a href="#t110">110</a></span><span class="t">            <span class="com"># Check if the property already exist in FEMM</span>&nbsp;</span><span class="r"></span></p>
     <p id="t111" class="run"><span class="n"><a href="#t111">111</a></span><span class="t">            <span class="key">if</span> <span class="str">"Air"</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">materials</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -209,7 +209,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.2.1</a>,
-            created at 2020-09-08 11:05 +0200
+            created at 2020-09-15 13:26 +0200
         </p>
     </div>
 </div>

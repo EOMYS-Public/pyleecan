@@ -21,8 +21,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            80 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">80 run</button>
+            87 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">87 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -195,12 +195,32 @@
     <p id="t142" class="run"><span class="n"><a href="#t142">142</a></span><span class="t">            <span class="nam">mid</span> <span class="op">=</span> <span class="nam">line</span><span class="op">.</span><span class="nam">get_middle</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t143" class="run"><span class="n"><a href="#t143">143</a></span><span class="t">            <span class="nam">plt</span><span class="op">.</span><span class="nam">text</span><span class="op">(</span><span class="nam">mid</span><span class="op">.</span><span class="nam">real</span><span class="op">,</span> <span class="nam">mid</span><span class="op">.</span><span class="nam">imag</span><span class="op">,</span> <span class="nam">str</span><span class="op">(</span><span class="nam">mesh_dict</span><span class="op">[</span><span class="nam">line</span><span class="op">.</span><span class="nam">label</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t144" class="run"><span class="n"><a href="#t144">144</a></span><span class="t">        <span class="nam">fig</span><span class="op">.</span><span class="nam">savefig</span><span class="op">(</span><span class="nam">join</span><span class="op">(</span><span class="nam">save_path</span><span class="op">,</span> <span class="str">"test_Lam_Wind_s10_Tooth_out.png"</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t145" class="pln"><span class="n"><a href="#t145">145</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t146" class="run"><span class="n"><a href="#t146">146</a></span><span class="t">        <span class="nam">test_obj</span><span class="op">.</span><span class="nam">rotor</span><span class="op">.</span><span class="nam">comp_wind_function</span><span class="op">(</span><span class="nam">alpha_mmf0</span> <span class="op">=</span> <span class="num">1</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t147" class="pln"><span class="n"><a href="#t147">147</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t148" class="run"><span class="n"><a href="#t148">148</a></span><span class="t">        <span class="nam">test_obj</span><span class="op">.</span><span class="nam">stator</span><span class="op">.</span><span class="nam">slot</span> <span class="op">=</span> <span class="nam">SlotW10</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t149" class="pln"><span class="n"><a href="#t149">149</a></span><span class="t">            <span class="nam">Zs</span><span class="op">=</span><span class="num">6</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t150" class="pln"><span class="n"><a href="#t150">150</a></span><span class="t">            <span class="nam">W0</span><span class="op">=</span><span class="num">50e-1</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t151" class="pln"><span class="n"><a href="#t151">151</a></span><span class="t">            <span class="nam">W1</span><span class="op">=</span><span class="num">80e-1</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t152" class="pln"><span class="n"><a href="#t152">152</a></span><span class="t">            <span class="nam">W2</span><span class="op">=</span><span class="num">50e-1</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t153" class="pln"><span class="n"><a href="#t153">153</a></span><span class="t">            <span class="nam">H0</span><span class="op">=</span><span class="num">15e-1</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t154" class="pln"><span class="n"><a href="#t154">154</a></span><span class="t">            <span class="nam">H1</span><span class="op">=</span><span class="num">25e-1</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t155" class="pln"><span class="n"><a href="#t155">155</a></span><span class="t">            <span class="nam">H2</span><span class="op">=</span><span class="num">140e-1</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t156" class="pln"><span class="n"><a href="#t156">156</a></span><span class="t">            <span class="nam">H1_is_rad</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t157" class="pln"><span class="n"><a href="#t157">157</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t158" class="pln"><span class="n"><a href="#t158">158</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t159" class="run"><span class="n"><a href="#t159">159</a></span><span class="t">        <span class="nam">lines</span> <span class="op">=</span> <span class="nam">test_obj</span><span class="op">.</span><span class="nam">stator</span><span class="op">.</span><span class="nam">slot</span><span class="op">.</span><span class="nam">build_geometry_half_tooth</span><span class="op">(</span><span class="nam">is_top</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t160" class="run"><span class="n"><a href="#t160">160</a></span><span class="t">        <span class="nam">surf</span> <span class="op">=</span> <span class="nam">SurfLine</span><span class="op">(</span><span class="nam">line_list</span><span class="op">=</span><span class="nam">lines</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t161" class="run"><span class="n"><a href="#t161">161</a></span><span class="t">        <span class="nam">surf</span><span class="op">.</span><span class="nam">plot_lines</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t162" class="run"><span class="n"><a href="#t162">162</a></span><span class="t">        <span class="nam">fig</span> <span class="op">=</span> <span class="nam">plt</span><span class="op">.</span><span class="nam">gcf</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t163" class="run"><span class="n"><a href="#t163">163</a></span><span class="t">        <span class="nam">fig</span><span class="op">.</span><span class="nam">savefig</span><span class="op">(</span><span class="nam">join</span><span class="op">(</span><span class="nam">save_path</span><span class="op">,</span> <span class="str">"test_Lam_Wind_s10_Tooth_bottom_out.png"</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t164" class="pln"><span class="n"><a href="#t164">164</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.2.1</a>,
-            created at 2020-09-08 11:05 +0200
+            created at 2020-09-15 13:26 +0200
         </p>
     </div>
 </div>
