@@ -8,6 +8,7 @@ from PyQt5.QtTest import QTest
 from pyleecan.Classes.LamSlotWind import LamSlotWind
 from pyleecan.Classes.SlotW21 import SlotW21
 from pyleecan.GUI.Dialog.DMachineSetup.SWSlot.PWSlot21.PWSlot21 import PWSlot21
+from numpy import pi 
 
 
 import pytest
@@ -108,6 +109,16 @@ class TestPWSlot21(object):
 
         assert self.widget.slot.H1 == 0.35
         assert self.test_obj.slot.H1 == 0.35
+
+
+        self.widget.c_H1_unit.setCurrentIndex(2)  # Index 2 is deg
+
+        self.widget.lf_H1.clear()  # Clear the field before writing
+        QTest.keyClicks(self.widget.lf_H1, "0.35")
+        self.widget.lf_H1.editingFinished.emit()  # To trigger the slot
+
+        assert self.widget.slot.H1 == 0.35 / 180 * pi
+        assert self.test_obj.slot.H1 == 0.35 / 180 * pi
 
     def test_set_H1_is_rad(self):
         """Check that the Widget allow to update H1_is_rad"""
