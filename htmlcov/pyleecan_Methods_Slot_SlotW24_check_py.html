@@ -21,8 +21,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            14 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">14 run</button>
+            12 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">12 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -82,31 +82,29 @@
     <p id="t29" class="run"><span class="n"><a href="#t29">29</a></span><span class="t">    <span class="key">if</span> <span class="num">2</span> <span class="op">*</span> <span class="nam">arcsin</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">W3</span> <span class="op">/</span> <span class="op">(</span><span class="num">2</span> <span class="op">*</span> <span class="nam">Rbo</span><span class="op">)</span><span class="op">)</span> <span class="op">></span> <span class="num">2</span> <span class="op">*</span> <span class="nam">pi</span> <span class="op">/</span> <span class="nam">self</span><span class="op">.</span><span class="nam">Zs</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t30" class="run"><span class="n"><a href="#t30">30</a></span><span class="t">        <span class="key">raise</span> <span class="nam">S24_W3CheckError</span><span class="op">(</span><span class="str">"The teeth are too wide, reduce Zs or W3"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t31" class="pln"><span class="n"><a href="#t31">31</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t">    <span class="nam">print</span><span class="op">(</span><span class="num">2</span> <span class="op">*</span> <span class="nam">arcsin</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">W3</span> <span class="op">/</span> <span class="op">(</span><span class="num">2</span> <span class="op">*</span> <span class="nam">Rbo</span> <span class="op">-</span> <span class="nam">self</span><span class="op">.</span><span class="nam">H2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t33" class="run"><span class="n"><a href="#t33">33</a></span><span class="t">    <span class="nam">print</span><span class="op">(</span> <span class="num">2</span> <span class="op">*</span> <span class="nam">pi</span> <span class="op">/</span> <span class="nam">self</span><span class="op">.</span><span class="nam">Zs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t34" class="run"><span class="n"><a href="#t34">34</a></span><span class="t">    <span class="key">if</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t35" class="pln"><span class="n"><a href="#t35">35</a></span><span class="t">        <span class="key">not</span> <span class="nam">self</span><span class="op">.</span><span class="nam">is_outwards</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t36" class="pln"><span class="n"><a href="#t36">36</a></span><span class="t">        <span class="key">and</span> <span class="num">2</span> <span class="op">*</span> <span class="nam">arcsin</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">W3</span> <span class="op">/</span> <span class="op">(</span><span class="num">2</span> <span class="op">*</span> <span class="nam">Rbo</span> <span class="op">-</span> <span class="nam">self</span><span class="op">.</span><span class="nam">H2</span><span class="op">)</span><span class="op">)</span> <span class="op">></span> <span class="num">2</span> <span class="op">*</span> <span class="nam">pi</span> <span class="op">/</span> <span class="nam">self</span><span class="op">.</span><span class="nam">Zs</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t37" class="pln"><span class="n"><a href="#t37">37</a></span><span class="t">    <span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t38" class="run"><span class="n"><a href="#t38">38</a></span><span class="t">        <span class="key">raise</span> <span class="nam">S24_HWCheckError</span><span class="op">(</span><span class="str">"The teeth are too wide, reduce Zs, H2 or W3"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t39" class="pln"><span class="n"><a href="#t39">39</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t40" class="pln"><span class="n"><a href="#t40">40</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t41" class="run"><span class="n"><a href="#t41">41</a></span><span class="t"><span class="key">class</span> <span class="nam">S24_W3CheckError</span><span class="op">(</span><span class="nam">SlotCheckError</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t42" class="pln"><span class="n"><a href="#t42">42</a></span><span class="t">    <span class="str">""" """</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t">    <span class="key">if</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t">        <span class="key">not</span> <span class="nam">self</span><span class="op">.</span><span class="nam">is_outwards</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">        <span class="key">and</span> <span class="num">2</span> <span class="op">*</span> <span class="nam">arcsin</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">W3</span> <span class="op">/</span> <span class="op">(</span><span class="num">2</span> <span class="op">*</span> <span class="nam">Rbo</span> <span class="op">-</span> <span class="nam">self</span><span class="op">.</span><span class="nam">H2</span><span class="op">)</span><span class="op">)</span> <span class="op">></span> <span class="num">2</span> <span class="op">*</span> <span class="nam">pi</span> <span class="op">/</span> <span class="nam">self</span><span class="op">.</span><span class="nam">Zs</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t35" class="pln"><span class="n"><a href="#t35">35</a></span><span class="t">    <span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t36" class="run"><span class="n"><a href="#t36">36</a></span><span class="t">        <span class="key">raise</span> <span class="nam">S24_HWCheckError</span><span class="op">(</span><span class="str">"The teeth are too wide, reduce Zs, H2 or W3"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t37" class="pln"><span class="n"><a href="#t37">37</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t38" class="pln"><span class="n"><a href="#t38">38</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t39" class="run"><span class="n"><a href="#t39">39</a></span><span class="t"><span class="key">class</span> <span class="nam">S24_W3CheckError</span><span class="op">(</span><span class="nam">SlotCheckError</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t40" class="pln"><span class="n"><a href="#t40">40</a></span><span class="t">    <span class="str">""" """</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t41" class="pln"><span class="n"><a href="#t41">41</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t42" class="run"><span class="n"><a href="#t42">42</a></span><span class="t">    <span class="key">pass</span>&nbsp;</span><span class="r"></span></p>
     <p id="t43" class="pln"><span class="n"><a href="#t43">43</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t44" class="run"><span class="n"><a href="#t44">44</a></span><span class="t">    <span class="key">pass</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t45" class="pln"><span class="n"><a href="#t45">45</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t46" class="pln"><span class="n"><a href="#t46">46</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t47" class="run"><span class="n"><a href="#t47">47</a></span><span class="t"><span class="key">class</span> <span class="nam">S24_HWCheckError</span><span class="op">(</span><span class="nam">SlotCheckError</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t48" class="pln"><span class="n"><a href="#t48">48</a></span><span class="t">    <span class="str">""" """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t49" class="pln"><span class="n"><a href="#t49">49</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t50" class="run"><span class="n"><a href="#t50">50</a></span><span class="t">    <span class="key">pass</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t44" class="pln"><span class="n"><a href="#t44">44</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t45" class="run"><span class="n"><a href="#t45">45</a></span><span class="t"><span class="key">class</span> <span class="nam">S24_HWCheckError</span><span class="op">(</span><span class="nam">SlotCheckError</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t46" class="pln"><span class="n"><a href="#t46">46</a></span><span class="t">    <span class="str">""" """</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t47" class="pln"><span class="n"><a href="#t47">47</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t48" class="run"><span class="n"><a href="#t48">48</a></span><span class="t">    <span class="key">pass</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.2.1</a>,
-            created at 2020-09-15 13:26 +0200
+            created at 2020-09-16 14:20 +0200
         </p>
     </div>
 </div>

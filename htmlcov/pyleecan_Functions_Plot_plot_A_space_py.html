@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for pyleecan\Functions\Plot\plot_A_space.py: 84%</title>
+    <title>Coverage for pyleecan\Functions\Plot\plot_A_space.py: 88%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>pyleecan\Functions\Plot\plot_A_space.py</b> :
-            <span class="pc_cov">84%</span>
+            <span class="pc_cov">88%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             89 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">75 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">14 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">78 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">11 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -171,8 +171,8 @@
     <p id="t118" class="run"><span class="n"><a href="#t118">118</a></span><span class="t">        <span class="nam">a_str</span> <span class="op">=</span> <span class="str">"angle{&#176;}"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t119" class="run"><span class="n"><a href="#t119">119</a></span><span class="t">        <span class="nam">xlabel</span> <span class="op">=</span> <span class="str">"Angle [&#176;]"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t120" class="pln"><span class="n"><a href="#t120">120</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t121" class="mis show_mis"><span class="n"><a href="#t121">121</a></span><span class="t">        <span class="nam">a_str</span> <span class="op">=</span> <span class="str">"angle"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t122" class="mis show_mis"><span class="n"><a href="#t122">122</a></span><span class="t">        <span class="nam">xlabel</span> <span class="op">=</span> <span class="str">"Angle [rad]"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t121" class="run"><span class="n"><a href="#t121">121</a></span><span class="t">        <span class="nam">a_str</span> <span class="op">=</span> <span class="str">"angle"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t122" class="run"><span class="n"><a href="#t122">122</a></span><span class="t">        <span class="nam">xlabel</span> <span class="op">=</span> <span class="str">"Angle [rad]"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t123" class="run"><span class="n"><a href="#t123">123</a></span><span class="t">    <span class="key">if</span> <span class="nam">t</span> <span class="op">!=</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t124" class="mis show_mis"><span class="n"><a href="#t124">124</a></span><span class="t">        <span class="nam">t_str</span> <span class="op">=</span> <span class="str">"time="</span> <span class="op">+</span> <span class="nam">str</span><span class="op">(</span><span class="nam">t</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t125" class="pln"><span class="n"><a href="#t125">125</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -200,7 +200,7 @@
     <p id="t147" class="run"><span class="n"><a href="#t147">147</a></span><span class="t">    <span class="key">if</span> <span class="nam">is_deg</span> <span class="key">and</span> <span class="nam">round</span><span class="op">(</span><span class="nam">max</span><span class="op">(</span><span class="nam">angle</span><span class="op">)</span> <span class="op">/</span> <span class="num">6</span><span class="op">)</span> <span class="op">%</span> <span class="num">5</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t148" class="run"><span class="n"><a href="#t148">148</a></span><span class="t">        <span class="nam">xticks</span> <span class="op">=</span> <span class="op">[</span><span class="nam">i</span> <span class="op">*</span> <span class="nam">round</span><span class="op">(</span><span class="nam">max</span><span class="op">(</span><span class="nam">angle</span><span class="op">)</span> <span class="op">/</span> <span class="num">6</span><span class="op">)</span> <span class="key">for</span> <span class="nam">i</span> <span class="key">in</span> <span class="nam">range</span><span class="op">(</span><span class="num">7</span><span class="op">)</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t149" class="pln"><span class="n"><a href="#t149">149</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t150" class="mis show_mis"><span class="n"><a href="#t150">150</a></span><span class="t">        <span class="nam">xticks</span> <span class="op">=</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t150" class="run"><span class="n"><a href="#t150">150</a></span><span class="t">        <span class="nam">xticks</span> <span class="op">=</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p id="t151" class="run"><span class="n"><a href="#t151">151</a></span><span class="t">    <span class="nam">Ydatas</span> <span class="op">=</span> <span class="op">[</span><span class="nam">results</span><span class="op">[</span><span class="nam">data</span><span class="op">.</span><span class="nam">symbol</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
     <p id="t152" class="pln"><span class="n"><a href="#t152">152</a></span><span class="t">        <span class="nam">results</span><span class="op">[</span><span class="nam">d</span><span class="op">.</span><span class="nam">symbol</span> <span class="op">+</span> <span class="str">"_"</span> <span class="op">+</span> <span class="nam">str</span><span class="op">(</span><span class="nam">i</span><span class="op">)</span><span class="op">]</span> <span class="key">for</span> <span class="nam">i</span><span class="op">,</span> <span class="nam">d</span> <span class="key">in</span> <span class="nam">enumerate</span><span class="op">(</span><span class="nam">data_list</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t153" class="pln"><span class="n"><a href="#t153">153</a></span><span class="t">    <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
@@ -304,7 +304,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.2.1</a>,
-            created at 2020-09-15 13:26 +0200
+            created at 2020-09-16 14:20 +0200
         </p>
     </div>
 </div>

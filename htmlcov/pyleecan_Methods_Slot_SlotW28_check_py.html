@@ -86,7 +86,7 @@
     <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t">    <span class="com">#        raise S28_WCheckError("You must have W0 &lt; 2*R1")</span>&nbsp;</span><span class="r"></span></p>
     <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t35" class="run"><span class="n"><a href="#t35">35</a></span><span class="t">    <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">W0</span> <span class="op">*</span> <span class="num">0.5</span> <span class="op">/</span> <span class="nam">Rbo</span> <span class="op">>=</span> <span class="num">1</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t36" class="mis show_mis"><span class="n"><a href="#t36">36</a></span><span class="t">        <span class="key">raise</span> <span class="nam">S28_RboW0CheckError</span><span class="op">(</span><span class="str">"You must have W0/2 &lt; Rbo"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t36" class="run"><span class="n"><a href="#t36">36</a></span><span class="t">        <span class="key">raise</span> <span class="nam">S28_RboW0CheckError</span><span class="op">(</span><span class="str">"You must have W0/2 &lt; Rbo"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t37" class="pln"><span class="n"><a href="#t37">37</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t38" class="run"><span class="n"><a href="#t38">38</a></span><span class="t">    <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">is_outwards</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t39" class="run"><span class="n"><a href="#t39">39</a></span><span class="t">        <span class="nam">R1</span> <span class="op">=</span> <span class="nam">Rbo</span> <span class="op">+</span> <span class="nam">self</span><span class="op">.</span><span class="nam">H0</span> <span class="op">+</span> <span class="nam">self</span><span class="op">.</span><span class="nam">R1</span>&nbsp;</span><span class="r"></span></p>
@@ -94,7 +94,7 @@
     <p id="t41" class="run"><span class="n"><a href="#t41">41</a></span><span class="t">        <span class="nam">R1</span> <span class="op">=</span> <span class="nam">Rbo</span> <span class="op">-</span> <span class="nam">self</span><span class="op">.</span><span class="nam">H0</span>&nbsp;</span><span class="r"></span></p>
     <p id="t42" class="pln"><span class="n"><a href="#t42">42</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t43" class="run"><span class="n"><a href="#t43">43</a></span><span class="t">    <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">W3</span> <span class="op">*</span> <span class="num">0.5</span> <span class="op">/</span> <span class="nam">R1</span> <span class="op">>=</span> <span class="num">1</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t44" class="run"><span class="n"><a href="#t44">44</a></span><span class="t">        <span class="key">raise</span> <span class="nam">S28_R1W3CheckError</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t44" class="mis show_mis"><span class="n"><a href="#t44">44</a></span><span class="t">        <span class="key">raise</span> <span class="nam">S28_R1W3CheckError</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t45" class="pln"><span class="n"><a href="#t45">45</a></span><span class="t">            <span class="str">"W3 is too high comparing to the lamination bore radius (Rbo)"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t46" class="pln"><span class="n"><a href="#t46">46</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t47" class="pln"><span class="n"><a href="#t47">47</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -142,7 +142,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.2.1</a>,
-            created at 2020-09-15 13:26 +0200
+            created at 2020-09-16 14:20 +0200
         </p>
     </div>
 </div>
