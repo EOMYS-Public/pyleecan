@@ -6,17 +6,14 @@ from numpy.linalg import norm
 
 def comp_wind_sym(wind_mat):
     """Computes the winding pattern periodicity and symmetries
-
     Parameters
     ----------
     wind_mat : numpy.ndarray
         Matrix of the Winding
-
     Returns
     -------
     Nperw: int
         Number of electrical period of the winding
-
     """
     assert len(wind_mat.shape) == 4, "dim 4 expected for wind_mat"
 
@@ -29,52 +26,51 @@ def comp_wind_sym(wind_mat):
     Nperw = 1  # Number of electrical period of the winding
     Nperslot = 1  # Periodicity of the winding in number of slots
 
+    # Looking for the periodicity of each phase
     for q in range(0, qs):
-        k = 0
-        stri = ""
-        while k < Zs:
-            stri = stri + str(int(wind_mat2[k, q]))     #Combining all value from a phase in a string to use principal_period
-            k += 1
-        Nperslot = lcm(Nperslot, principal_period(stri, Zs))
+        k = 1
+        is_sym = False
+        while k <= Zs and not is_sym:
+            # We shift the array arround the slot and check if it's the same
+            if array_equal(wind_mat2[:, q], roll(wind_mat2[:, q], shift=k)):
+                is_sym = True
+            else:
+                k += 1
+        # least common multiple to find common periodicity between different phase
+        Nperslot = lcm(Nperslot, k)
 
-    if Nperslot == Zs:
-        Nperw == 1
-    else:
-        Nperw = int(Zs / Nperslot)
+    # If Nperslot > Zs no symmetry
+    if Nperslot > 0 and Nperslot < Zs:
+        # nb of periods of the winding (2 means 180°)
+        Nperw = Zs / float(Nperslot)
+        # if Zs cannot be divided by Nperslot (non integer)
+        if Nperw % 1 != 0:
+            Nperw = 1
 
     # Check for anti symmetries in the elementary winding pattern
     if (
-        (Nperslot % 2 == 0 or Nperslot == 1)
+        Nperslot % 2 == 0
         and norm(
-            wind_mat2[0 : Nperw // 2, :] + wind_mat2[Nperw // 2 : Nperw, :]
+            wind_mat2[0 : Nperslot // 2, :] + wind_mat2[Nperslot // 2 : Nperslot, :]
         )
         == 0
     ):
         is_asym_wind = True
-        Nperslot = Nperslot * 2
+        Nperw = Nperw * 2
     else:
         is_asym_wind = False
 
-    if Nperslot == Zs:
-        Nperslot = 0
+    return int(Nperw), is_asym_wind
 
-    return Nperslot, is_asym_wind    # We are currently returning Nperslot because it contains the true number of electrical period.
-
-def principal_period(s, Zs):
-    """Method allowing to count how many period is in a string"""
-    i = (s+s).find(s, 1, -1)
-    return Zs if i == -1 else s.count(s[:i])
 
 def gcd(a, b):
     """Return the greatest common divisor of a and b
-
     Parameters
     ----------
     a : int
         first number
     b : int
         second number
-
     Returns
     -------
     gcd : int
@@ -87,14 +83,12 @@ def gcd(a, b):
 
 def lcm(a, b):
     """Return the least common multiple of a and b
-
     Parameters
     ----------
     a : int
         first number
     b : int
         second number
-
     Returns
     -------
     lcm : int
