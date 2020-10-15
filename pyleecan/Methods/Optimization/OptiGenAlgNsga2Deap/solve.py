@@ -236,7 +236,7 @@ def solve(self):
                     name=param_explorer.name,
                     unit=param_explorer.unit,
                     symbol=param_explorer.symbol,
-                    setter=param_explorer.setter,
+                    setter=param_explorer.setter, # TODO: _setter_str is lost here
                     value=paramexplorer_value[:, i].tolist(),
                 )
             )
