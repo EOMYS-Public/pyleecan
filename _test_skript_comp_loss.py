@@ -22,25 +22,27 @@ print("Results loaded")
 from pyleecan.Classes.Loss import Loss
 from pyleecan.Classes.LossModel import LossModel
 from pyleecan.Classes.LossModelBertotti import LossModelBertotti
+from pyleecan.Classes.LossModelWinding import LossModelWinding
+
 from pyleecan.Classes.ImportMatrixXls import ImportMatrixXls
 
 
-myLossModel = LossModelBertotti()
+myIronLoss = LossModelBertotti()
+myWindingLoss = LossModelWinding()
 mySimu.loss = Loss()
-mySimu.loss.models = [
-    myLossModel,
-]
+mySimu.loss.models = [myIronLoss, myWindingLoss]
 
-myLossModel.name = "Stator Iron Losses"
-myLossModel.k_hy = None
-myLossModel.alpha_hy = 2
-myLossModel.k_ed = None
-myLossModel.alpha_ed = 2
-myLossModel.k_ex = 0
-myLossModel.alpha_ex = 1.5
-myLossModel.mat_type = machine.stator.mat_type
-myLossModel.L1 = machine.stator.L1
-myLossModel.group = "stator"
+myWindingLoss.lam = "machine.stator"
+
+myIronLoss.name = "Stator Iron Losses"
+myIronLoss.k_hy = None
+myIronLoss.alpha_hy = 2
+myIronLoss.k_ed = None
+myIronLoss.alpha_ed = 2
+myIronLoss.k_ex = 0
+myIronLoss.alpha_ex = 1.5
+myIronLoss.lam = "machine.stator"
+myIronLoss.group = "stator core"
 
 LossData = ImportMatrixXls()
 # LossData.file_path = "pyleecan\\pyleecan\\Data\\Material\\M400-50A.xlsx"
@@ -50,17 +52,25 @@ LossData.sheet = "LossData"
 LossData.skiprows = 2
 LossData.usecols = None
 
+
 machine.stator.mat_type.mag.LossData = LossData
 
 # --- Run the Loss Simulation -------------------------------------------------------- #
 myLoss = mySimu.loss
 myLoss.run()
 
-#myResults.mag.meshsolution.plot_contour(
+# myResults.mag.meshsolution.plot_contour(
 #    label="B", group_names="stator", itime=0, clim=[0, 1.5]
-#)
+# )
 
-myResults.loss.meshsolutions[0].plot_contour(label="LossDens", itime=7, )
-myResults.loss.meshsolutions[0].plot_contour(label="LossDensSum", itime=0,)
+myResults.loss.meshsolutions[0].plot_contour(
+    label="LossDens",
+    itime=7,
+)
+myResults.loss.meshsolutions[0].plot_contour(
+    label="LossDensSum",
+    itime=0,
+)
 
-print(f"stator loss = {myResults.loss.losses[0].get_field([]).mean()} W")
+print(f"stator iron loss = {myResults.loss.losses[0].get_field([]).mean()} W")
+print(f"stator winding loss = {myResults.loss.losses[1].get_field([]).mean()} W")

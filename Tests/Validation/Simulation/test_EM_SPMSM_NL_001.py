@@ -21,23 +21,22 @@ import pytest
 from pyleecan.Functions.load import load
 from pyleecan.definitions import DATA_DIR
 
-SPMSM_015 = load(join(DATA_DIR, "Machine", "SPMSM_015.json"))
-
 
 @pytest.mark.long
 @pytest.mark.validation
 @pytest.mark.FEMM
 def test_Magnetic_FEMM_sym():
-    """Validation of outer rotor SPMSM 
+    """Validation of outer rotor SPMSM
     Open circuit (Null Stator currents)
 
     Machine B from Vu Xuan Hung thesis
-    "Modeling of exterior rotor permanent magnet machines with concentrated windings" 
-    Hanoi university of science and technology 2012 
+    "Modeling of exterior rotor permanent magnet machines with concentrated windings"
+    Hanoi university of science and technology 2012
     Test compute the Flux in FEMM, with and without symmetry
     and with MANATEE semi-analytical subdomain model
     """
 
+    SPMSM_015 = load(join(DATA_DIR, "Machine", "SPMSM_015.json"))
     simu = Simu1(name="EM_SPMSM_NL_001", machine=SPMSM_015)
 
     # Definition of the enforced output of the electrical module
@@ -57,9 +56,13 @@ def test_Magnetic_FEMM_sym():
     )
 
     # Definition of the magnetic simulation (is_mmfr=False => no flux from the magnets)
-    assert SPMSM_015.comp_sym() == (9, False)
+    assert SPMSM_015.comp_periodicity() == (9, False, 9, True)
     simu.mag = MagFEMM(
-        type_BH_stator=0, type_BH_rotor=0, is_symmetry_a=True, is_mmfs=False, sym_a=9
+        type_BH_stator=0,
+        type_BH_rotor=0,
+        is_periodicity_t=False,
+        is_periodicity_a=True,
+        is_mmfs=False,
     )
     simu.force = None
     simu.struct = None

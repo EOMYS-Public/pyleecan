@@ -220,7 +220,6 @@
             }
         ],
         "daughters": [
-            "Bore",
             "BoreFlower"
         ],
         "desc": "Abstract class for Bore shape",
@@ -307,7 +306,7 @@
                 "name": "connectivity",
                 "type": "ndarray",
                 "unit": "",
-                "value": ""
+                "value": []
             },
             {
                 "desc": "Total number of elements",
@@ -334,7 +333,7 @@
                 "name": "indice",
                 "type": "ndarray",
                 "unit": "",
-                "value": ""
+                "value": []
             },
             {
                 "desc": "Define FEA interpolation",
@@ -343,7 +342,7 @@
                 "name": "interpolation",
                 "type": "Interpolation",
                 "unit": "",
-                "value": null
+                "value": -1
             }
         ]
     },
@@ -657,7 +656,6 @@
             }
         ],
         "daughters": [
-            "Conductor",
             "CondType11",
             "CondType12",
             "CondType21",
@@ -808,7 +806,7 @@
                 "name": "result",
                 "type": "list",
                 "unit": "-",
-                "value": -1
+                "value": []
             }
         ]
     },
@@ -820,7 +818,6 @@
             }
         ],
         "daughters": [
-            "Drive",
             "DriveWave"
         ],
         "desc": "Abstract Drive class",
@@ -897,8 +894,8 @@
             }
         ],
         "daughters": [
-            "EEC",
-            "EEC_PMSM"
+            "EEC_PMSM",
+            "EEC_SCIM"
         ],
         "desc": "Electric module: Equivalent Electrical Circuit abstract class",
         "is_internal": false,
@@ -977,6 +974,65 @@
             }
         ]
     },
+    "EEC_SCIM": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Electric module: Electrical Equivalent Circuit for Squirrel Cage Induction Machine",
+        "is_internal": false,
+        "methods": [
+            "comp_parameters",
+            "solve_EEC",
+            "gen_drive",
+            "comp_joule_losses"
+        ],
+        "mother": "EEC",
+        "name": "EEC_SCIM",
+        "package": "Simulation",
+        "path": "pyleecan/Generator/ClassesRef/Simulation/EEC_SCIM.csv",
+        "properties": [
+            {
+                "desc": "Magnetic inductance",
+                "max": "",
+                "min": "",
+                "name": "indmag",
+                "type": "IndMag",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "Parameters of the EEC: computed if empty, or enforced",
+                "max": "",
+                "min": "",
+                "name": "parameters",
+                "type": "dict",
+                "unit": "-",
+                "value": {}
+            },
+            {
+                "desc": "Frequency",
+                "max": "",
+                "min": "",
+                "name": "freq0",
+                "type": "float",
+                "unit": "Hz",
+                "value": null
+            },
+            {
+                "desc": "Drive",
+                "max": "",
+                "min": "",
+                "name": "drive",
+                "type": "Drive",
+                "unit": "-",
+                "value": null
+            }
+        ]
+    },
     "Electrical": {
         "constants": [
             {
@@ -985,7 +1041,7 @@
             }
         ],
         "daughters": [],
-        "desc": "Electric module abstract object",
+        "desc": "Electric module object for electrical equivalent circuit simulation",
         "is_internal": false,
         "methods": [
             "run",
@@ -1074,7 +1130,6 @@
             }
         ],
         "daughters": [
-            "FluxLink",
             "FluxLinkFEMM"
         ],
         "desc": "Electric module: Flux Linkage",
@@ -1133,30 +1188,12 @@
                 "value": 1
             },
             {
-                "desc": "0 Compute on the complete machine, 1 compute according to sym_a and is_antiper_a",
+                "desc": "True to take into account the spatial periodicity of the machine",
                 "max": "",
                 "min": "",
-                "name": "is_symmetry_a",
+                "name": "is_periodicity_a",
                 "type": "bool",
                 "unit": "",
-                "value": 0
-            },
-            {
-                "desc": "Number of symmetry for the angle vector",
-                "max": "",
-                "min": "1",
-                "name": "sym_a",
-                "type": "int",
-                "unit": "-",
-                "value": 1
-            },
-            {
-                "desc": "To add an antiperiodicity to the angle vector",
-                "max": "",
-                "min": "",
-                "name": "is_antiper_a",
-                "type": "bool",
-                "unit": "-",
                 "value": 0
             },
             {
@@ -1167,6 +1204,15 @@
                 "type": "int",
                 "unit": "-",
                 "value": 5
+            },
+            {
+                "desc": "global coefficient to adjust geometry fineness in FEMM (0.5 : default , > 1 : finner , < 1 : less fine)",
+                "max": "",
+                "min": "",
+                "name": "Kgeo_fineness",
+                "type": "float",
+                "unit": "",
+                "value": 0.5
             }
         ]
     },
@@ -1178,14 +1224,14 @@
             }
         ],
         "daughters": [
-            "Force",
             "ForceMT"
         ],
         "desc": "Forces module abstract object",
         "is_internal": false,
         "methods": [
             "comp_time_angle",
-            "run"
+            "run",
+            "get_axes"
         ],
         "mother": "",
         "name": "Force",
@@ -1200,6 +1246,24 @@
                 "type": "bool",
                 "unit": "-",
                 "value": 0
+            },
+            {
+                "desc": "True to compute only on one time periodicity (use periodicities defined in output.mag.time)",
+                "max": "",
+                "min": "",
+                "name": "is_periodicity_t",
+                "type": "bool",
+                "unit": "-",
+                "value": 0
+            },
+            {
+                "desc": "True to compute only on one angle periodicity (use periodicities defined in output.mag.angle)",
+                "max": "",
+                "min": "",
+                "name": "is_periodicity_a",
+                "type": "bool",
+                "unit": "-",
+                "value": 0
             }
         ]
     },
@@ -1211,7 +1275,7 @@
             }
         ],
         "daughters": [],
-        "desc": "Force Maxwell tensor model",
+        "desc": "Force Maxwell tensor model for radial flux machines",
         "is_internal": false,
         "methods": [
             "comp_force",
@@ -1320,7 +1384,6 @@
             }
         ],
         "daughters": [
-            "GaussPoint",
             "FPGNSeg",
             "FPGNTri"
         ],
@@ -1341,7 +1404,6 @@
             }
         ],
         "daughters": [
-            "Hole",
             "HoleM50",
             "HoleM51",
             "HoleM52",
@@ -2262,7 +2324,6 @@
             }
         ],
         "daughters": [
-            "Import",
             "ImportGenMatrixSin",
             "ImportGenToothSaw",
             "ImportGenVectLin",
@@ -2637,7 +2698,6 @@
             }
         ],
         "daughters": [
-            "ImportMatrix",
             "ImportGenMatrixSin",
             "ImportGenToothSaw",
             "ImportGenVectLin",
@@ -2807,7 +2867,6 @@
             }
         ],
         "daughters": [
-            "IndMag",
             "IndMagFEMM"
         ],
         "desc": "Electric module: Magnetic Inductance",
@@ -2866,30 +2925,12 @@
                 "value": 1
             },
             {
-                "desc": "0 Compute on the complete machine, 1 compute according to sym_a and is_antiper_a",
+                "desc": "True to take into account the spatial periodicity of the machine",
                 "max": "",
                 "min": "",
-                "name": "is_symmetry_a",
+                "name": "is_periodicity_a",
                 "type": "bool",
                 "unit": "",
-                "value": 0
-            },
-            {
-                "desc": "Number of symmetry for the angle vector",
-                "max": "",
-                "min": "1",
-                "name": "sym_a",
-                "type": "int",
-                "unit": "-",
-                "value": 1
-            },
-            {
-                "desc": "To add an antiperiodicity to the angle vector",
-                "max": "",
-                "min": "",
-                "name": "is_antiper_a",
-                "type": "bool",
-                "unit": "-",
                 "value": 0
             },
             {
@@ -2900,6 +2941,15 @@
                 "type": "int",
                 "unit": "-",
                 "value": 5
+            },
+            {
+                "desc": "global coefficient to adjust geometry fineness in FEMM (0.5 : default , > 1 : finner , < 1 : less fine)",
+                "max": "",
+                "min": "",
+                "name": "Kgeo_fineness",
+                "type": "float",
+                "unit": "",
+                "value": 0.5
             }
         ]
     },
@@ -2911,7 +2961,6 @@
             }
         ],
         "daughters": [
-            "Input",
             "InputCurrent",
             "InputElec",
             "InputFlux",
@@ -2921,7 +2970,7 @@
         "is_internal": false,
         "methods": [
             "gen_input",
-            "comp_time"
+            "comp_axes"
         ],
         "mother": "",
         "name": "Input",
@@ -3038,7 +3087,7 @@
                 "name": "rot_dir",
                 "type": "float",
                 "unit": "-",
-                "value": -1
+                "value": null
             },
             {
                 "desc": "Initial angular position of the rotor at t=0",
@@ -3059,7 +3108,7 @@
                 "value": null
             },
             {
-                "desc": "d-axis current magnitude",
+                "desc": "d-axis current RMS magnitude",
                 "max": "",
                 "min": "",
                 "name": "Id_ref",
@@ -3068,12 +3117,21 @@
                 "value": null
             },
             {
-                "desc": "q-axis current magnitude",
+                "desc": "q-axis current RMS magnitude",
                 "max": "",
                 "min": "",
                 "name": "Iq_ref",
                 "type": "float",
                 "unit": "A",
+                "value": null
+            },
+            {
+                "desc": "electrical frequency",
+                "max": "",
+                "min": "",
+                "name": "felec",
+                "type": "float",
+                "unit": "Hz",
                 "value": null
             }
         ]
@@ -3150,6 +3208,15 @@
                 "name": "Uq_ref",
                 "type": "float",
                 "unit": "V",
+                "value": null
+            },
+            {
+                "desc": "electrical frequency",
+                "max": "",
+                "min": "",
+                "name": "felec",
+                "type": "float",
+                "unit": "Hz",
                 "value": null
             }
         ]
@@ -3287,7 +3354,7 @@
             "comp_radius_mid_yoke",
             "has_magnet",
             "comp_angle_d_axis",
-            "comp_sym"
+            "comp_periodicity"
         ],
         "mother": "Lamination",
         "name": "LamHole",
@@ -3322,7 +3389,6 @@
             }
         ],
         "daughters": [
-            "LamSlot",
             "LamSlotMag",
             "LamSlotWind",
             "LamSquirrelCage"
@@ -3340,7 +3406,7 @@
             "get_Zs",
             "get_bore_desc",
             "comp_radius_mid_yoke",
-            "comp_sym"
+            "comp_periodicity"
         ],
         "mother": "Lamination",
         "name": "LamSlot",
@@ -3377,7 +3443,7 @@
             "comp_volumes",
             "plot",
             "comp_angle_d_axis",
-            "comp_sym"
+            "comp_periodicity"
         ],
         "mother": "LamSlot",
         "name": "LamSlotMag",
@@ -3439,7 +3505,6 @@
             }
         ],
         "daughters": [
-            "LamSlotWind",
             "LamSquirrelCage"
         ],
         "desc": "Lamination with Slot filled with winding",
@@ -3465,7 +3530,7 @@
             "comp_rot_dir",
             "comp_lengths_winding",
             "comp_number_phase_eq",
-            "comp_sym"
+            "comp_periodicity"
         ],
         "mother": "LamSlot",
         "name": "LamSlotWind",
@@ -3508,7 +3573,8 @@
             "comp_length_ring",
             "plot",
             "comp_number_phase_eq",
-            "comp_sym"
+            "comp_periodicity",
+            "comp_surface_ring"
         ],
         "mother": "LamSlotWind",
         "name": "LamSquirrelCage",
@@ -3552,7 +3618,6 @@
             }
         ],
         "daughters": [
-            "Lamination",
             "LamHole",
             "LamSlot",
             "LamSlotMag",
@@ -3698,7 +3763,6 @@
             }
         ],
         "daughters": [
-            "Line",
             "Arc",
             "Arc1",
             "Arc2",
@@ -3740,7 +3804,7 @@
         "mother": "",
         "name": "Loss",
         "package": "Simulation",
-        "path": "pyleecan/pyleecan/Generator/ClassesRef/Simulation/Loss.csv",
+        "path": "pyleecan/Generator/ClassesRef/Simulation/Loss.csv",
         "properties": [
             {
                 "desc": "List of models to compute the machines losses",
@@ -3761,8 +3825,8 @@
             }
         ],
         "daughters": [
-            "LossModel",
-            "LossModelBertotti"
+            "LossModelBertotti",
+            "LossModelWinding"
         ],
         "desc": "Abstract Loss Model Class",
         "is_internal": false,
@@ -3772,7 +3836,7 @@
         "mother": "",
         "name": "LossModel",
         "package": "Simulation",
-        "path": "pyleecan/pyleecan/Generator/ClassesRef/Simulation/LossModel.csv",
+        "path": "pyleecan/Generator/ClassesRef/Simulation/LossModel.csv",
         "properties": [
             {
                 "desc": "Name of the loss simulation (has to be unique)",
@@ -3811,7 +3875,7 @@
         "mother": "LossModel",
         "name": "LossModelBertotti",
         "package": "Simulation",
-        "path": "pyleecan/pyleecan/Generator/ClassesRef/Simulation/LossModelBertotti.csv",
+        "path": "pyleecan/Generator/ClassesRef/Simulation/LossModelBertotti.csv",
         "properties": [
             {
                 "desc": "Hysteresis loss coefficient",
@@ -3877,22 +3941,51 @@
                 "value": "None"
             },
             {
-                "desc": "Material to be used for the loss computation",
+                "desc": "Name of machine's part to get lenght and material data, e.g. 'machine.stator'",
                 "max": "",
                 "min": "",
-                "name": "mat_type",
-                "type": "Material",
+                "name": "lam",
+                "type": "str",
                 "unit": "-",
-                "value": null
+                "value": "None"
+            }
+        ]
+    },
+    "LossModelWinding": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Winding loss model",
+        "is_internal": false,
+        "methods": [
+            "comp_loss"
+        ],
+        "mother": "LossModel",
+        "name": "LossModelWinding",
+        "package": "Simulation",
+        "path": "pyleecan/Generator/ClassesRef/Simulation/LossModelWinding.csv",
+        "properties": [
+            {
+                "desc": "Winding temperature",
+                "max": "",
+                "min": "",
+                "name": "temperature",
+                "type": "float",
+                "unit": "\u00c2\u00b0C",
+                "value": 20
             },
             {
-                "desc": "Lamination stack iron length [m]",
+                "desc": "Name of machine's laminaton that contains the winding, e.g. 'machine.stator'",
                 "max": "",
-                "min": "0",
-                "name": "L1",
-                "type": "float",
-                "unit": "m",
-                "value": 1
+                "min": "",
+                "name": "lam",
+                "type": "str",
+                "unit": "-",
+                "value": "'machine.stator'"
             }
         ]
     },
@@ -3904,7 +3997,6 @@
             }
         ],
         "daughters": [
-            "Machine",
             "MachineAsync",
             "MachineDFIM",
             "MachineIPMSM",
@@ -3927,7 +4019,7 @@
             "comp_masses",
             "comp_output_geo",
             "comp_Rgap_mec",
-            "comp_sym",
+            "comp_periodicity",
             "comp_width_airgap_mag",
             "comp_width_airgap_mec",
             "get_material_list",
@@ -4477,6 +4569,24 @@
                 "type": "DXFImport",
                 "unit": "",
                 "value": null
+            },
+            {
+                "desc": "To import an existing femm file",
+                "max": "",
+                "min": "",
+                "name": "import_file",
+                "type": "str",
+                "unit": "",
+                "value": ""
+            },
+            {
+                "desc": "To close femm automatically after the simulation",
+                "max": "",
+                "min": "",
+                "name": "is_close_femm",
+                "type": "bool",
+                "unit": "",
+                "value": 1
             }
         ]
     },
@@ -4488,7 +4598,6 @@
             }
         ],
         "daughters": [
-            "Magnet",
             "MagnetFlat",
             "MagnetPolar",
             "MagnetType10",
@@ -4551,7 +4660,6 @@
             }
         ],
         "daughters": [
-            "MagnetFlat",
             "MagnetType10",
             "MagnetType12",
             "MagnetType13"
@@ -4573,7 +4681,6 @@
             }
         ],
         "daughters": [
-            "MagnetPolar",
             "MagnetType11",
             "MagnetType14"
         ],
@@ -4852,7 +4959,6 @@
             }
         ],
         "daughters": [
-            "Magnetics",
             "MagFEMM"
         ],
         "desc": "Magnetic module abstract object",
@@ -4860,7 +4966,8 @@
         "methods": [
             "run",
             "comp_time_angle",
-            "comp_emf"
+            "comp_emf",
+            "get_axes"
         ],
         "mother": "",
         "name": "Magnetics",
@@ -4931,55 +5038,19 @@
                 "value": 0
             },
             {
-                "desc": "0 Compute on the complete time vector, 1 compute according to sym_t and is_antiper_t",
+                "desc": "True to compute only on one time periodicity (use periodicities defined in output.mag.time)",
                 "max": "",
                 "min": "",
-                "name": "is_symmetry_t",
+                "name": "is_periodicity_t",
                 "type": "bool",
                 "unit": "-",
                 "value": 0
             },
             {
-                "desc": "Number of symmetry for the time vector",
-                "max": "",
-                "min": "1",
-                "name": "sym_t",
-                "type": "int",
-                "unit": "-",
-                "value": 1
-            },
-            {
-                "desc": "To add an antiperiodicity to the time vector",
+                "desc": "True to compute only on one angle periodicity (use periodicities defined in output.mag.angle)",
                 "max": "",
                 "min": "",
-                "name": "is_antiper_t",
-                "type": "bool",
-                "unit": "-",
-                "value": 0
-            },
-            {
-                "desc": "0 Compute on the complete machine, 1 compute according to sym_a and is_antiper_a",
-                "max": "",
-                "min": "",
-                "name": "is_symmetry_a",
-                "type": "bool",
-                "unit": "",
-                "value": 0
-            },
-            {
-                "desc": "Number of symmetry for the angle vector",
-                "max": "",
-                "min": "1",
-                "name": "sym_a",
-                "type": "int",
-                "unit": "-",
-                "value": 1
-            },
-            {
-                "desc": "To add an antiperiodicity to the angle vector",
-                "max": "",
-                "min": "",
-                "name": "is_antiper_a",
+                "name": "is_periodicity_a",
                 "type": "bool",
                 "unit": "-",
                 "value": 0
@@ -5429,7 +5500,6 @@
             }
         ],
         "daughters": [
-            "Mesh",
             "MeshMat",
             "MeshVTK"
         ],
@@ -5550,7 +5620,7 @@
                 "name": "mesh",
                 "type": "[Mesh]",
                 "unit": "",
-                "value": []
+                "value": ""
             },
             {
                 "desc": "1 if the mesh is the same at each step (time, mode etc.)",
@@ -5568,7 +5638,7 @@
                 "name": "solution",
                 "type": "[Solution]",
                 "unit": "",
-                "value": []
+                "value": ""
             },
             {
                 "desc": "Dict sorted by groups name with cells indices. ",
@@ -5577,7 +5647,7 @@
                 "name": "group",
                 "type": "{ndarray}",
                 "unit": "",
-                "value": {}
+                "value": ""
             },
             {
                 "desc": "Dimension of the physical problem",
@@ -5755,7 +5825,6 @@
             }
         ],
         "daughters": [
-            "Notch",
             "NotchEvenDist"
         ],
         "desc": "Abstract class for notches",
@@ -6008,7 +6077,8 @@
             "mutate",
             "cross",
             "create_toolbox",
-            "check_optimization_input"
+            "check_optimization_input",
+            "delete_toolbox"
         ],
         "mother": "OptiGenAlg",
         "name": "OptiGenAlgNsga2Deap",
@@ -6084,6 +6154,24 @@
                 "min": "",
                 "name": "constraint",
                 "type": "[OptiConstraint]",
+                "unit": "",
+                "value": -1
+            },
+            {
+                "desc": "Function to execute a preprocessing on the simulation right before it is run.",
+                "max": "",
+                "min": "",
+                "name": "preprocessing",
+                "type": "function",
+                "unit": "",
+                "value": null
+            },
+            {
+                "desc": "List of DataKeepers to run on every output",
+                "max": "",
+                "min": "",
+                "name": "datakeeper_list",
+                "type": "[DataKeeper]",
                 "unit": "",
                 "value": -1
             }
@@ -6171,18 +6259,18 @@
                 "max": "",
                 "min": "",
                 "name": "time",
-                "type": "ndarray",
+                "type": "SciDataTool.Classes.DataND.Data",
                 "unit": "s",
-                "value": null
+                "value": "None"
             },
             {
                 "desc": "Electrical position vector (no symmetry)",
                 "max": "",
                 "min": "",
                 "name": "angle",
-                "type": "ndarray",
+                "type": "SciDataTool.Classes.DataND.Data",
                 "unit": "rad",
-                "value": null
+                "value": "None"
             },
             {
                 "desc": "Stator currents as a function of time (each column correspond to one phase)",
@@ -6219,15 +6307,6 @@
                 "type": "float",
                 "unit": "rpm",
                 "value": null
-            },
-            {
-                "desc": "Rotation direction of the rotor 1 trigo, -1 clockwise",
-                "max": "1",
-                "min": "-1",
-                "name": "rot_dir",
-                "type": "float",
-                "unit": "-",
-                "value": -1
             },
             {
                 "desc": "Initial angular position of the rotor at t=0",
@@ -6360,18 +6439,18 @@
                 "max": "",
                 "min": "",
                 "name": "time",
-                "type": "ndarray",
+                "type": "SciDataTool.Classes.DataND.Data",
                 "unit": "s",
-                "value": null
+                "value": "None"
             },
             {
                 "desc": "Structural position vector (no symmetry)",
                 "max": "",
                 "min": "",
                 "name": "angle",
-                "type": "ndarray",
+                "type": "SciDataTool.Classes.DataND.Data",
                 "unit": "rad",
-                "value": null
+                "value": "None"
             },
             {
                 "desc": "Length of the time vector",
@@ -6500,11 +6579,47 @@
                 "value": null
             },
             {
-                "desc": "Rotation direction",
+                "desc": "rotation direction of the magnetic field fundamental !! WARNING: rot_dir = -1 to have positive rotor rotating direction, i.e. rotor position moves towards positive angle",
                 "max": "1",
                 "min": "-1",
                 "name": "rot_dir",
                 "type": "int",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "Number of spatial periodicities of the machine",
+                "max": "",
+                "min": "",
+                "name": "per_a",
+                "type": "int",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "True if an spatial anti-periodicity is possible after the periodicities",
+                "max": "",
+                "min": "",
+                "name": "is_antiper_a",
+                "type": "bool",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "Number of time periodicities of the machine",
+                "max": "",
+                "min": "",
+                "name": "per_t",
+                "type": "int",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "True if an time anti-periodicity is possible after the periodicities",
+                "max": "",
+                "min": "",
+                "name": "is_antiper_t",
+                "type": "bool",
                 "unit": "-",
                 "value": null
             }
@@ -6581,21 +6696,39 @@
                 "value": null
             },
             {
-                "desc": "Symmetry factor of the lamination (1=full machine; 2 = half;...)",
+                "desc": "Number of spatial periodicities of the lamination",
                 "max": "",
                 "min": "",
-                "name": "sym",
+                "name": "per_a",
                 "type": "int",
                 "unit": "-",
                 "value": null
             },
             {
-                "desc": "True if the winding has a asymmetry",
+                "desc": "True if an spatial anti-periodicity is possible after the periodicities",
                 "max": "",
                 "min": "",
-                "name": "is_asym_wind",
+                "name": "is_antiper_a",
                 "type": "bool",
-                "unit": "",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "Number of time periodicities of the lamination",
+                "max": "",
+                "min": "",
+                "name": "per_t",
+                "type": "int",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "True if an time anti-periodicity is possible after the periodicities",
+                "max": "",
+                "min": "",
+                "name": "is_antiper_t",
+                "type": "bool",
+                "unit": "-",
                 "value": null
             }
         ]
@@ -6616,7 +6749,7 @@
         "mother": "",
         "name": "OutLoss",
         "package": "Output",
-        "path": "pyleecan/pyleecan/Generator/ClassesRef/Output/OutLoss.csv",
+        "path": "pyleecan/Generator/ClassesRef/Output/OutLoss.csv",
         "properties": [
             {
                 "desc": "List of the computed losses of SciDataTool's DataND type",
@@ -6668,36 +6801,18 @@
                 "max": "",
                 "min": "",
                 "name": "time",
-                "type": "ndarray",
+                "type": "SciDataTool.Classes.DataND.Data",
                 "unit": "s",
-                "value": null
+                "value": "None"
             },
             {
                 "desc": "Magnetic position vector (no symmetry)",
                 "max": "",
                 "min": "",
                 "name": "angle",
-                "type": "ndarray",
+                "type": "SciDataTool.Classes.DataND.Data",
                 "unit": "rad",
-                "value": null
-            },
-            {
-                "desc": "Length of the time vector",
-                "max": "",
-                "min": "",
-                "name": "Nt_tot",
-                "type": "int",
-                "unit": "-",
-                "value": null
-            },
-            {
-                "desc": "Length of the angle vector",
-                "max": "",
-                "min": "",
-                "name": "Na_tot",
-                "type": "int",
-                "unit": "-",
-                "value": null
+                "value": "None"
             },
             {
                 "desc": "Airgap flux density components",
@@ -6749,9 +6864,9 @@
                 "max": "",
                 "min": "",
                 "name": "Phi_wind_stator",
-                "type": "ndarray",
+                "type": "SciDataTool.Classes.DataTime.DataTime",
                 "unit": "Wb",
-                "value": null
+                "value": "None"
             },
             {
                 "desc": "Electromotive force",
@@ -6925,29 +7040,29 @@
             }
         ],
         "daughters": [
-            "Output",
             "XOutput"
         ],
         "desc": "Main Output object: gather all the outputs of all the modules",
         "is_internal": false,
         "methods": [
+            "getter.get_angle_offset_initial",
             "getter.get_angle_rotor",
             "getter.get_BH_rotor",
             "getter.get_BH_stator",
             "getter.get_path_result",
+            "getter.get_machine_periodicity",
+            "getter.get_rot_dir",
             "plot.Magnetic.plot_B_space",
             "plot.plot_A_cfft2",
+            "plot.plot_A_fft_space",
+            "plot.plot_A_fft_time",
             "plot.plot_A_fft2",
+            "plot.plot_A_quiver_2D",
             "plot.plot_A_space",
             "plot.plot_A_surf",
             "plot.plot_A_time",
             "plot.plot_A_time_space",
-            "plot.Structural.plot_force_space",
-            "plot.plot_A_quiver_2D",
-            "getter.get_rot_dir",
-            "getter.get_angle_offset_initial",
-            "plot.plot_A_fft_space",
-            "plot.plot_A_fft_time"
+            "plot.Structural.plot_force_space"
         ],
         "mother": "",
         "name": "Output",
@@ -7054,7 +7169,6 @@
             }
         ],
         "daughters": [
-            "ParamExplorer",
             "OptiDesignVar",
             "ParamExplorerSet"
         ],
@@ -7131,7 +7245,7 @@
                 "name": "value",
                 "type": "list",
                 "unit": "-",
-                "value": -1
+                "value": []
             }
         ]
     },
@@ -7163,7 +7277,7 @@
                 "name": "coordinate",
                 "type": "ndarray",
                 "unit": "",
-                "value": null
+                "value": []
             },
             {
                 "desc": "Total number of nodes",
@@ -7240,6 +7354,72 @@
             }
         ]
     },
+    "Post": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [
+            "PostFunction",
+            "PostMethod"
+        ],
+        "desc": "Abstract class for postprocessing",
+        "is_internal": false,
+        "methods": [],
+        "mother": "",
+        "name": "Post",
+        "package": "Post",
+        "path": "pyleecan/Generator/ClassesRef/Post/Post.csv",
+        "properties": []
+    },
+    "PostFunction": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Post-processing from a user-defined function",
+        "is_internal": false,
+        "methods": [],
+        "mother": "Post",
+        "name": "PostFunction",
+        "package": "Post",
+        "path": "pyleecan/Generator/ClassesRef/Post/PostFunction.csv",
+        "properties": [
+            {
+                "desc": "Post-processing that takes an output in argument",
+                "max": "",
+                "min": "",
+                "name": "run",
+                "type": "function",
+                "unit": "",
+                "value": null
+            }
+        ]
+    },
+    "PostMethod": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Abstract class for post-processing defined in the method run",
+        "is_internal": false,
+        "methods": [
+            "run"
+        ],
+        "mother": "Post",
+        "name": "PostMethod",
+        "package": "Post",
+        "path": "pyleecan/Generator/ClassesRef/Post/PostMethod.csv",
+        "properties": []
+    },
     "RefCell": {
         "constants": [
             {
@@ -7248,7 +7428,6 @@
             }
         ],
         "daughters": [
-            "RefCell",
             "RefSegmentP1",
             "RefTriangle3"
         ],
@@ -7311,7 +7490,8 @@
             "jacobian",
             "grad_shape_function",
             "get_real_point",
-            "get_ref_point"
+            "get_ref_point",
+            "is_inside"
         ],
         "mother": "RefCell",
         "name": "RefTriangle3",
@@ -7327,7 +7507,6 @@
             }
         ],
         "daughters": [
-            "ScalarProduct",
             "ScalarProductL2"
         ],
         "desc": "Store shape functions definition in the reference element",
@@ -7532,7 +7711,6 @@
             }
         ],
         "daughters": [
-            "Simulation",
             "Simu1"
         ],
         "desc": "Abstract class for the simulation",
@@ -7598,6 +7776,15 @@
                 "type": "VarSimu",
                 "unit": "-",
                 "value": null
+            },
+            {
+                "desc": "List of postprocessings to run on Output after the simulation",
+                "max": "",
+                "min": "",
+                "name": "postproc_list",
+                "type": "[Post]",
+                "unit": "-",
+                "value": []
             }
         ]
     },
@@ -7609,10 +7796,10 @@
             }
         ],
         "daughters": [
-            "Slot",
             "Slot19",
             "SlotCirc",
             "SlotMFlat",
+            "SlotMFlat2",
             "SlotMPolar",
             "SlotMag",
             "SlotUD",
@@ -7650,7 +7837,8 @@
             "get_surface_tooth",
             "is_outwards",
             "plot",
-            "comp_width_opening"
+            "comp_width_opening",
+            "get_name_lam"
         ],
         "mother": "",
         "name": "Slot",
@@ -7750,7 +7938,7 @@
         "is_internal": false,
         "methods": [
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -7853,6 +8041,92 @@
             }
         ]
     },
+    "SlotMFlat2": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            },
+            {
+                "name": "IS_SYMMETRICAL",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Flat bottomed SlotMag with adjustable slot opening (for spoke type IPMSM)",
+        "is_internal": false,
+        "methods": [
+            "build_geometry",
+            "comp_angle_opening",
+            "comp_angle_magnet",
+            "comp_angle_opening_magnet",
+            "comp_height",
+            "comp_surface",
+            "comp_H_arc",
+            "comp_W0m",
+            "get_point_bottom"
+        ],
+        "mother": "SlotMag",
+        "name": "SlotMFlat2",
+        "package": "Slot",
+        "path": "pyleecan/Generator/ClassesRef/Slot/SlotMFlat2.csv",
+        "properties": [
+            {
+                "desc": "Internal Slot height (for Magnet)",
+                "max": "",
+                "min": "0",
+                "name": "H0",
+                "type": "float",
+                "unit": "m",
+                "value": 0
+            },
+            {
+                "desc": "Slot opening height ",
+                "max": "",
+                "min": "0",
+                "name": "H1",
+                "type": "float",
+                "unit": "m",
+                "value": 0
+            },
+            {
+                "desc": "Inner slot width (for Magnet)",
+                "max": "",
+                "min": "0",
+                "name": "W0",
+                "type": "float",
+                "unit": "m/rad",
+                "value": 0.0122
+            },
+            {
+                "desc": "W0 unit, 0 for m, 1 for rad",
+                "max": "",
+                "min": "",
+                "name": "W0_is_rad",
+                "type": "bool",
+                "unit": "",
+                "value": 0
+            },
+            {
+                "desc": "Slot opening width ",
+                "max": "",
+                "min": "0",
+                "name": "W1",
+                "type": "float",
+                "unit": "m",
+                "value": 0.01
+            },
+            {
+                "desc": "List of magnet",
+                "max": "",
+                "min": "",
+                "name": "magnet",
+                "type": "[MagnetFlat]",
+                "unit": "",
+                "value": ""
+            }
+        ]
+    },
     "SlotMPolar": {
         "constants": [
             {
@@ -7922,6 +8196,7 @@
         ],
         "daughters": [
             "SlotMFlat",
+            "SlotMFlat2",
             "SlotMPolar"
         ],
         "desc": "Slot for inset and surface magnet (abstract)",
@@ -8004,7 +8279,9 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind",
+            "get_H1"
         ],
         "mother": "SlotWind",
         "name": "SlotW10",
@@ -8093,13 +8370,14 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_H1"
         ],
         "mother": "SlotWind",
         "name": "SlotW11",
@@ -8196,7 +8474,7 @@
         "is_internal": false,
         "methods": [
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -8270,7 +8548,9 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind",
+            "get_H1"
         ],
         "mother": "SlotWind",
         "name": "SlotW13",
@@ -8368,7 +8648,7 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -8445,7 +8725,7 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -8539,7 +8819,7 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -8615,13 +8895,15 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "build_geometry_wind",
+            "get_H1"
         ],
         "mother": "SlotWind",
         "name": "SlotW21",
@@ -8709,13 +8991,14 @@
         "is_internal": false,
         "methods": [
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "build_geometry_wind"
         ],
         "mother": "SlotWind",
         "name": "SlotW22",
@@ -8784,7 +9067,8 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind"
         ],
         "mother": "SlotWind",
         "name": "SlotW23",
@@ -8898,7 +9182,8 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind"
         ],
         "mother": "SlotWind",
         "name": "SlotW24",
@@ -8948,7 +9233,8 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind"
         ],
         "mother": "SlotWind",
         "name": "SlotW25",
@@ -9010,7 +9296,7 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -9087,7 +9373,7 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -9191,7 +9477,7 @@
         "methods": [
             "_comp_point_coordinate",
             "build_geometry",
-            "build_geometry_wind",
+            "get_surface_wind",
             "check",
             "comp_angle_opening",
             "comp_height",
@@ -9273,7 +9559,8 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind"
         ],
         "mother": "SlotWind",
         "name": "SlotW29",
@@ -9359,7 +9646,8 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind"
         ],
         "mother": "SlotWind",
         "name": "SlotW60",
@@ -9463,7 +9751,8 @@
             "comp_height",
             "comp_height_wind",
             "comp_surface",
-            "comp_surface_wind"
+            "comp_surface_wind",
+            "get_surface_wind"
         ],
         "mother": "SlotWind",
         "name": "SlotW61",
@@ -9588,7 +9877,8 @@
             "comp_height_wind",
             "comp_radius_mid_wind",
             "comp_surface_wind",
-            "plot_wind"
+            "plot_wind",
+            "build_geometry_wind"
         ],
         "mother": "Slot",
         "name": "SlotWind",
@@ -9604,7 +9894,6 @@
             }
         ],
         "daughters": [
-            "Solution",
             "Mode",
             "SolutionData",
             "SolutionMat",
@@ -9880,7 +10169,6 @@
             }
         ],
         "daughters": [
-            "Surface",
             "Circle",
             "PolarArc",
             "SurfLine",
@@ -10136,7 +10424,7 @@
                 "name": "paramexplorer_list",
                 "type": "[ParamExplorer]",
                 "unit": "-",
-                "value": []
+                "value": ""
             }
         ]
     },
@@ -10148,7 +10436,6 @@
             }
         ],
         "daughters": [
-            "VarSimu",
             "VarLoad",
             "VarLoadCurrent",
             "VarParam"
@@ -10156,7 +10443,10 @@
         "desc": "Abstract class for the multi-simulation",
         "is_internal": false,
         "methods": [
-            "run"
+            "run",
+            "set_reused_data",
+            "check_param",
+            "get_simulations"
         ],
         "mother": "",
         "name": "VarSimu",
@@ -10188,16 +10478,7 @@
                 "name": "datakeeper_list",
                 "type": "[DataKeeper]",
                 "unit": "-",
-                "value": []
-            },
-            {
-                "desc": "Number of processors used to run the simulations",
-                "max": "",
-                "min": "1",
-                "name": "nb_proc",
-                "type": "int",
-                "unit": "-",
-                "value": 1
+                "value": ""
             },
             {
                 "desc": "True to store every output in a list",
@@ -10234,6 +10515,24 @@
                 "type": "int",
                 "unit": "-",
                 "value": 0
+            },
+            {
+                "desc": "True to reuse the femm file for each simulation (draw the machine only once, MagFEMM only)",
+                "max": "",
+                "min": "",
+                "name": "is_reuse_femm_file",
+                "type": "bool",
+                "unit": "-",
+                "value": 1
+            },
+            {
+                "desc": "List of post-processing to run on XOutput after the multisimulation",
+                "max": "",
+                "min": "",
+                "name": "postproc_list",
+                "type": "[Post]",
+                "unit": "-",
+                "value": ""
             }
         ]
     },
@@ -10429,7 +10728,6 @@
             }
         ],
         "daughters": [
-            "Winding",
             "WindingCW1L",
             "WindingCW2LR",
             "WindingCW2LT",
@@ -10444,7 +10742,6 @@
             "comp_Ncspc",
             "comp_Ntspc",
             "comp_phasor_angle",
-            "comp_resistance_norm",
             "comp_winding_factor",
             "comp_length_endwinding"
         ],
@@ -10769,27 +11066,27 @@
                 "max": "",
                 "min": "",
                 "name": "paramexplorer_list",
-                "type": "list",
+                "type": "[ParamExplorer]",
                 "unit": "-",
-                "value": []
+                "value": ""
             },
             {
                 "desc": "List containing Output for each simulation",
                 "max": "",
                 "min": "",
                 "name": "output_list",
-                "type": "list",
+                "type": "[Output]",
                 "unit": "-",
-                "value": []
+                "value": ""
             },
             {
                 "desc": "Dictionnary containing VarParam DataKeeper results in ndarray",
                 "max": "",
                 "min": "",
                 "name": "xoutput_dict",
-                "type": "dict",
+                "type": "{DataKeeper}",
                 "unit": "-",
-                "value": {}
+                "value": ""
             },
             {
                 "desc": "Number of simulations excluding reference simulation",

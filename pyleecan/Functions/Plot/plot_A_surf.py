@@ -49,6 +49,7 @@ def plot_A_surf(
     """
 
     # Set plot
+    is_show_fig = True if fig is None else False
     (fig, axes, patch_leg, label_leg) = init_fig(fig, shape="rectangle")
     title = data.name + " as a function of time and space"
     if colormap is None:
@@ -75,8 +76,8 @@ def plot_A_surf(
     time = results["time"]
     Ydata = results[data.symbol]
 
-    if is_deg and round(max(angle) / 6) % 5 == 0:
-        yticks = [i * round(max(angle) / 6) for i in range(7)]
+    if is_deg and round(np_max(angle) / 6) % 5 == 0:
+        yticks = [i * round(np_max(angle) / 6) for i in range(7)]
     else:
         yticks = None
 
@@ -113,3 +114,6 @@ def plot_A_surf(
         save_path=save_path,
         subplot_index=subplot_index,
     )
+
+    if is_show_fig:
+        fig.show()

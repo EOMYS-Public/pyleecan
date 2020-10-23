@@ -21,8 +21,6 @@ import json
 from pyleecan.Functions.load import load
 from pyleecan.definitions import DATA_DIR
 
-SynRM_001 = load(join(DATA_DIR, "Machine", "SynRM_001.json"))
-
 
 @pytest.mark.long
 @pytest.mark.validation
@@ -34,6 +32,7 @@ def test_Magnetic_AGSF():
     """
     # The aim of this validation test is to compute the torque as a function of Phi0
     # As (for now) there is no electrical model, we will compute the current for each Phi0 here
+    SynRM_001 = load(join(DATA_DIR, "Machine", "SynRM_001.json"))
     freq0 = 50  # supply frequency [Hz]
     qs = 3  # Number of phases
     p = 2  # Number of pole pairs
@@ -50,7 +49,7 @@ def test_Magnetic_AGSF():
     # Definition of the main simulation
     simu = Simu1(name="FM_SynRM_FL_001", machine=SynRM_001)
     time_obj = ImportMatrixVal(value=time)
-    angle = ImportGenVectLin(start=0, stop=2 * pi, num=2016, endpoint=False)
+    Na_tot = 2016
     alpha_rotor = ImportGenVectLin(start=0, stop=2 * pi, num=Nt_tot, endpoint=False)
 
     simu.input = InputCurrent(
@@ -59,21 +58,20 @@ def test_Magnetic_AGSF():
         N0=None,
         angle_rotor=alpha_rotor,
         time=time_obj,
-        angle=angle,
+        Na_tot=Na_tot,
         angle_rotor_initial=0,
+        felec=freq0,
     )
 
     # Definition of the magnetic simulation (1/2 symmetry)
     simu.mag = MagFEMM(
         type_BH_stator=0,
         type_BH_rotor=0,
-        is_symmetry_a=True,
-        is_antiper_a=True,
-        sym_a=2,
+        is_periodicity_a=True,
     )
 
     # Definition of the magnetic simulation (no symmetry)
-    simu.force = ForceMT()
+    simu.force = ForceMT(is_periodicity_a=True)
 
     simu.struct = None
 
@@ -161,4 +159,5 @@ def test_Magnetic_AGSF():
         r_max=r_max,
         save_path=join(save_path, "test_FM_SynRM_FL_001_plot_flux_time_space"),
     )
+
     # ------------------------------------------------------

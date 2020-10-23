@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from itertools import repeat
+
 import matplotlib.pyplot as plt
-from numpy import where, argmin, abs, squeeze, split
+from numpy import where, argmin, abs, squeeze, split, ndarray
 
 from ...Functions.init_fig import init_subplot, init_fig
 from ...definitions import config_dict
@@ -10,10 +12,11 @@ FONT_NAME = config_dict["PLOT"]["FONT_NAME"]
 
 
 def plot_A_2D(
-    Xdata,
+    Xdatas,
     Ydatas,
     legend_list=[""],
     color_list=[(0, 0, 1, 0.5)],
+    linestyle_list=["-"],
     linewidth_list=[3],
     title="",
     xlabel="",
@@ -27,6 +30,8 @@ def plot_A_2D(
     type="curve",
     is_fund=False,
     fund_harm=None,
+    x_min=None,
+    x_max=None,
     y_min=None,
     y_max=None,
     xticks=None,
@@ -53,7 +58,7 @@ def plot_A_2D(
     ylabel : str
         label for the y-axis
     fig : Matplotlib.figure.Figure
-        existing figure to use if is_newfig=False
+        existing figure to use if None create a new one
     subplot_index : int
         index of subplot in which to plot
     is_logscale_x : bool
@@ -79,43 +84,61 @@ def plot_A_2D(
     """
 
     # Set figure/subplot
+    is_show_fig = True if fig is None else False
     if fig is None:
         (fig, axes, patch_leg, label_leg) = init_fig(None, shape="rectangle")
+
     fig, ax = init_subplot(fig=fig, subplot_index=subplot_index)
 
+    # Number of curves on a axe
+    ndatas = len(Ydatas)
+
+    # Retrocompatibility
+    if isinstance(Xdatas, ndarray):
+        Xdatas = [Xdatas]
+
+    if len(Xdatas) == 1:
+        i_Xdatas = [0 for i in range(ndatas)]
+    else:
+        i_Xdatas = range(ndatas)
+
     # Expend default argument
-    if len(color_list) < len(Ydatas) and len(color_list) == 1:
+    if 1 == len(color_list) < ndatas:
         # Set the same color for all curves
-        color_list = [color_list[0] for Y in Ydatas]
-    if len(linewidth_list) < len(Ydatas) and len(linewidth_list) == 1:
+        color_list = list(repeat(color_list[0], ndatas))
+    if 1 == len(linewidth_list) < ndatas:
         # Set the same color for all curves
-        linewidth_list = [linewidth_list[0] for Y in Ydatas]
-    if len(legend_list) < len(Ydatas) and len(legend_list) == 1:
+        linewidth_list = list(repeat(linewidth_list[0], ndatas))
+    if 1 == len(linestyle_list) < ndatas:
+        # Set the same linestyles for all curves
+        linestyle_list = list(repeat(linestyle_list[0], ndatas))
+    if 1 == len(legend_list) < ndatas:
         # Set no legend for all curves
-        legend_list = ["" for Y in Ydatas]
+        legend_list = list(repeat("", ndatas))
         no_legend = True
     else:
         no_legend = False
 
     # Plot
     if type == "curve":
-        for i in range(len(Ydatas)):
+        for i in range(ndatas):
             ax.plot(
-                Xdata,
+                Xdatas[i_Xdatas[i]],
                 Ydatas[i],
                 color=color_list[i],
                 label=legend_list[i],
                 linewidth=linewidth_list[i],
+                ls=linestyle_list[i],
             )
         if xticks is not None:
             ax.xaxis.set_ticks(xticks)
     elif type == "bargraph":
-        ndatas = len(Ydatas)
         positions = range(-ndatas + 1, ndatas, 2)
         for i in range(ndatas):
-            width = (Xdata[1] - Xdata[0]) / ndatas
+            # width = (Xdatas[i_Xdatas[i]][1] - Xdatas[i_Xdatas[i]][0]) / ndatas
+            width = Xdatas[i_Xdatas[i]][-1] / 100
             barlist = ax.bar(
-                Xdata + positions[i] * width / (2 * ndatas),
+                Xdatas[i_Xdatas[i]] + positions[i] * width / (2 * ndatas),
                 Ydatas[i],
                 color=color_list[i],
                 width=width,
@@ -126,15 +149,15 @@ def plot_A_2D(
                     mag_max = max(Ydatas[i])
                     imax = int(where(Ydatas[i] == mag_max)[0])
                 else:
-                    imax = argmin(abs(Xdata - fund_harm))
+                    imax = argmin(abs(Xdatas[i] - fund_harm))
                 barlist[imax].set_edgecolor("k")
         if xticks is not None:
             ax.xaxis.set_ticks(xticks)
     elif type == "barchart":
-        for i in range(len(Ydatas)):
+        for i in range(ndatas):
             if i == 0:
                 ax.bar(
-                    range(len(Xdata)),
+                    range(len(Xdatas[i_Xdatas[i]])),
                     Ydatas[i],
                     color=color_list[i],
                     width=0.5,
@@ -142,7 +165,7 @@ def plot_A_2D(
                 )
             else:
                 ax.bar(
-                    range(len(Xdata)),
+                    range(len(Xdatas[i_Xdatas[i]])),
                     Ydatas[i],
                     edgecolor=color_list[i],
                     width=0.5,
@@ -150,24 +173,29 @@ def plot_A_2D(
                     lw=1,
                     label=legend_list[i],
                 )
-        plt.xticks(range(len(Xdata)), [str(f) for f in Xdata], rotation=90)
+        plt.xticks(
+            range(len(Xdatas[i_Xdatas[i]])),
+            [str(f) for f in Xdatas[i_Xdatas[i]]],
+            rotation=90,
+        )
     elif type == "quiver":
-        for i in range(len(Ydatas)):
-            x = [e[0] for e in Xdata]
-            y = [e[1] for e in Xdata]
+        for i in range(ndatas):
+            x = [e[0] for e in Xdatas[i_Xdatas[i]]]
+            y = [e[1] for e in Xdatas[i_Xdatas[i]]]
             vect_list = split(Ydatas[i], 2)
             ax.quiver(x, y, squeeze(vect_list[0]), squeeze(vect_list[1]))
             ax.axis("equal")
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
+    ax.set_xlim([x_min, x_max])
     ax.set_ylim([y_min, y_max])
 
     if is_logscale_x:
-        ax.xscale("log")
+        ax.set_xscale("log")
 
     if is_logscale_y:
-        ax.yscale("log")
+        ax.set_yscale("log")
 
     if is_disp_title:
         ax.set_title(title)
@@ -175,7 +203,7 @@ def plot_A_2D(
     if is_grid:
         ax.grid()
 
-    if len(Ydatas) > 1 and not no_legend:
+    if ndatas > 1 and not no_legend:
         ax.legend(prop={"family": FONT_NAME, "size": 22})
 
     plt.tight_layout()
@@ -190,5 +218,8 @@ def plot_A_2D(
     if save_path is not None:
         fig.savefig(save_path)
         plt.close()
+
+    if is_show_fig:
+        fig.show()
 
     return ax

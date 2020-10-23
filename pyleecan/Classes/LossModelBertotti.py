@@ -9,6 +9,9 @@ from logging import getLogger
 from ._check import check_var, raise_
 from ..Functions.get_logger import get_logger
 from ..Functions.save import save
+from ..Functions.copy import copy
+from ..Functions.load import load_init_dict
+from ..Functions.Load.import_class import import_class
 from .LossModel import LossModel
 
 # Import all class method
@@ -32,7 +35,6 @@ except ImportError as error:
 
 
 from ._check import InitUnKnowClassError
-from .Material import Material
 
 
 class LossModelBertotti(LossModel):
@@ -78,15 +80,9 @@ class LossModelBertotti(LossModel):
         )
     else:
         comp_loss_norm = comp_loss_norm
-    # save method is available in all object
+    # save and copy methods are available in all object
     save = save
-
-    # generic copy method
-    def copy(self):
-        """Return a copy of the class
-        """
-        return type(self)(init_dict=self.as_dict())
-
+    copy = copy
     # get_logger method is available in all object
     get_logger = get_logger
 
@@ -99,42 +95,23 @@ class LossModelBertotti(LossModel):
         alpha_ed=None,
         alpha_ex=None,
         group=None,
-        mat_type=None,
-        L1=1,
+        lam=None,
         name="",
         init_dict=None,
         init_str=None,
     ):
         """Constructor of the class. Can be use in three ways :
         - __init__ (arg1 = 1, arg3 = 5) every parameters have name and default values
-            for Matrix, None will initialise the property with an empty Matrix
-            for pyleecan type, None will call the default constructor
-        - __init__ (init_dict = d) d must be a dictionnary with every properties as keys
+            for pyleecan type, -1 will call the default constructor
+        - __init__ (init_dict = d) d must be a dictionnary with property names as keys
         - __init__ (init_str = s) s must be a string
         s is the file path to load
 
         ndarray or list can be given for Vector and Matrix
         object or dict can be given for pyleecan Object"""
 
-        if mat_type == -1:
-            mat_type = Material()
-        if init_str is not None:  # Initialisation by str
-            from ..Functions.load import load
-
-            assert type(init_str) is str
-            # load the object from a file
-            obj = load(init_str)
-            assert type(obj) is type(self)
-            k_hy = obj.k_hy
-            k_ed = obj.k_ed
-            k_ex = obj.k_ex
-            alpha_hy = obj.alpha_hy
-            alpha_ed = obj.alpha_ed
-            alpha_ex = obj.alpha_ex
-            group = obj.group
-            mat_type = obj.mat_type
-            L1 = obj.L1
-            name = obj.name
+        if init_str is not None:  # Load from a file
+            init_dict = load_init_dict(init_str)[1]
         if init_dict is not None:  # Initialisation by dict
             assert type(init_dict) is dict
             # Overwrite default value with init_dict content
@@ -152,13 +129,11 @@ class LossModelBertotti(LossModel):
                 alpha_ex = init_dict["alpha_ex"]
             if "group" in list(init_dict.keys()):
                 group = init_dict["group"]
-            if "mat_type" in list(init_dict.keys()):
-                mat_type = init_dict["mat_type"]
-            if "L1" in list(init_dict.keys()):
-                L1 = init_dict["L1"]
+            if "lam" in list(init_dict.keys()):
+                lam = init_dict["lam"]
             if "name" in list(init_dict.keys()):
                 name = init_dict["name"]
-        # Initialisation by argument
+        # Set the properties (value check and convertion are done in setter)
         self.k_hy = k_hy
         self.k_ed = k_ed
         self.k_ex = k_ex
@@ -166,23 +141,14 @@ class LossModelBertotti(LossModel):
         self.alpha_ed = alpha_ed
         self.alpha_ex = alpha_ex
         self.group = group
-        # mat_type can be None, a Material object or a dict
-        if isinstance(mat_type, dict):
-            self.mat_type = Material(init_dict=mat_type)
-        elif isinstance(mat_type, str):
-            from ..Functions.load import load
-
-            self.mat_type = load(mat_type)
-        else:
-            self.mat_type = mat_type
-        self.L1 = L1
+        self.lam = lam
         # Call LossModel init
         super(LossModelBertotti, self).__init__(name=name)
         # The class is frozen (in LossModel init), for now it's impossible to
         # add new properties
 
     def __str__(self):
-        """Convert this objet in a readeable string (for print)"""
+        """Convert this object in a readeable string (for print)"""
 
         LossModelBertotti_str = ""
         # Get the properties inherited from LossModel
@@ -194,12 +160,7 @@ class LossModelBertotti(LossModel):
         LossModelBertotti_str += "alpha_ed = " + str(self.alpha_ed) + linesep
         LossModelBertotti_str += "alpha_ex = " + str(self.alpha_ex) + linesep
         LossModelBertotti_str += 'group = "' + str(self.group) + '"' + linesep
-        if self.mat_type is not None:
-            tmp = self.mat_type.__str__().replace(linesep, linesep + "\t").rstrip("\t")
-            LossModelBertotti_str += "mat_type = " + tmp
-        else:
-            LossModelBertotti_str += "mat_type = None" + linesep + linesep
-        LossModelBertotti_str += "L1 = " + str(self.L1) + linesep
+        LossModelBertotti_str += 'lam = "' + str(self.lam) + '"' + linesep
         return LossModelBertotti_str
 
     def __eq__(self, other):
@@ -225,15 +186,12 @@ class LossModelBertotti(LossModel):
             return False
         if other.group != self.group:
             return False
-        if other.mat_type != self.mat_type:
-            return False
-        if other.L1 != self.L1:
+        if other.lam != self.lam:
             return False
         return True
 
     def as_dict(self):
-        """Convert this objet in a json seriable dict (can be use in __init__)
-        """
+        """Convert this object in a json seriable dict (can be use in __init__)"""
 
         # Get the properties inherited from LossModel
         LossModelBertotti_dict = super(LossModelBertotti, self).as_dict()
@@ -244,12 +202,8 @@ class LossModelBertotti(LossModel):
         LossModelBertotti_dict["alpha_ed"] = self.alpha_ed
         LossModelBertotti_dict["alpha_ex"] = self.alpha_ex
         LossModelBertotti_dict["group"] = self.group
-        if self.mat_type is None:
-            LossModelBertotti_dict["mat_type"] = None
-        else:
-            LossModelBertotti_dict["mat_type"] = self.mat_type.as_dict()
-        LossModelBertotti_dict["L1"] = self.L1
-        # The class name is added to the dict fordeserialisation purpose
+        LossModelBertotti_dict["lam"] = self.lam
+        # The class name is added to the dict for deserialisation purpose
         # Overwrite the mother class name
         LossModelBertotti_dict["__class__"] = "LossModelBertotti"
         return LossModelBertotti_dict
@@ -264,9 +218,7 @@ class LossModelBertotti(LossModel):
         self.alpha_ed = None
         self.alpha_ex = None
         self.group = None
-        if self.mat_type is not None:
-            self.mat_type._set_None()
-        self.L1 = None
+        self.lam = None
         # Set to None the properties inherited from LossModel
         super(LossModelBertotti, self)._set_None()
 
@@ -396,42 +348,20 @@ class LossModelBertotti(LossModel):
         """,
     )
 
-    def _get_mat_type(self):
-        """getter of mat_type"""
-        return self._mat_type
+    def _get_lam(self):
+        """getter of lam"""
+        return self._lam
 
-    def _set_mat_type(self, value):
-        """setter of mat_type"""
-        check_var("mat_type", value, "Material")
-        self._mat_type = value
+    def _set_lam(self, value):
+        """setter of lam"""
+        check_var("lam", value, "str")
+        self._lam = value
 
-        if self._mat_type is not None:
-            self._mat_type.parent = self
+    lam = property(
+        fget=_get_lam,
+        fset=_set_lam,
+        doc=u"""Name of machine's part to get lenght and material data, e.g. 'machine.stator'
 
-    mat_type = property(
-        fget=_get_mat_type,
-        fset=_set_mat_type,
-        doc=u"""Material to be used for the loss computation
-
-        :Type: Material
-        """,
-    )
-
-    def _get_L1(self):
-        """getter of L1"""
-        return self._L1
-
-    def _set_L1(self, value):
-        """setter of L1"""
-        check_var("L1", value, "float", Vmin=0)
-        self._L1 = value
-
-    L1 = property(
-        fget=_get_L1,
-        fset=_set_L1,
-        doc=u"""Lamination stack iron length [m]
-
-        :Type: float
-        :min: 0
+        :Type: str
         """,
     )

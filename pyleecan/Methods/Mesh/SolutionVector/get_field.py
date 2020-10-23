@@ -5,19 +5,19 @@ import numpy as np
 def get_field(self, args=None):
     """Get the value of variables stored in Solution.
 
-     Parameters
-     ----------
-     self : Solution
-         an Solution object
-     field_name : str
-         name of the field to return
+    Parameters
+    ----------
+    self : Solution
+        an Solution object
+    field_name : str
+        name of the field to return
 
-     Returns
-     -------
-     field: array
-         an array of field values
+    Returns
+    -------
+    field: array
+        an array of field values
 
-     """
+    """
 
     if args is None:
         args = dict()
@@ -42,6 +42,7 @@ def get_field(self, args=None):
         )
     else:
         for comp in self.field.components:
+            along_arg = list()
             for axis in self.field.components[comp].axes:
                 if axis.name in args:
                     if isinstance(args[axis.name], int):
