@@ -19,9 +19,9 @@ class Ui_PWSlot24(object):
     def setupUi(self, PWSlot24):
         if not PWSlot24.objectName():
             PWSlot24.setObjectName(u"PWSlot24")
-        PWSlot24.resize(792, 470)
+        PWSlot24.resize(1138, 549)
         PWSlot24.setMinimumSize(QSize(270, 470))
-        PWSlot24.setMaximumSize(QSize(1101, 16777215))
+        PWSlot24.setMaximumSize(QSize(16777215, 16777215))
         self.horizontalLayout = QHBoxLayout(PWSlot24)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.verticalLayout_2 = QVBoxLayout()
@@ -37,7 +37,8 @@ class Ui_PWSlot24(object):
         self.img_slot.setPixmap(
             QPixmap(u":/images/images/MachineSetup/WSlot/SlotW24.png")
         )
-        self.img_slot.setScaledContents(True)
+        self.img_slot.setScaledContents(False)
+        self.img_slot.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.img_slot)
 
@@ -61,7 +62,7 @@ class Ui_PWSlot24(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 268, 446))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 268, 525))
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.gridLayout = QGridLayout()

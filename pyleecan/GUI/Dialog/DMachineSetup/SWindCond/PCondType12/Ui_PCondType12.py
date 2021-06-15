@@ -29,7 +29,8 @@ class Ui_PCondType12(object):
         self.img_cond.setPixmap(
             QPixmap(u":/images/images/MachineSetup/WindParam/CondType12.png")
         )
-        self.img_cond.setScaledContents(True)
+        self.img_cond.setScaledContents(False)
+        self.img_cond.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout.addWidget(self.img_cond)
 

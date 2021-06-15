@@ -19,7 +19,7 @@ class Ui_PHoleM52(object):
     def setupUi(self, PHoleM52):
         if not PHoleM52.objectName():
             PHoleM52.setObjectName(u"PHoleM52")
-        PHoleM52.resize(934, 440)
+        PHoleM52.resize(1153, 440)
         PHoleM52.setMinimumSize(QSize(740, 440))
         PHoleM52.setMaximumSize(QSize(16777215, 16777215))
         self.horizontalLayout = QHBoxLayout(PHoleM52)
@@ -38,7 +38,8 @@ class Ui_PHoleM52(object):
         self.img_slot.setPixmap(
             QPixmap(u":/images/images/MachineSetup/SMHoleMag/HoleM52.png")
         )
-        self.img_slot.setScaledContents(True)
+        self.img_slot.setScaledContents(False)
+        self.img_slot.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_3.addWidget(self.img_slot)
 

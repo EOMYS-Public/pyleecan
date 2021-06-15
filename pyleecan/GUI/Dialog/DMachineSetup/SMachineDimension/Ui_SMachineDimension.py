@@ -19,7 +19,7 @@ class Ui_SMachineDimension(object):
     def setupUi(self, SMachineDimension):
         if not SMachineDimension.objectName():
             SMachineDimension.setObjectName(u"SMachineDimension")
-        SMachineDimension.resize(1065, 679)
+        SMachineDimension.resize(1062, 679)
         SMachineDimension.setMinimumSize(QSize(650, 550))
         self.verticalLayout_3 = QVBoxLayout(SMachineDimension)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
@@ -34,7 +34,8 @@ class Ui_SMachineDimension(object):
                 u":/images/images/MachineSetup/MachineDimension/Dimension_Shaft_Rotor_Stator.png"
             )
         )
-        self.img_machine.setScaledContents(True)
+        self.img_machine.setScaledContents(False)
+        self.img_machine.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_2.addWidget(self.img_machine)
 

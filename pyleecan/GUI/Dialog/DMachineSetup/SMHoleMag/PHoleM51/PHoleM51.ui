@@ -61,10 +61,10 @@
         <pixmap resource="../../../../Resources/pyleecan.qrc">:/images/images/MachineSetup/SMHoleMag/HoleM51.png</pixmap>
        </property>
        <property name="scaledContents">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        <set>Qt::AlignCenter</set>
        </property>
        <property name="wordWrap">
         <bool>false</bool>

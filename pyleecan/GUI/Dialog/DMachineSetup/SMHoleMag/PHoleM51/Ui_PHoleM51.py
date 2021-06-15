@@ -40,8 +40,8 @@ class Ui_PHoleM51(object):
         self.img_slot.setPixmap(
             QPixmap(u":/images/images/MachineSetup/SMHoleMag/HoleM51.png")
         )
-        self.img_slot.setScaledContents(True)
-        self.img_slot.setAlignment(Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter)
+        self.img_slot.setScaledContents(False)
+        self.img_slot.setAlignment(Qt.AlignCenter)
         self.img_slot.setWordWrap(False)
 
         self.verticalLayout_3.addWidget(self.img_slot)
