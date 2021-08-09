@@ -84,7 +84,28 @@ def assign_FEMM_surface(femm, surf, prop, FEMM_dict, rotor, stator):
                 # modifiy magnetisation of south poles
                 if "_S_" in label:
                     mag = mag + 180
+            elif "Radial" in label:
+                # calculate pole angle and angle of pole middle
+                # label like 'HoleMagnet_Rotor_Parallel_N_R0_T0_S0'
+                label_split = label.split("_")
+                R_id = int(label_split[-3][1:])
+                T_id = int(label_split[-2][1:])
+                alpha_p = 360 / lam.hole[R_id].Zh
+                mag_0 = (
+                    floor_divide(angle(point_ref, deg=True), alpha_p) + 0.5
+                ) * alpha_p
+
+                mag_dict = lam.hole[R_id].comp_magnetization_dict()
+                mag = mag_0 + mag_dict["magnet_" + str(T_id)] * 180 / pi
+
+                # modifiy magnetisation of south poles
+                if "_S_" in label:
+                    mag = mag + 180
+                mag=mag+90
+
+
             else:
+
                 raise NotImplementedYetError(
                     "Only parallele magnetization are available for HoleMagnet"
                 )
