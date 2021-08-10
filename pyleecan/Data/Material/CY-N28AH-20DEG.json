@@ -1,0 +1,70 @@
+{
+    "HT": {
+        "Cp": 1,
+        "__class__": "MatHT",
+        "alpha": 0.00393,
+        "lambda_x": 1,
+        "lambda_y": 1,
+        "lambda_z": 1
+    },
+    "__class__": "Material",
+    "__save_date__": "2021_08_09 15h40min39s ",
+    "__version__": "pyleecan_1.3.2",
+    "desc": "Material description",
+    "eco": {
+        "__class__": "MatEconomical",
+        "cost_unit": 0.127,
+        "unit_name": "$"
+    },
+    "elec": {
+        "__class__": "MatElectrical",
+        "alpha": 1,
+        "epsr": 1,
+        "rho": 1.6e-06
+    },
+    "is_isotropic": true,
+    "mag": {
+        "BH_curve": {
+            "__class__": "ImportMatrixXls",
+            "axes_colrows": null,
+            "file_path": null,
+            "is_allsheets": null,
+            "is_transpose": null,
+            "sheet": null,
+            "skiprows": null,
+            "usecols": null
+        },
+        "Brm20": 1.08,
+        "Hc": 917035.624481873,
+        "LossData": {
+            "__class__": "ImportMatrix",
+            "is_transpose": false
+        },
+        "ModelBH": {
+            "Bmax": 2.31,
+            "Hmax": null,
+            "__class__": "ModelBH",
+            "delta": 100
+        },
+        "Wlam": 0,
+        "__class__": "MatMagnetics",
+        "alpha_Br": 0.0,
+        "is_BH_extrapolate": false,
+        "mur_lin": 1.037
+    },
+    "name": "CY-N28AH-20DEG",
+    "path": "C:/Users/dummy/AppData/Roaming/pyleecan/Material\\CY-N28AH-20DEG.json",
+    "struct": {
+        "Ex": 215000000000.0,
+        "Ey": 215000000000.0,
+        "Ez": 80000000000,
+        "Gxy": 0,
+        "Gxz": 2000000000,
+        "Gyz": 2000000000,
+        "__class__": "MatStructural",
+        "nu_xy": 0.3,
+        "nu_xz": 0.03,
+        "nu_yz": 0.03,
+        "rho": 7400.0
+    }
+}

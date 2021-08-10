@@ -91,7 +91,7 @@ def build_geometry_active(self, Nrad, Ntan, is_simplified=False, alpha=0, delta=
         )
         surf_list.append(surface)
 
-    if Nrad == 2 and Ntan == 2:
+    elif Nrad == 2 and Ntan == 2:
         # Part 1 (0,0)
         line1 = Segment(Z3, Z4)
         line2 = Segment(Z4, Zch)

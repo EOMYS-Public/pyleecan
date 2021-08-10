@@ -12,11 +12,14 @@ from pyleecan.Classes.Simu1 import Simu1
 from pyleecan.Classes.InputCurrent import InputCurrent
 from pyleecan.Classes.MagFEMM import MagFEMM
 from pyleecan.Classes.MagFEMM import MagFEMM
+#%run -m pip install plotly # Uncomment this line to install plotly
+import plotly.graph_objects as go
+from plotly.offline import init_notebook_mode
 
 def test_LSRPM_simulation():
     # Create the Simulation
-    LSRPM = load(join(DATA_DIR, "Machine", "LSRPM_001.json"))
-    # LSRPM.plot()
+    LSRPM = load(join(DATA_DIR, "Machine", "LSRPM_003.json"))
+    LSRPM.plot()
     simu_femm = Simu1(name="FEMM_simulation", machine=LSRPM)
     p = simu_femm.machine.stator.winding.p
     qs = simu_femm.machine.stator.winding.qs
@@ -42,15 +45,17 @@ def test_LSRPM_simulation():
     I0_rms =  6.85
     felec = p * simu_femm.input.N0 / 60  # [Hz]
     rot_dir = simu_femm.machine.stator.comp_rot_dir()
-    Phi0 = 140 * pi / 180  # Maximum Torque Per Amp
+    Phi0 = pi  # Maximum Torque Per Amp
 
-    Ia = I0_rms * sqrt(2) * cos(2 * pi * felec * time + 0 * rot_dir * 2 * pi / qs + Phi0)
-    Ib = I0_rms * sqrt(2) * cos(2 * pi * felec * time + 1 * rot_dir * 2 * pi / qs + Phi0)
-    Ic = I0_rms * sqrt(2) * cos(2 * pi * felec * time + 2 * rot_dir * 2 * pi / qs + Phi0)
-    Id = zeros(time.shape)
-    Ie = zeros(time.shape)
-    If = zeros(time.shape)
-    simu_femm.input.Is = array([Ia, Ib, Ic, Id, Ie, If]).transpose()
+    Ia = I0_rms * sqrt(2) * cos(2 * pi * felec * time + 0+Phi0)
+    Ib = I0_rms * sqrt(2) * cos(2 * pi * felec * time +2*pi/3+Phi0)
+    Ic = I0_rms * sqrt(2) * cos(2 * pi * felec * time -2*pi/3+Phi0)
+    #Auxiliary
+    # Id = zeros(time.shape)
+    # Ie = zeros(time.shape)
+    # If = zeros(time.shape)
+    # simu_femm.input.Is = array([Ia, Ib, Ic, Id, Ie, If]).transpose()
+    simu_femm.input.Is = array([Ia, Ib, Ic]).transpose()
 
     simu_femm.mag = MagFEMM(
         type_BH_stator=0,  # 0 to use the material B(H) curve,
@@ -84,6 +89,29 @@ def test_LSRPM_simulation():
     print(out_femm.mag.Tem.values.shape)
     print(simu_femm.input.Nt_tot)
     out_femm.mag.meshsolution.plot_contour(label="B", group_names="stator core")
+
+
+
+    init_notebook_mode()
+
+    result = out_femm.mag.B.components["radial"].get_along("angle{°}", "time")
+    x = result["angle"]
+    y = result["time"]
+    z = result["B_r"]
+    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y)])
+    fig.update_layout( )
+    fig.update_layout(title='Radial flux density in the airgap over time and angle',
+                    autosize=True,
+                    scene = dict(
+                        xaxis_title='Angle [°]',
+                        yaxis_title='Time [s]',
+                        zaxis_title='Flux [T]'
+                    ),
+                    width=700,
+                    margin=dict(r=20, b=100, l=10, t=100),
+                    )
+
+    fig.show(config = {"displaylogo":False})
 
     plt.show()
 
