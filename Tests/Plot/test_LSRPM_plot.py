@@ -192,7 +192,7 @@ def test_LSRPM():
     rotor.hole[0].magnet_0.type_magnetization = 0 # Radial magnet
 
     #Ventilation holes
-    rotor.axial_vent = [Hold_round_shaft, Screw_Hole]
+    #rotor.axial_vent = [Hold_round_shaft, Screw_Hole]
 
 
     # matplotlib notebook
