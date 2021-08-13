@@ -34,11 +34,7 @@ from pyleecan.Functions.load import load
 
 def test_LSRPM():
 
-    Hold_round_shaft = load(join(DATA_DIR, "Machine", "Hold_round_shaft.json"))
-    #Hold_round_shaft.plot()
 
-    Screw_Hole = load(join(DATA_DIR, "Machine", "Screw_Hole.json"))
-    #Screw_Hole.plot()
 
     mm = 1e-3  # Millimeter
 
@@ -192,7 +188,11 @@ def test_LSRPM():
     rotor.hole[0].magnet_0.type_magnetization = 0 # Radial magnet
 
     #Ventilation holes
-    #rotor.axial_vent = [Hold_round_shaft, Screw_Hole]
+    Hold_round_shaft = load(join(DATA_DIR, "Machine", "Hold_round_shaft.json"))
+    #Hold_round_shaft.plot()
+    Screw_Hole = load(join(DATA_DIR, "Machine", "Screw_Hole.json"))
+    #Screw_Hole.plot()
+    rotor.axial_vent = [Hold_round_shaft, Screw_Hole]
 
 
     # matplotlib notebook
