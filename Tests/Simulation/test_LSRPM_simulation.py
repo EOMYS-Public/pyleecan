@@ -3,7 +3,11 @@ from os.path import join
 from pyleecan.Functions.load import load
 from pyleecan.definitions import DATA_DIR
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 from pyleecan.Functions.Plot import dict_2D
+=======
+import pytest
+>>>>>>> 7ece1139ffe8983abb6221b137c652423cc61879
 from os.path import join
 
 from numpy import ones, pi, array, linspace, cos, sqrt, zeros, exp
@@ -16,11 +20,18 @@ from pyleecan.Classes.MagFEMM import MagFEMM
 import plotly.graph_objects as go
 from plotly.offline import init_notebook_mode
 
+
 def test_LSRPM_simulation():
     # Create the Simulation
+<<<<<<< HEAD
     LSRPM = load(join(DATA_DIR, "Machine", "LSRPM_004.json"))
     LSRPM.plot()
     simu_femm = Simu1(name="FEMM_simulation", machine=LSRPM)
+=======
+    LSRPM = load(join(DATA_DIR, "Machine", "LSRPM_001.json"))
+    # LSRPM.plot()
+    simu_femm = Simu1(name="LSRPM_001_FEMM_simulation", machine=LSRPM)
+>>>>>>> 7ece1139ffe8983abb6221b137c652423cc61879
     p = simu_femm.machine.stator.winding.p
     qs = simu_femm.machine.stator.winding.qs
 
@@ -41,13 +52,18 @@ def test_LSRPM_simulation():
         start=0, stop=2 * pi, num=2048, endpoint=False
     )  # 2048 steps
 
+<<<<<<< HEAD
     # Stator currents as a function of time, each column correspond to one phase [A] triphase
+=======
+    # Stator currents as a function of time, each column correspond to one phase [A]
+>>>>>>> 7ece1139ffe8983abb6221b137c652423cc61879
     I0_rms = 6.85
     felec = p * simu_femm.input.N0 / 60  # [Hz]
     rot_dir = simu_femm.machine.stator.comp_rot_dir()
     Phi0 = 0  # Maximum Torque Per Amp
 
     Ia = (
+<<<<<<< HEAD
         I0_rms
         * sqrt(2)
         * cos(2 * pi * felec * time + 0 * rot_dir * 2 * pi / qs + Phi0)
@@ -68,6 +84,20 @@ def test_LSRPM_simulation():
     # If = zeros(time.shape)
     # simu_femm.input.Is = array([Ia, Ib, Ic, Id, Ie, If]).transpose()
     simu_femm.input.Is = array([Ia, Ib, Ic]).transpose()
+=======
+        I0_rms * sqrt(2) * cos(2 * pi * felec * time + 0 * rot_dir * 2 * pi / qs + Phi0)
+    )
+    Ib = (
+        I0_rms * sqrt(2) * cos(2 * pi * felec * time + 1 * rot_dir * 2 * pi / qs + Phi0)
+    )
+    Ic = (
+        I0_rms * sqrt(2) * cos(2 * pi * felec * time + 2 * rot_dir * 2 * pi / qs + Phi0)
+    )
+    Id = zeros(time.shape)
+    Ie = zeros(time.shape)
+    If = zeros(time.shape)
+    simu_femm.input.Is = array([Ia, Ib, Ic, Id, Ie, If]).transpose()
+>>>>>>> 7ece1139ffe8983abb6221b137c652423cc61879
 
     simu_femm.mag = MagFEMM(
         type_BH_stator=0,  # 0 to use the material B(H) curve,
@@ -106,16 +136,33 @@ def test_LSRPM_simulation():
     simu_femm.mag.nb_worker = (
         8  # Number of FEMM instances to run at the same time (1 by default)
     )
-    simu_femm.mag.is_get_meshsolution = True  # To get FEA mesh for latter post-procesing
-    simu_femm.mag.is_save_meshsolution_as_file = False  # To save FEA results in a dat file
+    simu_femm.mag.is_get_meshsolution = (
+        True  # To get FEA mesh for latter post-procesing
+    )
+    simu_femm.mag.is_save_meshsolution_as_file = (
+        False  # To save FEA results in a dat file
+    )
     out_femm = simu_femm.run()
     # Radial magnetic flux
+<<<<<<< HEAD
     out_femm.mag.B.plot_2D_Data("angle", "time[0]", component_list=["radial"])
     out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]", "time[0]", component_list=["radial"])
     # Tangential magnetic flux
     # out_femm.mag.B.plot_2D_Data("angle","time[0]",component_list=["tangential"])
     # out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]","time[1]",component_list=["tangential"])
     # out_femm.mag.Tem.plot_2D_Data("time")
+=======
+    out_femm.mag.B.plot_2D_Data("angle", "time[1]", component_list=["radial"])
+    out_femm.mag.B.plot_2D_Data(
+        "wavenumber=[0,76]", "time[1]", component_list=["radial"]
+    )
+    # Tangential magnetic flux
+    out_femm.mag.B.plot_2D_Data("angle", "time[1]", component_list=["tangential"])
+    out_femm.mag.B.plot_2D_Data(
+        "wavenumber=[0,76]", "time[1]", component_list=["tangential"]
+    )
+    out_femm.mag.Tem.plot_2D_Data("time")
+>>>>>>> 7ece1139ffe8983abb6221b137c652423cc61879
     print(out_femm.mag.Tem.values.shape)
     print(simu_femm.input.Nt_tot)
 
@@ -127,6 +174,7 @@ def test_LSRPM_simulation():
    
 
     plt.show()
+
 
 if __name__ == "__main__":
     test_LSRPM_simulation()

@@ -188,16 +188,26 @@ def test_LSRPM():
     stator.winding.conductor.plot()
     # Set magnets in the rotor hole
     rotor.hole[0].magnet_0.mat_type = MagnetLSRPM
+<<<<<<< HEAD
     rotor.hole[0].magnet_0.type_magnetization = 0 # Radial magnet
 
     #Ventilation holes
     # rotor.axial_vent = [Hold_round_shaft, Screw_Hole]
+=======
+    rotor.hole[0].magnet_0.type_magnetization = 3
+>>>>>>> 7ece1139ffe8983abb6221b137c652423cc61879
 
     # matplotlib notebook
     LSRPM = MachineIPMSM(
         name="LSRPM LSEE", stator=stator, rotor=rotor, shaft=shaft, frame=None
     )
+<<<<<<< HEAD
     LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_004.json"))
+=======
+    # LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_001.json"))
+
+    LSRPM.plot(is_show_fig=False, save_path=join(save_path, "test_LSRPM.png"))
+>>>>>>> 7ece1139ffe8983abb6221b137c652423cc61879
 
     LSRPM.plot(is_show_fig=True, save_path=join(save_path, "test_LSRPM.png"))
     stator.plot(is_lam_only=True)
