@@ -483,11 +483,11 @@
                 "value": 0
             },
             {
-                "desc": "Label to set to the lines",
+                "desc": "Property dict to apply on the lines",
                 "max": "",
                 "min": "",
-                "name": "line_label",
-                "type": "str",
+                "name": "prop_dict",
+                "type": "dict",
                 "unit": "",
                 "value": ""
             }
@@ -3949,6 +3949,15 @@
                 "type": "float",
                 "unit": "Hz",
                 "value": null
+            },
+            {
+                "desc": "Theorical Average Electromagnetic Power",
+                "max": "",
+                "min": "",
+                "name": "Pem_av_ref",
+                "type": "float",
+                "unit": "W",
+                "value": null
             }
         ]
     },
@@ -4603,7 +4612,8 @@
             "comp_radius_mid_yoke",
             "get_yoke_desc",
             "get_bore_desc",
-            "comp_point_ref"
+            "comp_point_ref",
+            "get_label"
         ],
         "mother": "",
         "name": "Lamination",
@@ -4754,13 +4764,13 @@
         "path": "pyleecan/Generator/ClassesRef/Geometry/Line.csv",
         "properties": [
             {
-                "desc": "the label of the Line (EX: Yoke_side)",
+                "desc": "Property dictionary",
                 "max": "",
                 "min": "",
-                "name": "label",
-                "type": "str",
+                "name": "prop_dict",
+                "type": "dict",
                 "unit": "-",
-                "value": ""
+                "value": null
             }
         ]
     },
@@ -5783,8 +5793,8 @@
                 "value": ""
             },
             {
-                "desc": "Permanent magnet magnetization type: 0 for radial, 1 for parallel, 2 for Hallbach",
-                "max": "5",
+                "desc": "Permanent magnet magnetization type: 0 for radial, 1 for parallel, 2 for Hallbach, 3 Tangential",
+                "max": "3",
                 "min": "0",
                 "name": "type_magnetization",
                 "type": "int",
@@ -7655,7 +7665,7 @@
                 "value": null
             },
             {
-                "desc": "Average Electromagnetic power",
+                "desc": "Theorical Average Electromagnetic Power",
                 "max": "",
                 "min": "",
                 "name": "Pem_av_ref",
@@ -8091,7 +8101,8 @@
             "store",
             "clean",
             "comp_emf",
-            "get_demag"
+            "get_demag",
+            "comp_power"
         ],
         "mother": "",
         "name": "OutMag",
@@ -8222,6 +8233,15 @@
                 "name": "Rag",
                 "type": "float",
                 "unit": "-",
+                "value": null
+            },
+            {
+                "desc": "Average Electromagnetic power",
+                "max": "",
+                "min": "",
+                "name": "Pem_av",
+                "type": "float",
+                "unit": "W",
                 "value": null
             }
         ]
