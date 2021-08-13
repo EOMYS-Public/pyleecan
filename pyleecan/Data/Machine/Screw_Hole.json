@@ -9,7 +9,7 @@
     "surf_list": [
         {
             "__class__": "SurfLine",
-            "label": "Hole",
+            "label": "HoleVoid",
             "line_list": [
                 {
                     "__class__": "Segment",
