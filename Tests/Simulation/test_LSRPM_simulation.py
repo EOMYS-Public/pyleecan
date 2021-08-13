@@ -3,10 +3,10 @@ from os.path import join
 from pyleecan.Functions.load import load
 from pyleecan.definitions import DATA_DIR
 import matplotlib.pyplot as plt
-
+from pyleecan.Functions.Plot import dict_2D
 from os.path import join
 
-from numpy import ones, pi, array, linspace, cos, sqrt, zeros
+from numpy import ones, pi, array, linspace, cos, sqrt, zeros, exp
 
 from pyleecan.Classes.Simu1 import Simu1
 from pyleecan.Classes.InputCurrent import InputCurrent
@@ -18,7 +18,7 @@ from plotly.offline import init_notebook_mode
 
 def test_LSRPM_simulation():
     # Create the Simulation
-    LSRPM = load(join(DATA_DIR, "Machine", "LSRPM_003.json"))
+    LSRPM = load(join(DATA_DIR, "Machine", "LSRPM_004.json"))
     LSRPM.plot()
     simu_femm = Simu1(name="FEMM_simulation", machine=LSRPM)
     p = simu_femm.machine.stator.winding.p
@@ -41,15 +41,27 @@ def test_LSRPM_simulation():
         start=0, stop=2 * pi, num=2048, endpoint=False
     )  # 2048 steps
 
-    # Stator currents as a function of time, each column correspond to one phase [A]
-    I0_rms =  6.85
+    # Stator currents as a function of time, each column correspond to one phase [A] triphase
+    I0_rms = 6.85
     felec = p * simu_femm.input.N0 / 60  # [Hz]
     rot_dir = simu_femm.machine.stator.comp_rot_dir()
-    Phi0 = pi  # Maximum Torque Per Amp
+    Phi0 = 0  # Maximum Torque Per Amp
 
-    Ia = I0_rms * sqrt(2) * cos(2 * pi * felec * time + 0+Phi0)
-    Ib = I0_rms * sqrt(2) * cos(2 * pi * felec * time +2*pi/3+Phi0)
-    Ic = I0_rms * sqrt(2) * cos(2 * pi * felec * time -2*pi/3+Phi0)
+    Ia = (
+        I0_rms
+        * sqrt(2)
+        * cos(2 * pi * felec * time + 0 * rot_dir * 2 * pi / qs + Phi0)
+    )
+    Ib = (
+        I0_rms
+        * sqrt(2)
+        * cos(2 * pi * felec * time + 1 * rot_dir * 2 * pi / qs + Phi0)
+    )
+    Ic = (
+        I0_rms
+        * sqrt(2)
+        * cos(2 * pi * felec * time + 2 * rot_dir * 2 * pi / qs + Phi0)
+    )
     #Auxiliary
     # Id = zeros(time.shape)
     # Ie = zeros(time.shape)
@@ -67,6 +79,24 @@ def test_LSRPM_simulation():
         file_name="",  # Name of the file to save the FEMM model
     )
 
+    # Definition of a sinusoidal current
+ 
+    # I0, Phi0 to set
+    # I0_rms = 6.85 # Maximum current [Arms]
+    # Phi0 = -pi/2  # Maximum Torque Per Amp
+    # # Compute corresponding Id/Iq
+    # Id_ref = (I0_rms*exp(1j*Phi0)).real
+    # Iq_ref = (I0_rms*exp(1j*Phi0)).imag
+    # # Setting the values
+    # simu_femm.input.Id_ref = Id_ref # [Arms]
+    # simu_femm.input.Iq_ref = Iq_ref # [Arms]
+
+    # print(Id_ref,Iq_ref)
+
+    # simu_femm.input.Nt_tot = 128*3 # Number of time step
+    # simu_femm.input.Na_tot = 2048 # Spatial discretization
+    # simu_femm.input.N0 = 750 # Rotor speed [rpm]
+
     # Only the magnetic module is defined
     simu_femm.elec = None
     simu_femm.force = None
@@ -74,44 +104,27 @@ def test_LSRPM_simulation():
     simu_femm.mag.is_periodicity_a = True
     simu_femm.mag.is_periodicity_t = True
     simu_femm.mag.nb_worker = (
-        4  # Number of FEMM instances to run at the same time (1 by default)
+        8  # Number of FEMM instances to run at the same time (1 by default)
     )
     simu_femm.mag.is_get_meshsolution = True  # To get FEA mesh for latter post-procesing
     simu_femm.mag.is_save_meshsolution_as_file = False  # To save FEA results in a dat file
     out_femm = simu_femm.run()
     # Radial magnetic flux
-    out_femm.mag.B.plot_2D_Data("angle", "time[1]", component_list=["radial"])
-    out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]", "time[1]", component_list=["radial"])
+    out_femm.mag.B.plot_2D_Data("angle", "time[0]", component_list=["radial"])
+    out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]", "time[0]", component_list=["radial"])
     # Tangential magnetic flux
-    out_femm.mag.B.plot_2D_Data("angle","time[1]",component_list=["tangential"])
-    out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]","time[1]",component_list=["tangential"])
-    out_femm.mag.Tem.plot_2D_Data("time")
+    # out_femm.mag.B.plot_2D_Data("angle","time[0]",component_list=["tangential"])
+    # out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]","time[1]",component_list=["tangential"])
+    # out_femm.mag.Tem.plot_2D_Data("time")
     print(out_femm.mag.Tem.values.shape)
     print(simu_femm.input.Nt_tot)
+
     out_femm.mag.meshsolution.plot_contour(label="B", group_names="stator core")
+    out_femm.elec.get_Is().plot_2D_Data("time", "phase", **dict_2D)
+    print(out_femm.simu.machine.stator.comp_resistance_wind())
 
 
-
-    init_notebook_mode()
-
-    result = out_femm.mag.B.components["radial"].get_along("angle{°}", "time")
-    x = result["angle"]
-    y = result["time"]
-    z = result["B_r"]
-    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y)])
-    fig.update_layout( )
-    fig.update_layout(title='Radial flux density in the airgap over time and angle',
-                    autosize=True,
-                    scene = dict(
-                        xaxis_title='Angle [°]',
-                        yaxis_title='Time [s]',
-                        zaxis_title='Flux [T]'
-                    ),
-                    width=700,
-                    margin=dict(r=20, b=100, l=10, t=100),
-                    )
-
-    fig.show(config = {"displaylogo":False})
+   
 
     plt.show()
 

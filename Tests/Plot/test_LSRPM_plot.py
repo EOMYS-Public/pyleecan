@@ -22,7 +22,7 @@ from pyleecan.Classes.SlotWLSRPM import SlotWLSRPM
 from pyleecan.Classes.WindingUD import WindingUD
 
 
-from pyleecan.Classes.CondType11 import CondType11
+from pyleecan.Classes.CondType12 import CondType12
 from pyleecan.Classes.Shaft import Shaft
 from pyleecan.Classes.Frame import Frame
 from pyleecan.Classes.Material import Material
@@ -33,6 +33,13 @@ from pyleecan.Functions.load import load
 
 
 def test_LSRPM():
+
+    Hold_round_shaft = load(join(DATA_DIR, "Machine", "Hold_round_shaft.json"))
+    #Hold_round_shaft.plot()
+
+    Screw_Hole = load(join(DATA_DIR, "Machine", "Screw_Hole.json"))
+    #Screw_Hole.plot()
+
     mm = 1e-3  # Millimeter
 
     # Lamination setup
@@ -120,20 +127,16 @@ def test_LSRPM():
 
 
 
-    stator.winding = WindingUD(wind_mat=wind_mat_LSRPM, qs=3, p=4) #qs=6 (Stator + auxiliary)
+    stator.winding = WindingUD(wind_mat=wind_mat_LSRPM, qs=3, p=4, Ntcoil=58, Npcp=1,) #qs=6 (Stator + auxiliary)
 
     # Conductor setup
-    stator.winding.conductor = CondType11(
-        Nwppc_tan=1,  # stator winding number of preformed wires (strands)
+    stator.winding.conductor = CondType12(
+        Nwppc=1,  # stator winding number of preformed wires (strands)
         # in parallel per coil along tangential (horizontal) direction
-        Nwppc_rad=1,  # stator winding number of preformed wires (strands)
-        # in parallel per coil along radial (vertical) direction
         Wwire=0.001,  # single wire width without insulation [m]
-        Hwire=0.001,  # single wire height without insulation [m]
+        Wins_cond=0.001,
+        #Hwire=0.001,  # single wire height without insulation [m]
         Wins_wire=1e-6,  # winding strand insulation thickness [m]
-        type_winding_shape=1,  # type of winding shape for end winding length calculation
-        # 0 for hairpin windings
-        # 1 for normal windings
     )
 
     # Rotor setup
@@ -165,7 +168,7 @@ def test_LSRPM():
     )
     rotor.mat_type
     rotor.bore = BoreLSRPM(N=8, Rarc=0.0375, alpha=0)
-
+    
     # Set shaft
     shaft = Shaft(
         Drsh=rotor.Rint * 2,  # Diamater of the rotor shaft [m]
@@ -182,16 +185,19 @@ def test_LSRPM():
     stator.mat_type = M600_65A_50Hz
     rotor.mat_type = M600_65A_50Hz
     stator.winding.conductor.cond_mat = Copper1
-
+    stator.winding.conductor.plot()
     # Set magnets in the rotor hole
     rotor.hole[0].magnet_0.mat_type = MagnetLSRPM
     rotor.hole[0].magnet_0.type_magnetization = 0 # Radial magnet
+
+    #Ventilation holes
+    # rotor.axial_vent = [Hold_round_shaft, Screw_Hole]
 
     # matplotlib notebook
     LSRPM = MachineIPMSM(
         name="LSRPM LSEE", stator=stator, rotor=rotor, shaft=shaft, frame=None
     )
-    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_003.json"))
+    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_004.json"))
 
     LSRPM.plot(is_show_fig=True, save_path=join(save_path, "test_LSRPM.png"))
     stator.plot(is_lam_only=True)
