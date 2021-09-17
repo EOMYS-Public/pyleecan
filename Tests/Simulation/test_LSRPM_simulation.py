@@ -13,7 +13,10 @@ from numpy import ones, pi, array, linspace, cos, sqrt, zeros, exp
 from pyleecan.Classes.Simu1 import Simu1
 from pyleecan.Classes.InputCurrent import InputCurrent
 from pyleecan.Classes.MagFEMM import MagFEMM
-from pyleecan.Classes.MagFEMM import MagFEMM
+from pyleecan.Classes.Electrical import Electrical
+from pyleecan.Classes.EEC_PMSM import EEC_PMSM
+from pyleecan.Classes.FluxLinkFEMM import FluxLinkFEMM
+from pyleecan.Classes.IndMagFEMM import IndMagFEMM
 #%run -m pip install plotly # Uncomment this line to install plotly
 import plotly.graph_objects as go
 from plotly.offline import init_notebook_mode
@@ -24,6 +27,8 @@ def test_LSRPM_simulation():
 
     LSRPM = load(join(DATA_DIR, "Machine", "LSRPM_004.json"))
     LSRPM.plot()
+
+    # Create a simultion
     simu_femm = Simu1(name="FEMM_simulation", machine=LSRPM)
 
     p = simu_femm.machine.stator.winding.p
@@ -47,33 +52,33 @@ def test_LSRPM_simulation():
     )  # 2048 steps
 
     # Stator currents as a function of time, each column correspond to one phase [A] triphase
-    I0_rms = 6.85
+    #I0_rms = 6.85
     felec = p * simu_femm.input.N0 / 60  # [Hz]
     rot_dir = simu_femm.machine.stator.comp_rot_dir()
-    Phi0 = 0  # Maximum Torque Per Amp
+    # Phi0 = 0  # Maximum Torque Per Amp
 
-    Ia = (
+    # Ia = (
 
-        I0_rms
-        * sqrt(2)
-        * cos(2 * pi * felec * time + 0 * rot_dir * 2 * pi / qs + Phi0)
-    )
-    Ib = (
-        I0_rms
-        * sqrt(2)
-        * cos(2 * pi * felec * time + 1 * rot_dir * 2 * pi / qs + Phi0)
-    )
-    Ic = (
-        I0_rms
-        * sqrt(2)
-        * cos(2 * pi * felec * time + 2 * rot_dir * 2 * pi / qs + Phi0)
-    )
+    #     I0_rms
+    #     * sqrt(2)
+    #     * cos(2 * pi * felec * time + 0 * rot_dir * 2 * pi / qs + Phi0)
+    # )
+    # Ib = (
+    #     I0_rms
+    #     * sqrt(2)
+    #     * cos(2 * pi * felec * time + 1 * rot_dir * 2 * pi / qs + Phi0)
+    # )
+    # Ic = (
+    #     I0_rms
+    #     * sqrt(2)
+    #     * cos(2 * pi * felec * time + 2 * rot_dir * 2 * pi / qs + Phi0)
+    # )
     #Auxiliary
     # Id = zeros(time.shape)
     # Ie = zeros(time.shape)
     # If = zeros(time.shape)
     # simu_femm.input.Is = array([Ia, Ib, Ic, Id, Ie, If]).transpose()
-    simu_femm.input.Is = array([Ia, Ib, Ic]).transpose()
+    # simu_femm.input.Is = array([Ia, Ib, Ic]).transpose()
 
     simu_femm.mag = MagFEMM(
         type_BH_stator=0,  # 0 to use the material B(H) curve,
@@ -87,30 +92,33 @@ def test_LSRPM_simulation():
 
     # Definition of a sinusoidal current
  
-    # I0, Phi0 to set
-    # I0_rms = 6.85 # Maximum current [Arms]
-    # Phi0 = -pi/2  # Maximum Torque Per Amp
+    #I0, Phi0 to set
+    I0_rms = 6.85# Maximum current [Arms]
+    # Phi0 = pi/2  # MATP
     # # Compute corresponding Id/Iq
-    # Id_ref = (I0_rms*exp(1j*Phi0)).real
-    # Iq_ref = (I0_rms*exp(1j*Phi0)).imag
-    # # Setting the values
-    # simu_femm.input.Id_ref = Id_ref # [Arms]
-    # simu_femm.input.Iq_ref = Iq_ref # [Arms]
+    # Id_ref = (I0_rms*exp(1j*(Phi0+pi/2))).real#### +pi/2 just to inverse dq axes, in LSRPM the alpha0 is q axis not d axis
+    # Iq_ref = (I0_rms*exp(1j*(Phi0+pi/2))).imag
+    Id_ref=0
+    Iq_ref=I0_rms
 
-    # print(Id_ref,Iq_ref)
+    # Setting the values
+    simu_femm.input.Id_ref = Id_ref # [Arms]
+    simu_femm.input.Iq_ref = Iq_ref # [Arms]
 
-    # simu_femm.input.Nt_tot = 128*3 # Number of time step
-    # simu_femm.input.Na_tot = 2048 # Spatial discretization
-    # simu_femm.input.N0 = 750 # Rotor speed [rpm]
+    print(Id_ref,Iq_ref)
+
+    simu_femm.input.Nt_tot = 128*3 # Number of time step
+    simu_femm.input.Na_tot = 2048 # Spatial discretization
+    simu_femm.input.N0 = 750 # Rotor speed [rpm]
 
     # Only the magnetic module is defined
-    simu_femm.elec = None
+    # simu_femm.elec = None
     simu_femm.force = None
     simu_femm.struct = None
-    simu_femm.mag.is_periodicity_a = True
+    simu_femm.mag.is_periodicity_a = False
     simu_femm.mag.is_periodicity_t = True
     simu_femm.mag.nb_worker = (
-        8  # Number of FEMM instances to run at the same time (1 by default)
+        16  # Number of FEMM instances to run at the same time (1 by default)
     )
     simu_femm.mag.is_get_meshsolution = (
         True  # To get FEA mesh for latter post-procesing
@@ -124,9 +132,9 @@ def test_LSRPM_simulation():
     out_femm.mag.B.plot_2D_Data("angle", "time[0]", component_list=["radial"])
     out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]", "time[0]", component_list=["radial"])
     # Tangential magnetic flux
-    # out_femm.mag.B.plot_2D_Data("angle","time[0]",component_list=["tangential"])
-    # out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]","time[1]",component_list=["tangential"])
-    # out_femm.mag.Tem.plot_2D_Data("time")
+    out_femm.mag.B.plot_2D_Data("angle","time[0]",component_list=["tangential"])
+    out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]","time[0]",component_list=["tangential"])
+    out_femm.mag.Tem.plot_2D_Data("time")
 
     print(out_femm.mag.Tem.values.shape)
     print(simu_femm.input.Nt_tot)
@@ -136,10 +144,26 @@ def test_LSRPM_simulation():
     print(out_femm.simu.machine.stator.comp_resistance_wind())
 
 
-   
+
+
+    #########################################################################################
+    ##Electrical module
+    # Definition of the magnetic simulation (FEMM with symmetry and sliding band)
+    # simu_femm.elec = Electrical(
+    # eec=EEC_PMSM(
+    #     indmag=IndMagFEMM(is_periodicity_a=None, Nt_tot=50),
+    #     fluxlink=FluxLinkFEMM(is_periodicity_a=None, Nt_tot=50),
+    #     )
+    # )
+    # # Run only Electrical module
+
+    # simu_femm.force = None
+    # simu_femm.struct = None
+
+    # out = simu_femm.run()
+    # out.elec.Us.plot_2D_Data("time", "phase", **dict_2D)
 
     plt.show()
-
 
 if __name__ == "__main__":
     test_LSRPM_simulation()

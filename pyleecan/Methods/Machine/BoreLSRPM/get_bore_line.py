@@ -29,6 +29,8 @@ def get_bore_line(self, prop_dict=None):
     # Compute the shape
 
     alpha1 = pi / self.N
+    alpha=self.alpha
+    
 
     # Z1
     Z1 = Rbo * exp(-1j * alpha1)
@@ -52,8 +54,8 @@ def get_bore_line(self, prop_dict=None):
 
         bore_list.append(
             Arc1(
-                begin=Z1 * exp(1j * (2 * pi / self.N * (ii - 1) + self.alpha)),
-                end=Z2 * exp(1j * (2 * pi / self.N * (ii - 1) + self.alpha)),
+                begin=Z1 * exp(1j * (2 * pi / self.N * (ii - 1) + alpha)),
+                end=Z2 * exp(1j * (2 * pi / self.N * (ii - 1) + alpha)),
                 radius=self.Rarc,
                 is_trigo_direction=True,
                 prop_dict=prop_dict,
@@ -62,16 +64,16 @@ def get_bore_line(self, prop_dict=None):
 
         bore_list.append(
             Segment(
-                Z2 * exp(1j * (2 * pi / self.N * (ii - 1) + self.alpha)),
-                Z3 * exp(1j * (2 * pi / self.N * (ii - 1) + self.alpha)),
+                Z2 * exp(1j * (2 * pi / self.N * (ii - 1) + alpha)),
+                Z3 * exp(1j * (2 * pi / self.N * (ii - 1) + alpha)),
                 prop_dict=prop_dict,
             )
         )
 
         bore_list.append(
             Arc1(
-                begin=Z3 * exp(1j * (2 * pi / self.N * (ii - 1) + self.alpha)),
-                end=Z4 * exp(1j * (2 * pi / self.N * (ii - 1) + self.alpha)),
+                begin=Z3 * exp(1j * (2 * pi / self.N * (ii - 1) + alpha)),
+                end=Z4 * exp(1j * (2 * pi / self.N * (ii - 1) + alpha)),
                 radius=self.Rarc,
                 is_trigo_direction=True,
                 prop_dict=prop_dict,

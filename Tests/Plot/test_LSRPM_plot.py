@@ -120,10 +120,8 @@ def test_LSRPM():
         ]
     ).T
 
-
-
-
-    stator.winding = WindingUD(wind_mat=wind_mat_LSRPM, qs=3, p=4, Ntcoil=58, Npcp=1,) #qs=6 (Stator + auxiliary)
+    stator.winding = WindingUD(wind_mat=wind_mat_LSRPM*58, qs=3, p=4, Npcp=1,) #qs=6 (Stator + auxiliary)
+    #Warning: if wind_mat is active, Ntcoil should be included in the matrix
 
     # Conductor setup
     stator.winding.conductor = CondType12(
@@ -132,7 +130,7 @@ def test_LSRPM():
         Wwire=0.001,  # single wire width without insulation [m]
         Wins_cond=0.001,
         #Hwire=0.001,  # single wire height without insulation [m]
-        Wins_wire=1e-6,  # winding strand insulation thickness [m]
+        Wins_wire=0,  # winding strand insulation thickness [m]
     )
 
     # Rotor setup
@@ -163,7 +161,7 @@ def test_LSRPM():
         )
     )
     rotor.mat_type
-    rotor.bore = BoreLSRPM(N=8, Rarc=0.0375, alpha=0)
+    rotor.bore = BoreLSRPM(N=8, Rarc=0.0375, alpha=22.5/180*pi)
     
     # Set shaft
     shaft = Shaft(
@@ -185,7 +183,7 @@ def test_LSRPM():
     # Set magnets in the rotor hole
     rotor.hole[0].magnet_0.mat_type = MagnetLSRPM
 
-    rotor.hole[0].magnet_0.type_magnetization = 0 # Radial magnet
+    rotor.hole[0].magnet_0.type_magnetization = 3 # Radial magnet
 
     #Ventilation holes
     Hold_round_shaft = load(join(DATA_DIR, "Machine", "Hold_round_shaft.json"))
@@ -193,6 +191,7 @@ def test_LSRPM():
     Screw_Hole = load(join(DATA_DIR, "Machine", "Screw_Hole.json"))
     #Screw_Hole.plot()
     rotor.axial_vent = [Hold_round_shaft, Screw_Hole]
+ 
 
 
     # matplotlib notebook
@@ -200,7 +199,7 @@ def test_LSRPM():
         name="LSRPM LSEE", stator=stator, rotor=rotor, shaft=shaft, frame=None
     )
 
-    #LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_004.json"))
+    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_004.json"))
 
     LSRPM.plot(is_show_fig=True, save_path=join(save_path, "test_LSRPM.png"))
     stator.plot(is_lam_only=True)
