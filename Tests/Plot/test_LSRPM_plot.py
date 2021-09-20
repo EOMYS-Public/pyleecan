@@ -180,6 +180,8 @@ def test_LSRPM():
     rotor.mat_type = M600_65A_50Hz
     stator.winding.conductor.cond_mat = Copper1
     stator.winding.conductor.plot()
+
+
     # Set magnets in the rotor hole
     rotor.hole[0].magnet_0.mat_type = MagnetLSRPM
 

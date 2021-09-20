@@ -18,7 +18,7 @@ def comp_angle_d_axis(self):
     """
 
     p = self.get_pole_pair_number()
-    if self.has_magnet():
+    if self.has_magnet() and self.hole[0].magnet_0.type_magnetization!=3: #Normale rotor with magnets
         return pi / p / 2
-    else:
+    else: #Without magnet or spoke rotor with magnets
         return 0

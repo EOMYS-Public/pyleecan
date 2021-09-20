@@ -55,6 +55,7 @@ def test_LSRPM_simulation():
     #I0_rms = 6.85
     felec = p * simu_femm.input.N0 / 60  # [Hz]
     rot_dir = simu_femm.machine.stator.comp_rot_dir()
+
     # Phi0 = 0  # Maximum Torque Per Amp
 
     # Ia = (
@@ -94,12 +95,11 @@ def test_LSRPM_simulation():
  
     #I0, Phi0 to set
     I0_rms = 6.85# Maximum current [Arms]
-    # Phi0 = pi/2  # MATP
-    # # Compute corresponding Id/Iq
-    # Id_ref = (I0_rms*exp(1j*(Phi0+pi/2))).real#### +pi/2 just to inverse dq axes, in LSRPM the alpha0 is q axis not d axis
-    # Iq_ref = (I0_rms*exp(1j*(Phi0+pi/2))).imag
-    Id_ref=0
-    Iq_ref=I0_rms
+    Phi0 = -pi/2  # MATP 
+    # Compute corresponding Id/Iq
+    Id_ref = (I0_rms*exp(1j*(Phi0))).real
+    Iq_ref = (I0_rms*exp(1j*(Phi0))).imag
+ 
 
     # Setting the values
     simu_femm.input.Id_ref = Id_ref # [Arms]
