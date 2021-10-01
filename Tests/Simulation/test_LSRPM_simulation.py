@@ -9,6 +9,8 @@ from pyleecan.Functions.Plot import dict_2D
 from os.path import join
 
 from numpy import ones, pi, array, linspace, cos, sqrt, zeros, exp
+from pyleecan.Classes.VarLoadCurrent import VarLoadCurrent
+from SciDataTool.Functions.Plot.plot_2D import plot_2D
 
 from pyleecan.Classes.Simu1 import Simu1
 from pyleecan.Classes.InputCurrent import InputCurrent
@@ -40,13 +42,13 @@ def test_LSRPM_simulation():
     # Rotor speed [rpm]
     simu_femm.input.N0 = 750
 
-    # time discretization [s]
+    # # time discretization [s]
     time = linspace(
         start=0, stop=60 / simu_femm.input.N0, num=32 * p, endpoint=False
     )  # 32*p timesteps
     simu_femm.input.time = time
 
-    # Angular discretization along the airgap circonference for flux density calculation
+    # # Angular discretization along the airgap circonference for flux density calculation
     simu_femm.input.angle = linspace(
         start=0, stop=2 * pi, num=2048, endpoint=False
     )  # 2048 steps
@@ -94,8 +96,8 @@ def test_LSRPM_simulation():
     # Definition of a sinusoidal current
  
     #I0, Phi0 to set
-    I0_rms = 6.85# Maximum current [Arms]
-    Phi0 = -pi/2  # MATP 
+    I0_rms =0# Maximum current [Arms]
+    Phi0 = 0  # MATP 
     # Compute corresponding Id/Iq
     Id_ref = (I0_rms*exp(1j*(Phi0))).real
     Iq_ref = (I0_rms*exp(1j*(Phi0))).imag
@@ -105,10 +107,15 @@ def test_LSRPM_simulation():
     simu_femm.input.Id_ref = Id_ref # [Arms]
     simu_femm.input.Iq_ref = Iq_ref # [Arms]
 
+    # setting I0_rms and Phi0 directly in simulation
+    # simu_op.input.set_Id_Iq(I0=I0_rms, Phi0=Phi0)
+    # print("Id: "+str(simu_op.input.Id_ref))
+    # print("Iq: "+str(simu_op.input.Iq_ref))
+
     print(Id_ref,Iq_ref)
 
-    simu_femm.input.Nt_tot = 128*3 # Number of time step
-    simu_femm.input.Na_tot = 2048 # Spatial discretization
+    # simu_femm.input.Nt_tot = 128*3 # Number of time step
+    # simu_femm.input.Na_tot = 2048 # Spatial discretization
     simu_femm.input.N0 = 750 # Rotor speed [rpm]
 
     # Only the magnetic module is defined
@@ -144,11 +151,68 @@ def test_LSRPM_simulation():
     print(out_femm.simu.machine.stator.comp_resistance_wind())
 
 
+    #########################################################################################
+    ## Several Operating Point
+#     Tem_av_ref = array([79, 125, 160, 192, 237, 281, 319, 343, 353, 332, 266, 164, 22]) # Yang et al, 2013 (reference)
+#     Phi0_ref = linspace(60 * pi / 180, 180 * pi / 180, Tem_av_ref.size)
+#     N_simu = Tem_av_ref.size
 
+#     varload = VarLoadCurrent(is_torque=True)
+#     varload.type_OP_matrix = 0 # Matrix N0, I0, Phi0,  (N0, Id, Iq) if type_OP_matrix==1
+
+#     # Creating the Operating point matrix
+#     OP_matrix = zeros((N_simu,4))
+
+#     # Set N0 = 2000 [rpm] for all simulation
+#     OP_matrix[:,0] = 2000 * ones((N_simu))
+
+#     # Set I0 = 250 / sqrt(2) [A] (RMS) for all simulation
+#     OP_matrix[:,1] = I0_rms * ones((N_simu))
+
+#     # Set Phi0 from 60° to 180°
+#     OP_matrix[:,2] = Phi0_ref
+
+#     # Set reference torque from Yang et al, 2013
+#     OP_matrix[:,3] = Tem_av_ref
+
+#     varload.OP_matrix = OP_matrix
+#     print(OP_matrix)
+
+#     # All the simulation use the same machine
+#     # No need to draw the machine for all OP
+#     varload.is_reuse_femm_file=True
+
+#     simu_vop = simu_femm.copy()
+#     simu_vop.var_simu = varload
+
+#     # Speed-up computation (set reference simu as first OP)
+#     simu_vop.input.set_OP_from_array(varload.OP_matrix, varload.type_OP_matrix)
+
+#     Xout = simu_vop.run()
+
+#     print("Values available in XOutput:")
+#     print(Xout.xoutput_dict.keys())
+
+#     print("\nI0 for each simulation:")
+#     print(Xout["I0"].result)
+#     print("\nPhi0 for each simulation:")
+#     print(Xout["Phi0"].result)
+
+#     fig = Xout.plot_multi("Phi0", "Tem_av")
+#     fig = Xout.plot_multi("Id", "Iq")
+#     plot_2D(
+#     array([x*180/pi for x in Xout.xoutput_dict["Phi0"].result]),
+#     [Xout.xoutput_dict["Tem_av"].result, Xout.xoutput_dict["Tem_av_ref"].result],
+#     legend_list=["Pyleecan", "Yang et al, 2013"],
+#     xlabel="Current angle [°]",
+#     ylabel="Electrical torque [N.m]",
+#     title="Electrical torque vs current angle",
+#     **dict_2D
+# )
 
     #########################################################################################
     ##Electrical module
-    # Definition of the magnetic simulation (FEMM with symmetry and sliding band)
+    #Definition of the magnetic simulation (FEMM with symmetry and sliding band)
     # simu_femm.elec = Electrical(
     # eec=EEC_PMSM(
     #     indmag=IndMagFEMM(is_periodicity_a=None, Nt_tot=50),
@@ -162,6 +226,12 @@ def test_LSRPM_simulation():
 
     # out = simu_femm.run()
     # out.elec.Us.plot_2D_Data("time", "phase", **dict_2D)
+    # print("Ld: "+str(out.elec.Ld))
+    # print("Lq: "+str(out.elec.Lq))
+
+    # print("Ud: "+str(out.elec.Ud_ref))
+    # print("Uq: "+str(out.elec.Uq_ref))
+    # print("Tem: "+str(out.elec.Tem_av_ref))
 
     plt.show()
 

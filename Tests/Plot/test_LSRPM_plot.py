@@ -203,7 +203,7 @@ def test_LSRPM():
 
     LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_004.json"))
 
-    LSRPM.plot(is_show_fig=True, save_path=join(save_path, "test_LSRPM.png"))
+    LSRPM.plot(is_show_fig=True,is_add_arrow=True,save_path=join(save_path, "test_LSRPM.png"))
     stator.plot(is_lam_only=True)
     Surface.plot
     plt.show()
