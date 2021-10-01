@@ -220,6 +220,7 @@ class HoleM53(HoleMag):
         Zh=36,
         mat_void=-1,
         magnetization_dict_offset=None,
+        Alpha0=0,
         init_dict=None,
         init_str=None,
     ):
@@ -264,6 +265,8 @@ class HoleM53(HoleMag):
                 mat_void = init_dict["mat_void"]
             if "magnetization_dict_offset" in list(init_dict.keys()):
                 magnetization_dict_offset = init_dict["magnetization_dict_offset"]
+            if "Alpha0" in list(init_dict.keys()):
+                Alpha0 = init_dict["Alpha0"]
         # Set the properties (value check and convertion are done in setter)
         self.H0 = H0
         self.H1 = H1
@@ -280,6 +283,7 @@ class HoleM53(HoleMag):
             Zh=Zh,
             mat_void=mat_void,
             magnetization_dict_offset=magnetization_dict_offset,
+            Alpha0=Alpha0,
         )
         # The class is frozen (in HoleMag init), for now it's impossible to
         # add new properties
@@ -407,15 +411,23 @@ class HoleM53(HoleMag):
         S += getsizeof(self.magnet_1)
         return S
 
-    def as_dict(self, **kwargs):
+    def as_dict(self, type_handle_ndarray=0, keep_function=False, **kwargs):
         """
         Convert this object in a json serializable dict (can be use in __init__).
+        type_handle_ndarray: int
+            How to handle ndarray (0: tolist, 1: copy, 2: nothing)
+        keep_function : bool
+            True to keep the function object, else return str
         Optional keyword input parameter is for internal use only
         and may prevent json serializability.
         """
 
         # Get the properties inherited from HoleMag
-        HoleM53_dict = super(HoleM53, self).as_dict(**kwargs)
+        HoleM53_dict = super(HoleM53, self).as_dict(
+            type_handle_ndarray=type_handle_ndarray,
+            keep_function=keep_function,
+            **kwargs
+        )
         HoleM53_dict["H0"] = self.H0
         HoleM53_dict["H1"] = self.H1
         HoleM53_dict["W1"] = self.W1
@@ -427,11 +439,19 @@ class HoleM53(HoleMag):
         if self.magnet_0 is None:
             HoleM53_dict["magnet_0"] = None
         else:
-            HoleM53_dict["magnet_0"] = self.magnet_0.as_dict(**kwargs)
+            HoleM53_dict["magnet_0"] = self.magnet_0.as_dict(
+                type_handle_ndarray=type_handle_ndarray,
+                keep_function=keep_function,
+                **kwargs
+            )
         if self.magnet_1 is None:
             HoleM53_dict["magnet_1"] = None
         else:
-            HoleM53_dict["magnet_1"] = self.magnet_1.as_dict(**kwargs)
+            HoleM53_dict["magnet_1"] = self.magnet_1.as_dict(
+                type_handle_ndarray=type_handle_ndarray,
+                keep_function=keep_function,
+                **kwargs
+            )
         # The class name is added to the dict for deserialisation purpose
         # Overwrite the mother class name
         HoleM53_dict["__class__"] = "HoleM53"

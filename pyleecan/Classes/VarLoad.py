@@ -15,6 +15,14 @@ from ..Functions.load import load_init_dict
 from ..Functions.Load.import_class import import_class
 from .VarSimu import VarSimu
 
+# Import all class method
+# Try/catch to remove unnecessary dependencies in unused method
+try:
+    from ..Methods.Simulation.VarLoad.get_ref_simu_index import get_ref_simu_index
+except ImportError as error:
+    get_ref_simu_index = error
+
+
 from ._check import InitUnKnowClassError
 from .DataKeeper import DataKeeper
 from .VarSimu import VarSimu
@@ -27,6 +35,18 @@ class VarLoad(VarSimu):
     VERSION = 1
     NAME = "Variable Load"
 
+    # cf Methods.Simulation.VarLoad.get_ref_simu_index
+    if isinstance(get_ref_simu_index, ImportError):
+        get_ref_simu_index = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use VarLoad method get_ref_simu_index: "
+                    + str(get_ref_simu_index)
+                )
+            )
+        )
+    else:
+        get_ref_simu_index = get_ref_simu_index
     # save and copy methods are available in all object
     save = save
     copy = copy
@@ -147,15 +167,23 @@ class VarLoad(VarSimu):
         S += super(VarLoad, self).__sizeof__()
         return S
 
-    def as_dict(self, **kwargs):
+    def as_dict(self, type_handle_ndarray=0, keep_function=False, **kwargs):
         """
         Convert this object in a json serializable dict (can be use in __init__).
+        type_handle_ndarray: int
+            How to handle ndarray (0: tolist, 1: copy, 2: nothing)
+        keep_function : bool
+            True to keep the function object, else return str
         Optional keyword input parameter is for internal use only
         and may prevent json serializability.
         """
 
         # Get the properties inherited from VarSimu
-        VarLoad_dict = super(VarLoad, self).as_dict(**kwargs)
+        VarLoad_dict = super(VarLoad, self).as_dict(
+            type_handle_ndarray=type_handle_ndarray,
+            keep_function=keep_function,
+            **kwargs
+        )
         # The class name is added to the dict for deserialisation purpose
         # Overwrite the mother class name
         VarLoad_dict["__class__"] = "VarLoad"

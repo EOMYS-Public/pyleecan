@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from numpy import zeros, swapaxes, sign
 
 from ....Methods.Machine.Winding import WindingError
-
 
 from swat_em import datamodel
 
@@ -33,23 +30,14 @@ def comp_connection_mat(self, Zs=None, p=None):
     """
 
     if Zs is None:
-        if self.parent is None:
-            raise WindingError(
-                "ERROR: The Winding object must be in a Lamination object."
-            )
-
         if not hasattr(self.parent, "slot") and not hasattr(self.parent, "slot_list"):
-            raise WindingError(
-                "ERROR: The Winding object must be in a Lamination object with Slot."
-            )
+            raise WindingError("The Winding object must be in a Lamination object.")
 
         Zs = self.parent.get_Zs()
 
     if p is None:
         if self.parent is None:
-            raise WindingError(
-                "ERROR: The Winding object must be in a Lamination object."
-            )
+            raise WindingError("The Winding object must be in a Lamination object.")
 
         p = self.parent.get_pole_pair_number()
 
@@ -65,13 +53,22 @@ def comp_connection_mat(self, Zs=None, p=None):
 
     Nlayer = self.Nlayer  # number of layers
 
-    coil_pitch = self.coil_pitch  # coil pitch (coil span)
+    # Coil pitch (or coil span)
+    if self.coil_pitch in [0, None]:
+        # Number of slots per pole and per phase
+        spp = Zs / (2 * p * qs)
+        if spp > 0.5:
+            # distributed winding
+            self.coil_pitch = int(qs * spp)
+        else:
+            # tooth concentrated winding
+            self.coil_pitch = 1
 
     # generate a datamodel for the winding
     wdg = datamodel()
 
     # generate winding from inputs
-    wdg.genwdg(Q=Zs, P=2 * p, m=qs, layers=Nlayer, turns=Ntcoil, w=coil_pitch)
+    wdg.genwdg(Q=Zs, P=2 * p, m=qs, layers=Nlayer, turns=Ntcoil, w=self.coil_pitch)
 
     # init connexion matrix
     wind_mat = zeros((Nlayer, 1, Zs, qs))
@@ -112,10 +109,11 @@ def comp_connection_mat(self, Zs=None, p=None):
     Npcp_list = wdg.get_parallel_connections()
     if self.Npcp is None:
         self.Npcp = Npcp_list[0]
-    elif self.Npcp > p:
-        self.Npcp = p
+    elif self.Npcp > 2 * p:
+        self.Npcp = 2 * p
         self.get_logger().warning(
-            "Number of parallel circuits per phase must be < p, assign it to: " + str(p)
+            "Number of parallel circuits per phase must be < 2*p, assign it to: "
+            + str(self.Npcp)
         )
     # if self.Npcp not in Npcp_list:
 

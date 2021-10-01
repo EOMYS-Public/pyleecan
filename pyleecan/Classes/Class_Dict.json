@@ -1930,6 +1930,15 @@
                 "type": "dict",
                 "unit": "-",
                 "value": null
+            },
+            {
+                "desc": "Shift angle of the holes around circumference",
+                "max": "6.29",
+                "min": "0",
+                "name": "Alpha0",
+                "type": "float",
+                "unit": "rad",
+                "value": 0
             }
         ]
     },
@@ -4260,10 +4269,10 @@
             "plot",
             "comp_height_yoke",
             "get_Zs",
-            "comp_radius_mid_yoke",
             "comp_periodicity",
             "get_bore_desc",
-            "set_pole_pair_number"
+            "set_pole_pair_number",
+            "comp_angle_d_axis"
         ],
         "mother": "Lamination",
         "name": "LamSlot",
@@ -4614,7 +4623,8 @@
             "get_yoke_desc",
             "get_bore_desc",
             "comp_point_ref",
-            "get_label"
+            "get_label",
+            "get_yoke_side_line"
         ],
         "mother": "",
         "name": "Lamination",
@@ -5313,7 +5323,9 @@
         "is_internal": false,
         "methods": [
             "check",
-            "get_machine_type"
+            "get_machine_type",
+            "get_pole_pair_number",
+            "set_pole_pair_number"
         ],
         "mother": "MachineSync",
         "name": "MachineSRM",
@@ -6801,21 +6813,21 @@
         "path": "pyleecan/Generator/ClassesRef/Material/ModelBH.csv",
         "properties": [
             {
-                "desc": "Max value of H for extrapolation",
+                "desc": "Max value of B for extrapolation",
                 "max": "",
                 "min": "",
                 "name": "Bmax",
                 "type": "float",
-                "unit": "-",
+                "unit": "T",
                 "value": 2.31
             },
             {
-                "desc": "Max value of B for extrapolation",
+                "desc": "Max value of H for extrapolation",
                 "max": "",
                 "min": "",
                 "name": "Hmax",
                 "type": "float",
-                "unit": "-",
+                "unit": "A/m",
                 "value": null
             },
             {
@@ -6824,7 +6836,7 @@
                 "min": "",
                 "name": "delta",
                 "type": "float",
-                "unit": "-",
+                "unit": "A/m",
                 "value": 100
             }
         ]
@@ -12747,7 +12759,9 @@
         ],
         "desc": "Abstract class to generate multi-simulation by changing the operating point",
         "is_internal": false,
-        "methods": [],
+        "methods": [
+            "get_ref_simu_index"
+        ],
         "mother": "VarSimu",
         "name": "VarLoad",
         "package": "Simulation",
@@ -12870,7 +12884,8 @@
             "gen_datakeeper_list",
             "get_elec_datakeeper",
             "get_mag_datakeeper",
-            "get_force_datakeeper"
+            "get_force_datakeeper",
+            "get_ref_simu_index"
         ],
         "mother": "",
         "name": "VarSimu",
@@ -13001,15 +13016,6 @@
         "path": "pyleecan/Generator/ClassesRef/Slot/VentilationCirc.csv",
         "properties": [
             {
-                "desc": "Shift angle of the holes around circumference",
-                "max": "6.29",
-                "min": "0",
-                "name": "Alpha0",
-                "type": "float",
-                "unit": "rad",
-                "value": 0
-            },
-            {
                 "desc": "Hole diameters",
                 "max": "",
                 "min": "0",
@@ -13051,15 +13057,6 @@
         "package": "Slot",
         "path": "pyleecan/Generator/ClassesRef/Slot/VentilationPolar.csv",
         "properties": [
-            {
-                "desc": "Shift angle of the hole around circumference",
-                "max": "6.29",
-                "min": "0",
-                "name": "Alpha0",
-                "type": "float",
-                "unit": "rad",
-                "value": 0
-            },
             {
                 "desc": "Height of the hole",
                 "max": "",
@@ -13111,15 +13108,6 @@
         "package": "Slot",
         "path": "pyleecan/Generator/ClassesRef/Slot/VentilationTrap.csv",
         "properties": [
-            {
-                "desc": "Shift angle of the hole around circumference",
-                "max": "6.29",
-                "min": "0",
-                "name": "Alpha0",
-                "type": "float",
-                "unit": "rad",
-                "value": 0
-            },
             {
                 "desc": "Hole height",
                 "max": "",

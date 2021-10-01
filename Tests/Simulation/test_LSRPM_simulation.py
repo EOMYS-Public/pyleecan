@@ -169,7 +169,7 @@ def test_LSRPM_simulation():
 #     # Set I0 = 250 / sqrt(2) [A] (RMS) for all simulation
 #     OP_matrix[:,1] = I0_rms * ones((N_simu))
 
-#     # Set Phi0 from 60Â° to 180Â°
+#     # Set Phi0 from 60° to 180°
 #     OP_matrix[:,2] = Phi0_ref
 
 #     # Set reference torque from Yang et al, 2013
@@ -204,7 +204,7 @@ def test_LSRPM_simulation():
 #     array([x*180/pi for x in Xout.xoutput_dict["Phi0"].result]),
 #     [Xout.xoutput_dict["Tem_av"].result, Xout.xoutput_dict["Tem_av_ref"].result],
 #     legend_list=["Pyleecan", "Yang et al, 2013"],
-#     xlabel="Current angle [Â°]",
+#     xlabel="Current angle [°]",
 #     ylabel="Electrical torque [N.m]",
 #     title="Electrical torque vs current angle",
 #     **dict_2D

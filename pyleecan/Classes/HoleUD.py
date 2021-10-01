@@ -121,6 +121,7 @@ class HoleUD(HoleMag):
         Zh=36,
         mat_void=-1,
         magnetization_dict_offset=None,
+        Alpha0=0,
         init_dict=None,
         init_str=None,
     ):
@@ -149,6 +150,8 @@ class HoleUD(HoleMag):
                 mat_void = init_dict["mat_void"]
             if "magnetization_dict_offset" in list(init_dict.keys()):
                 magnetization_dict_offset = init_dict["magnetization_dict_offset"]
+            if "Alpha0" in list(init_dict.keys()):
+                Alpha0 = init_dict["Alpha0"]
         # Set the properties (value check and convertion are done in setter)
         self.surf_list = surf_list
         self.magnet_dict = magnet_dict
@@ -157,6 +160,7 @@ class HoleUD(HoleMag):
             Zh=Zh,
             mat_void=mat_void,
             magnetization_dict_offset=magnetization_dict_offset,
+            Alpha0=Alpha0,
         )
         # The class is frozen (in HoleMag init), for now it's impossible to
         # add new properties
@@ -259,22 +263,36 @@ class HoleUD(HoleMag):
                 S += getsizeof(value) + getsizeof(key)
         return S
 
-    def as_dict(self, **kwargs):
+    def as_dict(self, type_handle_ndarray=0, keep_function=False, **kwargs):
         """
         Convert this object in a json serializable dict (can be use in __init__).
+        type_handle_ndarray: int
+            How to handle ndarray (0: tolist, 1: copy, 2: nothing)
+        keep_function : bool
+            True to keep the function object, else return str
         Optional keyword input parameter is for internal use only
         and may prevent json serializability.
         """
 
         # Get the properties inherited from HoleMag
-        HoleUD_dict = super(HoleUD, self).as_dict(**kwargs)
+        HoleUD_dict = super(HoleUD, self).as_dict(
+            type_handle_ndarray=type_handle_ndarray,
+            keep_function=keep_function,
+            **kwargs
+        )
         if self.surf_list is None:
             HoleUD_dict["surf_list"] = None
         else:
             HoleUD_dict["surf_list"] = list()
             for obj in self.surf_list:
                 if obj is not None:
-                    HoleUD_dict["surf_list"].append(obj.as_dict(**kwargs))
+                    HoleUD_dict["surf_list"].append(
+                        obj.as_dict(
+                            type_handle_ndarray=type_handle_ndarray,
+                            keep_function=keep_function,
+                            **kwargs
+                        )
+                    )
                 else:
                     HoleUD_dict["surf_list"].append(None)
         if self.magnet_dict is None:
@@ -283,7 +301,11 @@ class HoleUD(HoleMag):
             HoleUD_dict["magnet_dict"] = dict()
             for key, obj in self.magnet_dict.items():
                 if obj is not None:
-                    HoleUD_dict["magnet_dict"][key] = obj.as_dict(**kwargs)
+                    HoleUD_dict["magnet_dict"][key] = obj.as_dict(
+                        type_handle_ndarray=type_handle_ndarray,
+                        keep_function=keep_function,
+                        **kwargs
+                    )
                 else:
                     HoleUD_dict["magnet_dict"][key] = None
         # The class name is added to the dict for deserialisation purpose
