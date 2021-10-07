@@ -35,7 +35,7 @@
             "usecols": null
         },
         "Brm20": 1.08,
-        "Hc": 7.94e+05,
+        "Hc": 8.2877e+05,
         "LossData": {
             "__class__": "ImportMatrix",
             "is_transpose": false

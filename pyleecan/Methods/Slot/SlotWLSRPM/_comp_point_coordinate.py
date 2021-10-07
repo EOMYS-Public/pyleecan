@@ -51,22 +51,22 @@ def _comp_point_coordinate(self):
         + xcht * (xcht - xclt) / (ycht - yclt)
     )
     Z4t = x4t + 1j * y4t
-    Z4 = Z4t * exp(-1j * hsp)
+    
     # Z3
     x3t = x4t
     y3t = y4t - self.W1 + self.R1
     Z3t = x3t + 1j * y3t
-    Z3 = Z3t * exp(-1j * hsp)
+    
     # Z2
     x2t = x3t - self.R1
     y2t = self.W3 / 2
     Z2t = x2t + 1j * y2t
-    Z2 = Z2t * exp(-1j * hsp)
+    
     # Z1
     y1t = self.W3 / 2
     x1t = sqrt((Rbo) ** 2 - (y1t) ** 2)
     Z1t = x1t + 1j * y1t
-    Z1 = Z1t * exp(-1j * hsp)
+    
 
     # Z9 damper winding point
 
@@ -74,6 +74,14 @@ def _comp_point_coordinate(self):
     y9t = self.W3 / 2
     Z9t = x9t + 1j * y9t
     Z9 = Z9t * exp(-1j * hsp)
+
+    #Flux 2D
+    
+
+    Z1 = Z1t * exp(-1j * hsp)
+    Z2 = Z2t * exp(-1j * hsp)
+    Z3 = Z3t * exp(-1j * hsp)
+    Z4 = Z4t * exp(-1j * hsp)
 
     point_dict = dict()
     # symetry

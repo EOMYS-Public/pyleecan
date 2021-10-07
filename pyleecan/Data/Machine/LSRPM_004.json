@@ -1,7 +1,7 @@
 {
     "__class__": "MachineIPMSM",
-    "__save_date__": "2021_10_01 13h36min45s ",
-    "__version__": "pyleecan_1.3.2",
+    "__save_date__": "2021_10_07 10h54min20s ",
+    "__version__": "pyleecan_1.3.5",
     "desc": "",
     "frame": null,
     "logger_name": "Pyleecan.Machine",
@@ -16,6 +16,7 @@
         "__class__": "LamHole",
         "axial_vent": [
             {
+                "Alpha0": 0,
                 "Zh": 8,
                 "__class__": "HoleUD",
                 "magnet_dict": {},
@@ -266,6 +267,7 @@
                 ]
             },
             {
+                "Alpha0": 0,
                 "Zh": 8,
                 "__class__": "HoleUD",
                 "magnet_dict": {},
@@ -483,6 +485,7 @@
         },
         "hole": [
             {
+                "Alpha0": 0,
                 "H1": 0.0023515058436089,
                 "R1": 0.0003,
                 "R2": 0.019327,
@@ -530,7 +533,7 @@
                                 "usecols": null
                             },
                             "Brm20": 1.08,
-                            "Hc": 794000.0,
+                            "Hc": 828770.0,
                             "LossData": {
                                 "__class__": "ImportMatrix",
                                 "is_transpose": false

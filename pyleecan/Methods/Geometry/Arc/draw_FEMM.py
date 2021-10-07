@@ -84,5 +84,8 @@ def draw_FEMM(
         femm.mi_selectarcsegment(X2, Y2)
 
     maxseg = self.comp_maxseg(element_size, maxseg)
+    if 0.95 <maxseg < 0.96 or maxseg == 0:
+        print("toto")
+        pass
     femm.mi_setarcsegmentprop(maxseg, propname, hide, group)
     femm.mi_clearselected()

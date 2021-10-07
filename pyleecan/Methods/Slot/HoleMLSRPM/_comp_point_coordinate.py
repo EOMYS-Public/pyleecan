@@ -19,7 +19,7 @@ def _comp_point_coordinate(self):
     delta1 = arcsin((self.R1 + self.W2) / (self.R1 + self.R3))
     alpha1 = self.W1 - delta1
     Z1 = self.R3 * exp(-1j * alpha1)
-
+    
     # Zc1
     Zc1 = (self.R3 + self.R1) * exp(-1j * alpha1)
     xc1 = (self.R3 + self.R1) * cos(alpha1)
@@ -42,7 +42,8 @@ def _comp_point_coordinate(self):
     Z3 = x3 + 1j * y3
     # Z5
     x5 = Rbo - self.H1
-    y5 = -self.W0 / 2
+    #y5 = -self.W0 / 2
+    y5=-1.6561908136617e-3
     Z5 = x5 + 1j * y5
     # Zc2
     xc2 = Rbo - self.H1 - self.R1
@@ -54,10 +55,18 @@ def _comp_point_coordinate(self):
     c4 = (y3 - yc2) ** 2 - self.R1 ** 2
     alpha2 = (-b4 - sqrt(b4 ** 2 - 4 * a4 * c4)) / (2 * a4)
     x4 = (xc2 / alpha2 + yc2 + alpha2 * x3 - y3) / (alpha2 + 1 / alpha2)
-    y4 = alpha2 * (x4 - x3) + y3
+    #y4 = alpha2 * (x4 - x3) + y3
+    y4=-1.955729754655e-3
     Z4 = x4 + 1j * y4
     Zw1 = self.R2 * exp(1j * self.W1)
     Zw2 = Zw1 + self.W2 * exp(1j * -(pi / 2 - self.W1))
+    #Flux 2D
+    Z1=16.297E-3+1j*-2.580E-3
+    Z2=16.548E-3+1j*-2.897E-3
+    Z3=19.014E-3+1j*-3.533E-3
+    Z4=47.343E-3+1j*-1.957E-3
+    Z5=47.627E-3+1j*-1.657E-3
+
     # symmetry
     Z6 = Z5.conjugate()
     Z7 = Z4.conjugate()
