@@ -1,6 +1,6 @@
 {
     "__class__": "MachineIPMSM",
-    "__save_date__": "2021_10_07 10h54min20s ",
+    "__save_date__": "2021_10_08 11h01min31s ",
     "__version__": "pyleecan_1.3.5",
     "desc": "",
     "frame": null,
@@ -533,13 +533,13 @@
                                 "usecols": null
                             },
                             "Brm20": 1.08,
-                            "Hc": 828770.0,
+                            "Hc": 828772.1241,
                             "LossData": {
                                 "__class__": "ImportMatrix",
                                 "is_transpose": false
                             },
                             "ModelBH": {
-                                "Bmax": 2.31,
+                                "Bmax": 1.21031,
                                 "Hmax": null,
                                 "__class__": "ModelBH",
                                 "delta": 100
@@ -792,7 +792,7 @@
                     "is_transpose": false
                 },
                 "ModelBH": {
-                    "Bmax": 2.31,
+                    "Bmax": 2.22566,
                     "Hmax": null,
                     "__class__": "ModelBH",
                     "delta": 100
@@ -1059,7 +1059,7 @@
                     "is_transpose": false
                 },
                 "ModelBH": {
-                    "Bmax": 2.31,
+                    "Bmax": 2.22566,
                     "Hmax": null,
                     "__class__": "ModelBH",
                     "delta": 100

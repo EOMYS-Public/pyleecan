@@ -35,13 +35,13 @@
             "usecols": null
         },
         "Brm20": 1.08,
-        "Hc": 8.2877e+05,
+        "Hc": 8.287721241e+05,
         "LossData": {
             "__class__": "ImportMatrix",
             "is_transpose": false
         },
         "ModelBH": {
-            "Bmax": 2.31,
+            "Bmax": 1.21031,
             "Hmax": null,
             "__class__": "ModelBH",
             "delta": 100

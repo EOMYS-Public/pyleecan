@@ -52,7 +52,9 @@ def build_geometry(self, alpha=0, delta=0, is_simplified=False):
     curve_list_mag.append(Segment(Z3, Z4))
     curve_list_mag.append(Segment(Z4, Z7))
     curve_list_mag.append(Segment(Z7, Z8))
-    curve_list_mag.append(Segment(Z8, Z3))
+    curve_list_mag.append(
+        Arc1(begin=Z8, end=Z3, radius=-self.R2, is_trigo_direction=False)
+        )
 
     point_ref = (Z3 + Z4 + Z7 + Z8) / 4
 
@@ -97,8 +99,12 @@ def build_geometry(self, alpha=0, delta=0, is_simplified=False):
         Arc1(begin=Z1, end=Z2, radius=self.R1, is_trigo_direction=True)
     )
     curve_list_air.append(Segment(Z2, Z3))
-    curve_list_air.append(Segment(Z3, Z8))
+    curve_list_air.append(
+        Arc1(begin=Z3, end=Z8, radius=self.R2, is_trigo_direction=True)
+        )
+    
     curve_list_air.append(Segment(Z8, Z9))
+
     curve_list_air.append(
         Arc1(begin=Z9, end=Z10, radius=self.R1, is_trigo_direction=True)
     )

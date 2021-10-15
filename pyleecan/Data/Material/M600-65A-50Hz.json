@@ -157,7 +157,7 @@
             "is_transpose": false
         },
         "ModelBH": {
-            "Bmax": 2.31,
+            "Bmax": 2.22566,
             "Hmax": null,
             "__class__": "ModelBH",
             "delta": 100

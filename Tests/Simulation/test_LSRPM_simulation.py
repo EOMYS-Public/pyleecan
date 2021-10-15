@@ -155,7 +155,7 @@ def test_LSRPM_simulation():
 
     #ref flux2D 
 
-    B_flux = pd.read_excel (r'D:/StageSijie/LSRPM/B_675_airgap_radial.xls')
+    B_flux = pd.read_excel (r'D:/StageSijie/LSRPM/B_675_V2.xls')
     B_radial=pd.DataFrame(B_flux, columns= ['Magnetic flux density / Normal component'])
     Ang_ref=linspace(0,2*pi, B_radial.size)
     Angle_ref = DataLinspace(
@@ -190,13 +190,13 @@ def test_LSRPM_simulation():
     B_tange_pyleecan=out_femm.mag.B.components['tangential']
     B_tange_pyleecan.plot_2D_Data("angle{°}",data_list=[B_tange],legend_list=["Pyleecan", "Flux2D"] )
 
-    print(out_femm.mag.Tem.values.shape)
-    print(simu_femm.input.Nt_tot)
+    # print(out_femm.mag.Tem.values.shape)
+    # print(simu_femm.input.Nt_tot)
 
-    out_femm.mag.meshsolution.plot_contour(label="B", group_names=["stator core","rotor core"])
-    out_femm.mag.meshsolution.plot_contour(label="B", group_names="rotor core")
-    out_femm.elec.get_Is().plot_2D_Data("time", "phase", **dict_2D)
-    print(out_femm.simu.machine.stator.comp_resistance_wind())
+    # out_femm.mag.meshsolution.plot_contour(label="B", group_names=["stator core","rotor core"])
+    # out_femm.mag.meshsolution.plot_contour(label="B", group_names="rotor core")
+    # out_femm.elec.get_Is().plot_2D_Data("time", "phase", **dict_2D)
+    # print(out_femm.simu.machine.stator.comp_resistance_wind())
 
 
     #########################################################################################
