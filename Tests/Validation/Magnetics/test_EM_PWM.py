@@ -16,7 +16,7 @@ from pyleecan.Classes.Simu1 import Simu1
 #from pyleecan.Classes.InputVoltage import InputVoltage
 from pyleecan.Classes.Electrical import Electrical
 from pyleecan.Classes.EEC_PMSM import EEC_PMSM
-from pyleecan.Classes.OPdq import OPdq
+#from pyleecan.Classes.OPdq import OPdq
 from pyleecan.Classes.ImportGenVectLin import ImportGenVectLin
 from pyleecan.Classes.ImportGenVectLin import ImportGenVectLin
 from pyleecan.Classes.ImportMatrixVal import ImportMatrixVal
