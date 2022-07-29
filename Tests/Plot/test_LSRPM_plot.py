@@ -201,7 +201,7 @@ def test_LSRPM():
         name="LSRPM LSEE", stator=stator, rotor=rotor, shaft=shaft, frame=None
     )
 
-    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_004.json"))
+    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_005.json"))
 
     LSRPM.plot(is_show_fig=True,save_path=join(save_path, "test_LSRPM.png"))
     stator.plot(is_lam_only=True)
