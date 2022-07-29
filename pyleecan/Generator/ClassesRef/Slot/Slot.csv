@@ -1,7 +1,7 @@
 Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,,Package,Inherit,Methods,Constant Name,Constant Value,Class description
 Zs,-,slot number,0,int,36,0,,,Slot,,build_geometry_active,VERSION,1,Generic class for slot (abstract)
-,,,,,,,,,,,build_geometry_half_tooth,,,
-,,,,,,,,,,,check,,,
+wedge_mat,-,"Material for the wedge, if None no wedge",0,Material,None,,,,,,build_geometry_half_tooth,,,
+is_bore,-,"True if the Slot is on the bore radius, False for yoke",0,bool,1,,,,,,check,,,
 ,,,,,,,,,,,comp_angle_active_eq,,,
 ,,,,,,,,,,,comp_angle_opening,,,
 ,,,,,,,,,,,comp_height,,,
@@ -11,6 +11,9 @@ Zs,-,slot number,0,int,36,0,,,Slot,,build_geometry_active,VERSION,1,Generic clas
 ,,,,,,,,,,,comp_radius_mid_active,,,
 ,,,,,,,,,,,comp_surface,,,
 ,,,,,,,,,,,comp_surface_active,,,
+,,,,,,,,,,,comp_surface_opening,,,
+,,,,,,,,,,,comp_surface_wedges,,,
+,,,,,,,,,,,comp_width,,,
 ,,,,,,,,,,,comp_width_opening,,,
 ,,,,,,,,,,,convert_to_SlotUD2,,,
 ,,,,,,,,,,,get_is_stator,,,
@@ -18,6 +21,8 @@ Zs,-,slot number,0,int,36,0,,,Slot,,build_geometry_active,VERSION,1,Generic clas
 ,,,,,,,,,,,get_Rbo,,,
 ,,,,,,,,,,,get_surface,,,
 ,,,,,,,,,,,get_surface_tooth,,,
+,,,,,,,,,,,get_surface_wedges,,,
 ,,,,,,,,,,,is_outwards,,,
 ,,,,,,,,,,,plot,,,
 ,,,,,,,,,,,plot_active,,,
+,,,,,,,,,,,set_label,,,

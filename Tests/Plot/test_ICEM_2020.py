@@ -44,6 +44,8 @@ on Pyleecan open-source object-oriented software"
 """
 
 
+@pytest.mark.long_5s
+@pytest.mark.long_1m
 @pytest.mark.MagFEMM
 @pytest.mark.SCIM
 @pytest.mark.periodicity
@@ -65,8 +67,7 @@ def test_FEMM_sym():
     simu.input = InputCurrent(
         Is=Is,
         Ir=Ir,  # zero current for the rotor
-        N0=N0,
-        angle_rotor=None,  # Will be computed
+        OP=OPdq(N0=N0),
         Nt_tot=Nt_tot,
         Na_tot=Na_tot,
         angle_rotor_initial=0.2244,
@@ -74,7 +75,9 @@ def test_FEMM_sym():
 
     # Definition of the magnetic simulation
     # 2 sym + antiperiodicity = 1/4 Lamination
-    simu.mag = MagFEMM(type_BH_stator=2, type_BH_rotor=2, is_periodicity_a=True)
+    simu.mag = MagFEMM(
+        type_BH_stator=2, type_BH_rotor=2, is_periodicity_a=True, is_fast_draw=False
+    )
     # Stop after magnetic computation
     simu.force = None
     simu.struct = None
@@ -234,12 +237,12 @@ def test_MachineUD():
     )
     lam1.winding = WindingUD(qs=3, p=3)
     lam1.winding.init_as_CW2LT()
-    # Outer rotor
+    # External Rotor
     lam2 = LamSlot(
         Rext=lam1.Rint - A1, Rint=lam1.Rint - A1 - W2, is_internal=True, is_stator=False
     )
     lam2.slot = SlotW10(Zs=22, W0=25e-3, W1=25e-3, W2=15e-3, H0=0, H1=0, H2=W2 * 0.75)
-    # Inner rotor
+    # Internal Rotor
     lam3 = LamSlot(
         Rext=lam2.Rint - A2,
         Rint=lam2.Rint - A2 - W3,
@@ -419,7 +422,7 @@ def test_WindingUD():
         Rint=0.2, Rext=0.5, is_internal=True, is_stator=False, L1=0.9, Nrvd=2, Wrvd=0.05
     )
     machine.rotor.axial_vent = [
-        VentilationPolar(Zh=6, Alpha0=pi / 6, W1=pi / 6, D0=100e-3, H0=0.3)
+        VentilationPolar(Zh=6, Alpha0=0, W1=pi / 6, D0=100e-3, H0=0.3)
     ]
     machine.rotor.slot = SlotW12(Zs=6, R2=35e-3, H0=20e-3, R1=17e-3, H1=130e-3)
     machine.rotor.winding = WindingUD(wind_mat=wind_mat, qs=4, p=4, Lewout=60e-3)
@@ -489,7 +492,7 @@ def test_WindingUD_layer():
     assert len(fig.axes[0].patches) == 32
 
 
-def test_BoreFlower():
+def test_BoreFlower(is_show_fig=False):
     """Figure 18: LamHole with uneven bore shape
     From pyleecan/Tests/Plot/LamHole/test_Hole_50_plot.py
     """
@@ -519,15 +522,19 @@ def test_BoreFlower():
     rotor.hole[0].magnet_1 = None
     # Rotor bore shape
     rotor.bore = BoreFlower(N=8, Rarc=0.05, alpha=pi / 8)
+    rotor.yoke = BoreFlower(N=8, Rarc=0.05 / 4, alpha=pi / 8)
 
     # Plot, check and save
-    rotor.plot(is_show_fig=False)
-    fig = plt.gcf()
+    fig, _ = rotor.plot(is_show_fig=is_show_fig)
     fig.savefig(join(save_path, "fig_18_BoreFlower.png"))
     fig.savefig(join(save_path, "fig_18_BoreFlower.svg"), format="svg")
     # 2 for lam + 3*8 for holes + 16 vents
     assert len(fig.axes[0].patches) == 42
-
+    fig, _ = rotor.plot(is_show_fig=is_show_fig, sym=8)
+    fig.savefig(join(save_path, "fig_18_BoreFlower_sym.png"))
+    fig.savefig(join(save_path, "fig_18_BoreFlower_sym.svg"), format="svg")
+    # 1 for lam + 3*1 for holes + 3 vents
+    assert len(fig.axes[0].patches) == 7
 
 @pytest.mark.SPMSM
 @pytest.mark.MagFEMM
@@ -552,8 +559,7 @@ def test_ecc_FEMM():
     simu.input = InputCurrent(
         Is=Is,
         Ir=None,  # No winding on the rotor
-        N0=N0,
-        angle_rotor=None,
+        OP=OPdq(N0=N0),
         time=time,
         angle=angle,
         angle_rotor_initial=0,
@@ -567,6 +573,7 @@ def test_ecc_FEMM():
         is_periodicity_a=False,
         is_mmfs=False,
         is_get_meshsolution=True,
+        is_fast_draw=False,
     )
     simu.force = None
     simu.struct = None
@@ -680,19 +687,14 @@ def test_Optimization_problem():
     simu.input = InputCurrent(
         Is=Is,
         Ir=Ir,  # zero current for the rotor
-        N0=N0,
-        angle_rotor=None,  # Will be computed
+        OP=OPdq(N0=N0),
         Nt_tot=Nt_tot,
         Na_tot=Na_tot,
         angle_rotor_initial=0.39,
     )
 
     # Definition of the magnetic simulation
-    simu.mag = MagFEMM(
-        type_BH_stator=2,
-        type_BH_rotor=2,
-        is_periodicity_a=True,
-    )
+    simu.mag = MagFEMM(type_BH_stator=2, type_BH_rotor=2, is_periodicity_a=True,)
 
     simu.struct = None
 
@@ -842,4 +844,10 @@ def test_Optimization_problem():
 
 
 if __name__ == "__main__":
-    test_WindingUD_layer()
+    test_BoreFlower(is_show_fig=True)
+    plt.show()
+    # test_FEMM_sym()
+    # test_WindingUD()
+    # test_ecc_FEMM()
+    # test_WindingUD_layer()
+    print("Done")

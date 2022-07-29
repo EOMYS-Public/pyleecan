@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from os import getcwd, remove, listdir
-from os.path import isfile, join
+from os.path import isfile, join, isdir
 from unittest.mock import patch  # for unittest of input
 
 import pytest
@@ -20,9 +20,11 @@ from pyleecan.Classes.Shaft import Shaft
 from pyleecan.Classes.Simu1 import Simu1
 from pyleecan.Classes.SlotM11 import SlotM11
 from pyleecan.Classes.SlotW10 import SlotW10
+from pyleecan.Classes.SlotUD import SlotUD
+from pyleecan.Classes.HoleUD import HoleUD
 from pyleecan.Classes.Winding import Winding
+from pyleecan.Classes.OPdq import OPdq
 from pyleecan.Functions.load import (
-    LoadSwitchError,
     LoadWrongDictClassError,
     LoadWrongTypeError,
     load,
@@ -98,6 +100,19 @@ def test_save_load_machine():
     assert result.frame == None
 
 
+def test_save_load_json_compressed():
+    """Check that you can save/load a compressed json file"""
+    test_obj = load(join(DATA_DIR, "Machine", "Toyota_Prius.json"))
+    # Check save
+    file_path = join(save_path, "Toyota_Prius_compressed")
+    assert not isfile(file_path + ".json.gz")
+    test_obj.save(file_path, type_compression=1)
+    assert isfile(file_path + ".json.gz")
+    # Check load
+    test_obj2 = load(file_path + ".json.gz")
+    assert test_obj == test_obj2
+
+
 @pytest.mark.IPMSM
 @pytest.mark.MagFEMM
 @pytest.mark.periodicity
@@ -116,8 +131,7 @@ def test_save_load_folder_path():
     simu.input = InputCurrent(
         Is=Is,
         Ir=None,  # No winding on the rotor
-        N0=N0,
-        angle_rotor=None,  # Will be computed
+        OP=OPdq(N0=N0),
         time=time,
         angle=angle,
         rot_dir=-1,
@@ -145,29 +159,75 @@ def test_save_load_folder_path():
     if isfile(file_path):
         remove(file_path)
 
+    # Check save
     assert isfile(file_path) == False
     test_obj.save(loc_save_path, is_folder=True)
     assert isfile(file_path)
     assert isfile(join(loc_save_path, "MagnetPrius.json"))
+    assert isfile(join(loc_save_path, "MagnetPrius_00001.json"))
     assert isfile(join(loc_save_path, "M400-50A.json"))
+    assert isfile(join(loc_save_path, "M400-50A_00001.json"))
+    assert isfile(join(loc_save_path, "M400-50A_00002.json"))
+    assert isfile(join(loc_save_path, "Insulator1.json"))
+    assert isfile(join(loc_save_path, "Air.json"))
+    assert isfile(join(loc_save_path, "Copper1.json"))
     assert isfile(join(loc_save_path, "Toyota_Prius.json"))
-    assert isfile(join(loc_save_path, "test_save_load_folder_path.json"))
-    assert len(listdir(loc_save_path)) == 8
+    assert isfile(join(loc_save_path, "test_save_load_folder_path.json"))  # Simu
+    assert isfile(join(loc_save_path, "FolderSaved.json"))  # Output
+    assert len(listdir(loc_save_path)) == 11
+    # Check load
     test_obj2 = load(loc_save_path)
     assert test_obj == test_obj2
     assert callable(test_obj.simu.postproc_list[0]._run_func)
     assert callable(test_obj.simu.postproc_list[1]._run_func)
+    # Check that material name are still the same
+    assert test_obj2.simu.machine.stator.mat_type.name == "M400-50A"
+    assert test_obj2.simu.machine.rotor.mat_type.name == "M400-50A"
+    assert test_obj2.simu.machine.shaft.mat_type.name == "M400-50A"
 
     # Check that the machine can be updated
     test_obj2.simu.machine.stator.L1 = 999
+    test_obj2.simu.machine.name = "Toyota2"
     # Check that empty materials are not save in separate file
     test_obj2.simu.machine.stator.winding.conductor.ins_mat._set_None()
 
-    test_obj2.save(loc_save_path, is_folder=True)
+    test_obj2.save(loc_save_path, is_folder=True, type_handle_old=1)
+    assert isfile(join(loc_save_path, "MagnetPrius.json"))
+    assert isfile(join(loc_save_path, "MagnetPrius_00001.json"))
+    assert isfile(join(loc_save_path, "M400-50A.json"))
+    assert isfile(join(loc_save_path, "M400-50A_00001.json"))
+    assert isfile(join(loc_save_path, "M400-50A_00002.json"))
+    assert not isfile(join(loc_save_path, "Insulator1.json"))  # Material removed
+    assert not isfile(join(loc_save_path, "Material_00001.json"))  # Material removed
+    assert isfile(join(loc_save_path, "Air.json"))
+    assert isfile(join(loc_save_path, "Copper1.json"))
+    assert isfile(join(loc_save_path, "Toyota2.json"))
+    assert not isfile(join(loc_save_path, "Toyota_Prius.json"))
+    assert isfile(join(loc_save_path, "test_save_load_folder_path.json"))  # Simu
+    assert isfile(join(loc_save_path, "FolderSaved.json"))  # Output
+    assert len(listdir(loc_save_path)) == 10
     test_obj3 = load(loc_save_path)
 
     assert test_obj2.simu.machine.stator.L1 == test_obj3.simu.machine.stator.L1
-    assert len(listdir(loc_save_path)) == 8
+    assert len(test_obj2.compare(test_obj3)) == 0
+
+    # Check save with backup folder
+    test_obj2.save(loc_save_path, is_folder=True, type_handle_old=2)
+    assert isfile(join(loc_save_path, "MagnetPrius.json"))
+    assert isfile(join(loc_save_path, "MagnetPrius_00001.json"))
+    assert isfile(join(loc_save_path, "M400-50A.json"))
+    assert isfile(join(loc_save_path, "M400-50A_00001.json"))
+    assert isfile(join(loc_save_path, "M400-50A_00002.json"))
+    assert isfile(join(loc_save_path, "Air.json"))
+    assert isfile(join(loc_save_path, "Copper1.json"))
+    assert isfile(join(loc_save_path, "Toyota2.json"))
+    assert isfile(join(loc_save_path, "test_save_load_folder_path.json"))  # Simu
+    assert isfile(join(loc_save_path, "FolderSaved.json"))  # Output
+    assert len(listdir(loc_save_path)) == 11
+
+    back_path = join(loc_save_path, "Backup")
+    assert isdir(back_path)
+    assert len(listdir(back_path)) == 10
 
 
 def test_save_load_just_name():
@@ -186,6 +246,31 @@ def test_save_load_just_name():
     assert type(result) is SlotW10
     assert result.Zs == 10
     # remove(file_path)
+
+
+def test_save_load_DXF_flat():
+    """Check that you can save/load a machine with dxf slot/hole in flat mode"""
+    Prius_DXF = load(join(DATA_DIR, "Machine", "Toyota_Prius_DXF.json"))
+    save_dir = join(save_path, "Toyota_Prius_DXF")
+    # Check save
+    assert not isdir(save_dir)
+    Prius_DXF.save(save_path=save_dir, is_folder=True)
+    assert isdir(save_dir)
+    file_list = listdir(save_dir)
+    assert len(file_list) == 12
+    assert "hole.json" in file_list
+    assert "slot.json" in file_list
+    # Check load
+    Prius_2 = load(save_dir)
+    assert isinstance(Prius_2.stator.slot, SlotUD)
+    assert isinstance(Prius_2.rotor.hole[0], HoleUD)
+    assert len(Prius_DXF.compare(Prius_2)) == 0
+    # Remove file and check None
+    remove(join(save_dir, "hole.json"))
+    remove(join(save_dir, "slot.json"))
+    Prius_3 = load(save_dir)
+    assert Prius_3.stator.slot is None
+    assert Prius_3.rotor.hole[0] is None
 
 
 def test_load_error_missing():
@@ -316,8 +401,7 @@ def test_save_load_simu(type_file):
     simu.input = InputCurrent(
         Is=Is,
         Ir=None,  # No winding on the rotor
-        N0=N0,
-        angle_rotor=None,  # Will be computed
+        OP=OPdq(N0=N0),
         time=time,
         angle=angle,
         rot_dir=-1,
@@ -325,7 +409,7 @@ def test_save_load_simu(type_file):
 
     # Definition of the magnetic simulation (no symmetry)
     simu.mag = MagFEMM(
-        type_BH_stator=2, type_BH_rotor=0, is_periodicity_a=True, is_sliding_band=False
+        type_BH_stator=2, type_BH_rotor=0, is_periodicity_a=True, is_sliding_band=True
     )
     simu.force = None
     simu.struct = None
@@ -349,6 +433,8 @@ def test_save_load_simu(type_file):
 
 if __name__ == "__main__":
     test_save_load_folder_path()
+    # test_save_load_DXF_flat()
     # test_save_load_simu("json")
     # test_save_load_simu("h5")
     # test_save_load_simu("pkl")
+    print("Done")

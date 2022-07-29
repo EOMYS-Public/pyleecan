@@ -5,6 +5,7 @@ import pandas as pd
 from SciDataTool import Data1D, DataLinspace, DataPattern, DataTime, DataFreq, VectorField
 # Load the machine
 from os.path import join
+from pyleecan.Classes.OPdq import OPdq
 from pyleecan.Functions.load import load
 from pyleecan.definitions import DATA_DIR
 import matplotlib.pyplot as plt
@@ -29,6 +30,7 @@ import plotly.graph_objects as go
 from plotly.offline import init_notebook_mode
 
 
+@pytest.mark.skip(reason="Work in progress")
 def test_LSRPM_simulation():
     # Create the Simulation
 
@@ -45,11 +47,11 @@ def test_LSRPM_simulation():
     simu_femm.input = InputCurrent()
 
     # Rotor speed [rpm]
-    simu_femm.input.N0 = 750
+    simu_femm.input.OP = OPdq(N0=750)
 
     # # time discretization [s]
     time = linspace(
-        start=0, stop=60 / simu_femm.input.N0/4, num=1, endpoint=False
+        start=0, stop=60 / simu_femm.input.OP.N0, num=32 * p, endpoint=False
     )  # 32*p timesteps
     simu_femm.input.time = time
 
@@ -58,10 +60,11 @@ def test_LSRPM_simulation():
         start=0, stop=2 * pi, num=2048, endpoint=False
     )  # 2048 steps
 
-    # Stator currents as a function of time, each column correspond to one phase [A] triphase
-    #I0_rms = 6.85
-    # felec = p * simu_femm.input.N0 / 60  # [Hz]
-    # rot_dir = simu_femm.machine.stator.comp_rot_dir()
+    # Stator currents as a function of time, each column correspond to one phase [A]
+    I0_rms = 6.85
+    felec = p * simu_femm.input.OP.N0 / 60  # [Hz]
+    rot_dir = simu_femm.machine.stator.comp_mmf_dir()
+    Phi0 = 140 * pi / 180  # Maximum Torque Per Amp
 
     # Phi0 = 0  # Maximum Torque Per Amp
 
@@ -167,7 +170,7 @@ def test_LSRPM_simulation():
     number=B_radial.size
     )
     B_radial = DataTime(name="Airgap radial flux density", symbol="Br", unit="T", axes=[Angle_ref], values=B_radial.values)
-    B_radial.plot_2D_Data("angle{Â°}")
+    B_radial.plot_2D_Data("angle{°}")
 
     B_tange=pd.DataFrame(B_flux, columns= ['Magnetic flux density / Tangential component'])
     B_tange = DataTime(name="Airgap radial flux density", symbol="Br", unit="T", axes=[Angle_ref], values=B_tange.values*-1)
@@ -183,12 +186,12 @@ def test_LSRPM_simulation():
     
     out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]", "time[0]", component_list=["radial"])
     B_radial_pyleecan=out_femm.mag.B.components['radial']
-    B_radial_pyleecan.plot_2D_Data("angle{Â°}",data_list=[B_radial],legend_list=["Pyleecan", "Flux2D"] )
+    B_radial_pyleecan.plot_2D_Data("angle{°}",data_list=[B_radial],legend_list=["Pyleecan", "Flux2D"] )
     # Tangential magnetic flux
-    out_femm.mag.B.plot_2D_Data("angle{Â°}","time[0]",component_list=["tangential"])
+    out_femm.mag.B.plot_2D_Data("angle{°}","time[0]",component_list=["tangential"])
     out_femm.mag.B.plot_2D_Data("wavenumber=[0,76]","time[0]",component_list=["tangential"])
     B_tange_pyleecan=out_femm.mag.B.components['tangential']
-    B_tange_pyleecan.plot_2D_Data("angle{Â°}",data_list=[B_tange],legend_list=["Pyleecan", "Flux2D"] )
+    B_tange_pyleecan.plot_2D_Data("angle{°}",data_list=[B_tange],legend_list=["Pyleecan", "Flux2D"] )
 
     # print(out_femm.mag.Tem.values.shape)
     # print(simu_femm.input.Nt_tot)
@@ -217,7 +220,7 @@ def test_LSRPM_simulation():
 #     # Set I0 = 250 / sqrt(2) [A] (RMS) for all simulation
 #     OP_matrix[:,1] = I0_rms * ones((N_simu))
 
-#     # Set Phi0 from 60ï¿½ to 180ï¿½
+#     # Set Phi0 from 60? to 180?
 #     OP_matrix[:,2] = Phi0_ref
 
 #     # Set reference torque from Yang et al, 2013
@@ -252,7 +255,7 @@ def test_LSRPM_simulation():
 #     array([x*180/pi for x in Xout.xoutput_dict["Phi0"].result]),
 #     [Xout.xoutput_dict["Tem_av"].result, Xout.xoutput_dict["Tem_av_ref"].result],
 #     legend_list=["Pyleecan", "Yang et al, 2013"],
-#     xlabel="Current angle [ï¿½]",
+#     xlabel="Current angle [?]",
 #     ylabel="Electrical torque [N.m]",
 #     title="Electrical torque vs current angle",
 #     **dict_2D

@@ -31,7 +31,7 @@ def get_fund_harm(self, data):
         p = self.simu.machine.get_pole_pair_number()
 
         # Get electrical fundamental frequency
-        f_elec = self.simu.input.comp_felec()
+        f_elec = self.elec.OP.get_felec()
 
         # Loop on axes to express the fundamental harmonic of the Data object
         # including normalizations
@@ -66,8 +66,8 @@ def get_fund_harm(self, data):
                     fund_harm[axe_fft] = coeff
 
                     # Add also normalizations in dict
-                    for key, val in axe.normalizations.items():
-                        fund_harm[key] = fund_harm[axe_fft] / val
+                    for key, norm in axe.normalizations.items():
+                        fund_harm[key] = norm.normalize(fund_harm[axe_fft])
 
     # Cannot calculate dict of fundamental harmonic values
     else:

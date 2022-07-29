@@ -1,17 +1,59 @@
 # -*- coding: utf-8 -*-
 
+from os import chdir, getcwd, walk
 from os.path import isdir, join, splitext
-from os import walk, getcwd, chdir
-from .Load.retrocompatibility import convert_init_dict
-from .Load.load_json import load_json
-from .Load.load_hdf5 import load_hdf5
-from .Load.load_pkl import load_pkl
+
 from .Load.import_class import import_class
-from ..Classes._check import InitUnKnowClassError
+from .Load.load_hdf5 import load_hdf5
+from .Load.load_json import load_json
+from .Load.load_pkl import load_pkl
+from .Load.retrocompatibility import convert_init_dict
 
 # Matlib Keys
 LIB_KEY = "RefMatLib"
 MACH_KEY = "MachineMatLib"
+PATH_KEY = "MATLIB_PATH"
+
+
+def load(file_path):
+    """Load a pyleecan object from a json file
+
+    Parameters
+    ----------
+    file_path: str
+        path to the file to load
+    """
+    if file_path.endswith(".pkl"):
+        return load_pkl(file_path)
+    file_path, init_dict = load_init_dict(file_path)
+
+    # Check that loaded data are of type dict
+    if not isinstance(init_dict, dict):
+        raise LoadWrongTypeError(
+            'Loaded file is of type "'
+            + type(init_dict).__name__
+            + '", type "dict" expected.'
+        )
+    # Check that the dictionay has a "__class__" key
+    if "__class__" not in init_dict:
+        raise LoadWrongDictClassError('Key "__class__" missing in loaded file')
+
+    # Retrocompatibility
+    convert_init_dict(init_dict)
+
+    return init_data(init_dict, file_path)
+
+
+def load_init_dict(file_path):
+    """load the init_dict from a h5 or json file"""
+    if file_path.endswith("hdf5") or file_path.endswith("h5"):
+        return load_hdf5(file_path)
+    elif file_path.endswith((".json", ".json.gz")) or isdir(file_path):
+        return load_json(file_path)
+    else:
+        raise Exception(
+            "Load error: Only hdf5, h5 and json format supported: " + file_path
+        )
 
 
 def init_data(obj, file_path):
@@ -72,47 +114,6 @@ def init_data(obj, file_path):
     # keep all other (json) types as they are
     else:
         return obj
-
-
-def load_init_dict(file_path):
-    """load the init_dict from a h5 or json file"""
-    if file_path.endswith("hdf5") or file_path.endswith("h5"):
-        return load_hdf5(file_path)
-    elif file_path.endswith("json") or isdir(file_path):
-        return load_json(file_path)
-    else:
-        raise Exception(
-            "Load error: Only hdf5, h5 and json format supported: " + file_path
-        )
-
-
-def load(file_path):
-    """Load a pyleecan object from a json file
-
-    Parameters
-    ----------
-    file_path: str
-        path to the file to load
-    """
-    if file_path.endswith(".pkl"):
-        return load_pkl(file_path)
-    file_path, init_dict = load_init_dict(file_path)
-
-    # Check that loaded data are of type dict
-    if not isinstance(init_dict, dict):
-        raise LoadWrongTypeError(
-            'Loaded file is of type "'
-            + type(init_dict).__name__
-            + '", type "dict" expected.'
-        )
-    # Check that the dictionay has a "__class__" key
-    if "__class__" not in init_dict:
-        raise LoadWrongDictClassError('Key "__class__" missing in loaded file')
-
-    # Retrocompatibility
-    convert_init_dict(init_dict)
-
-    return init_data(init_dict, file_path)
 
 
 def _load(file_path, cls_type=None):
@@ -237,7 +238,7 @@ def load_matlib(matlib_path=None, machine=None):
     material_dict: dict
         Materials dictionary (library + machine)
     """
-    material_dict = {LIB_KEY: list(), MACH_KEY: list(), "MATLIB_PATH": matlib_path}
+    material_dict = {LIB_KEY: list(), MACH_KEY: list(), PATH_KEY: matlib_path}
     if matlib_path is not None:
         material_dict[LIB_KEY] = load_matlib_folder(matlib_path)
     if machine is not None:

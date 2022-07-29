@@ -19,11 +19,14 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
 
     # Signal to DMachineSetup to know that the save popup is needed
     saveNeeded = Signal()
+    ZsChanged = Signal()  # Signal to update the slot number after loading a slot
+
     # Information for WslotMag
     slot_name = "Import from DXF"
+    notch_name = "Import from DXF"
     slot_type = SlotUD
 
-    def __init__(self, lamination=None):
+    def __init__(self, lamination=None, material_dict=None, is_notch=False):
         """Initialize the widget according to lamination
 
         Parameters
@@ -32,7 +35,12 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
             A PWSlotUD widget
         lamination : Lamination
             current lamination to edit
+        material_dict: dict
+            Materials dictionary (library + machine)
+        is_notch : bool
+            True to adapt the slot GUI for the notch setup
         """
+
         # Build the interface according to the .ui file
         QWidget.__init__(self)
         self.setupUi(self)
@@ -41,6 +49,9 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
         self.lamination = lamination
         self.slot = lamination.slot
         self.u = gui_option.unit
+        self.material_dict = material_dict
+        self.dxf_gui = None  # Link to the popup
+        self.is_notch = is_notch
 
         # Setup Path selector for Json files
         self.w_path_json.obj = None
@@ -49,6 +60,22 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
         self.w_path_json.extension = "JSON file (*.json)"
         self.w_path_json.update()
 
+        # Wedge setup
+        if self.is_notch:
+            self.g_wedge.hide()
+            self.b_dxf.setText("Define Notch from DXF")
+        else:
+            self.g_wedge.setChecked(self.slot.wedge_mat is not None)
+            self.w_wedge_mat.setText("Wedge Material")
+            if lamination.mat_type is not None and lamination.mat_type.name not in [
+                "",
+                None,
+            ]:
+                self.w_wedge_mat.def_mat = lamination.mat_type.name
+            else:
+                self.w_wedge_mat.def_mat = "M400-50A"
+            self.set_wedge()
+
         # Update the GUI according to the current slot
         self.update_graph()
         self.w_out.comp_output()
@@ -56,6 +83,17 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
         # Connect the signals
         self.b_dxf.clicked.connect(self.open_DXF_Slot)
         self.w_path_json.pathChanged.connect(self.load_slot)
+        self.g_wedge.toggled.connect(self.set_wedge)
+
+    def set_wedge(self):
+        """Setup the slot wedge according to the GUI"""
+        if self.g_wedge.isChecked():
+            self.w_wedge_mat.show()
+            self.w_wedge_mat.update(self.slot, "wedge_mat", self.material_dict)
+        else:
+            self.w_wedge_mat.hide()
+            self.slot.wedge_mat = None
+        self.update_graph()
 
     def update_graph(self):
         """Plot the lamination with/without the slot"""
@@ -71,6 +109,7 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
         lam.plot(fig=self.w_viewer.fig, is_show_fig=False)
 
         # Update the Graph
+        self.w_viewer.axes.set_title("")
         self.w_viewer.axes.set_axis_off()
         self.w_viewer.axes.axis("equal")
         if self.w_viewer.axes.get_legend() is not None:
@@ -101,11 +140,14 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
             return
 
         # Update the slot object
-        Zs = self.slot.Zs
         parent = self.slot.parent
         self.slot.__init__(init_dict=slot.as_dict())  # keep pointer
-        self.slot.Zs = Zs
         self.slot.parent = parent
+        self.ZsChanged.emit()
+
+        # Update the new GUI according to the slot
+        self.update_graph()
+        self.w_out.comp_output()
 
         # Update the new GUI according to the slot
         self.update_graph()
@@ -114,7 +156,9 @@ class PWSlotUD(Ui_PWSlotUD, QWidget):
     def open_DXF_Slot(self):
         """Open the GUI to define the SlotUD"""
         # Init GUI with lamination parameters
-        self.dxf_gui = DXF_Slot(Zs=self.slot.Zs, lam=self.lamination)
+        self.dxf_gui = DXF_Slot(
+            Zs=self.slot.Zs, lam=self.lamination, is_notch=self.is_notch
+        )
         self.dxf_gui.setWindowFlags(Qt.Window)  # To maximize the GUI
         self.dxf_gui.show()
         # Update the slot when saving

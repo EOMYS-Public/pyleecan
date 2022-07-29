@@ -10,9 +10,9 @@ from logging import getLogger
 from ._check import check_var, raise_
 from ..Functions.get_logger import get_logger
 from ..Functions.save import save
-from ..Functions.copy import copy
 from ..Functions.load import load_init_dict
 from ..Functions.Load.import_class import import_class
+from copy import deepcopy
 from ._frozen import FrozenClass
 
 # Import all class method
@@ -23,13 +23,33 @@ except ImportError as error:
     get_loss = error
 
 try:
+    from ..Methods.Output.OutLoss.get_loss_density_ag import get_loss_density_ag
+except ImportError as error:
+    get_loss_density_ag = error
+
+try:
     from ..Methods.Output.OutLoss.get_loss_dist import get_loss_dist
 except ImportError as error:
     get_loss_dist = error
 
+try:
+    from ..Methods.Output.OutLoss.get_loss_group import get_loss_group
+except ImportError as error:
+    get_loss_group = error
 
+try:
+    from ..Methods.Output.OutLoss.get_loss_overall import get_loss_overall
+except ImportError as error:
+    get_loss_overall = error
+
+try:
+    from ..Methods.Output.OutLoss.store import store
+except ImportError as error:
+    store = error
+
+
+from numpy import isnan
 from ._check import InitUnKnowClassError
-from .MeshSolution import MeshSolution
 
 
 class OutLoss(FrozenClass):
@@ -47,6 +67,18 @@ class OutLoss(FrozenClass):
         )
     else:
         get_loss = get_loss
+    # cf Methods.Output.OutLoss.get_loss_density_ag
+    if isinstance(get_loss_density_ag, ImportError):
+        get_loss_density_ag = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use OutLoss method get_loss_density_ag: "
+                    + str(get_loss_density_ag)
+                )
+            )
+        )
+    else:
+        get_loss_density_ag = get_loss_density_ag
     # cf Methods.Output.OutLoss.get_loss_dist
     if isinstance(get_loss_dist, ImportError):
         get_loss_dist = property(
@@ -58,18 +90,56 @@ class OutLoss(FrozenClass):
         )
     else:
         get_loss_dist = get_loss_dist
-    # save and copy methods are available in all object
+    # cf Methods.Output.OutLoss.get_loss_group
+    if isinstance(get_loss_group, ImportError):
+        get_loss_group = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use OutLoss method get_loss_group: " + str(get_loss_group)
+                )
+            )
+        )
+    else:
+        get_loss_group = get_loss_group
+    # cf Methods.Output.OutLoss.get_loss_overall
+    if isinstance(get_loss_overall, ImportError):
+        get_loss_overall = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use OutLoss method get_loss_overall: "
+                    + str(get_loss_overall)
+                )
+            )
+        )
+    else:
+        get_loss_overall = get_loss_overall
+    # cf Methods.Output.OutLoss.store
+    if isinstance(store, ImportError):
+        store = property(
+            fget=lambda x: raise_(
+                ImportError("Can't use OutLoss method store: " + str(store))
+            )
+        )
+    else:
+        store = store
+    # generic save method is available in all object
     save = save
-    copy = copy
     # get_logger method is available in all object
     get_logger = get_logger
 
     def __init__(
         self,
         loss_list=None,
-        meshsol_list=-1,
+        meshsol_list=None,
         loss_index=-1,
         logger_name="Pyleecan.Loss",
+        axes_dict=None,
+        Pstator=None,
+        Protor=None,
+        Pmagnet=None,
+        Pprox=None,
+        Pjoule=None,
+        coeff_dict=-1,
         init_dict=None,
         init_str=None,
     ):
@@ -96,12 +166,33 @@ class OutLoss(FrozenClass):
                 loss_index = init_dict["loss_index"]
             if "logger_name" in list(init_dict.keys()):
                 logger_name = init_dict["logger_name"]
+            if "axes_dict" in list(init_dict.keys()):
+                axes_dict = init_dict["axes_dict"]
+            if "Pstator" in list(init_dict.keys()):
+                Pstator = init_dict["Pstator"]
+            if "Protor" in list(init_dict.keys()):
+                Protor = init_dict["Protor"]
+            if "Pmagnet" in list(init_dict.keys()):
+                Pmagnet = init_dict["Pmagnet"]
+            if "Pprox" in list(init_dict.keys()):
+                Pprox = init_dict["Pprox"]
+            if "Pjoule" in list(init_dict.keys()):
+                Pjoule = init_dict["Pjoule"]
+            if "coeff_dict" in list(init_dict.keys()):
+                coeff_dict = init_dict["coeff_dict"]
         # Set the properties (value check and convertion are done in setter)
         self.parent = None
         self.loss_list = loss_list
         self.meshsol_list = meshsol_list
         self.loss_index = loss_index
         self.logger_name = logger_name
+        self.axes_dict = axes_dict
+        self.Pstator = Pstator
+        self.Protor = Protor
+        self.Pmagnet = Pmagnet
+        self.Pprox = Pprox
+        self.Pjoule = Pjoule
+        self.coeff_dict = coeff_dict
 
         # The class is frozen, for now it's impossible to add new properties
         self._freeze()
@@ -125,6 +216,13 @@ class OutLoss(FrozenClass):
             OutLoss_str += "meshsol_list[" + str(ii) + "] =" + tmp + linesep + linesep
         OutLoss_str += "loss_index = " + str(self.loss_index) + linesep
         OutLoss_str += 'logger_name = "' + str(self.logger_name) + '"' + linesep
+        OutLoss_str += "axes_dict = " + str(self.axes_dict) + linesep + linesep
+        OutLoss_str += "Pstator = " + str(self.Pstator) + linesep
+        OutLoss_str += "Protor = " + str(self.Protor) + linesep
+        OutLoss_str += "Pmagnet = " + str(self.Pmagnet) + linesep
+        OutLoss_str += "Pprox = " + str(self.Pprox) + linesep
+        OutLoss_str += "Pjoule = " + str(self.Pjoule) + linesep
+        OutLoss_str += "coeff_dict = " + str(self.coeff_dict) + linesep
         return OutLoss_str
 
     def __eq__(self, other):
@@ -140,9 +238,23 @@ class OutLoss(FrozenClass):
             return False
         if other.logger_name != self.logger_name:
             return False
+        if other.axes_dict != self.axes_dict:
+            return False
+        if other.Pstator != self.Pstator:
+            return False
+        if other.Protor != self.Protor:
+            return False
+        if other.Pmagnet != self.Pmagnet:
+            return False
+        if other.Pprox != self.Pprox:
+            return False
+        if other.Pjoule != self.Pjoule:
+            return False
+        if other.coeff_dict != self.coeff_dict:
+            return False
         return True
 
-    def compare(self, other, name="self", ignore_list=None):
+    def compare(self, other, name="self", ignore_list=None, is_add_value=False):
         """Compare two objects and return list of differences"""
 
         if ignore_list is None:
@@ -162,7 +274,10 @@ class OutLoss(FrozenClass):
             for ii in range(len(other.loss_list)):
                 diff_list.extend(
                     self.loss_list[ii].compare(
-                        other.loss_list[ii], name=name + ".loss_list[" + str(ii) + "]"
+                        other.loss_list[ii],
+                        name=name + ".loss_list[" + str(ii) + "]",
+                        ignore_list=ignore_list,
+                        is_add_value=is_add_value,
                     )
                 )
         if (other.meshsol_list is None and self.meshsol_list is not None) or (
@@ -179,12 +294,155 @@ class OutLoss(FrozenClass):
                     self.meshsol_list[ii].compare(
                         other.meshsol_list[ii],
                         name=name + ".meshsol_list[" + str(ii) + "]",
+                        ignore_list=ignore_list,
+                        is_add_value=is_add_value,
                     )
                 )
         if other._loss_index != self._loss_index:
-            diff_list.append(name + ".loss_index")
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._loss_index)
+                    + ", other="
+                    + str(other._loss_index)
+                    + ")"
+                )
+                diff_list.append(name + ".loss_index" + val_str)
+            else:
+                diff_list.append(name + ".loss_index")
         if other._logger_name != self._logger_name:
-            diff_list.append(name + ".logger_name")
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._logger_name)
+                    + ", other="
+                    + str(other._logger_name)
+                    + ")"
+                )
+                diff_list.append(name + ".logger_name" + val_str)
+            else:
+                diff_list.append(name + ".logger_name")
+        if (other.axes_dict is None and self.axes_dict is not None) or (
+            other.axes_dict is not None and self.axes_dict is None
+        ):
+            diff_list.append(name + ".axes_dict None mismatch")
+        elif self.axes_dict is None:
+            pass
+        elif len(other.axes_dict) != len(self.axes_dict):
+            diff_list.append("len(" + name + "axes_dict)")
+        else:
+            for key in self.axes_dict:
+                diff_list.extend(
+                    self.axes_dict[key].compare(
+                        other.axes_dict[key],
+                        name=name + ".axes_dict[" + str(key) + "]",
+                        ignore_list=ignore_list,
+                        is_add_value=is_add_value,
+                    )
+                )
+        if (
+            other._Pstator is not None
+            and self._Pstator is not None
+            and isnan(other._Pstator)
+            and isnan(self._Pstator)
+        ):
+            pass
+        elif other._Pstator != self._Pstator:
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._Pstator)
+                    + ", other="
+                    + str(other._Pstator)
+                    + ")"
+                )
+                diff_list.append(name + ".Pstator" + val_str)
+            else:
+                diff_list.append(name + ".Pstator")
+        if (
+            other._Protor is not None
+            and self._Protor is not None
+            and isnan(other._Protor)
+            and isnan(self._Protor)
+        ):
+            pass
+        elif other._Protor != self._Protor:
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._Protor)
+                    + ", other="
+                    + str(other._Protor)
+                    + ")"
+                )
+                diff_list.append(name + ".Protor" + val_str)
+            else:
+                diff_list.append(name + ".Protor")
+        if (
+            other._Pmagnet is not None
+            and self._Pmagnet is not None
+            and isnan(other._Pmagnet)
+            and isnan(self._Pmagnet)
+        ):
+            pass
+        elif other._Pmagnet != self._Pmagnet:
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._Pmagnet)
+                    + ", other="
+                    + str(other._Pmagnet)
+                    + ")"
+                )
+                diff_list.append(name + ".Pmagnet" + val_str)
+            else:
+                diff_list.append(name + ".Pmagnet")
+        if (
+            other._Pprox is not None
+            and self._Pprox is not None
+            and isnan(other._Pprox)
+            and isnan(self._Pprox)
+        ):
+            pass
+        elif other._Pprox != self._Pprox:
+            if is_add_value:
+                val_str = (
+                    " (self=" + str(self._Pprox) + ", other=" + str(other._Pprox) + ")"
+                )
+                diff_list.append(name + ".Pprox" + val_str)
+            else:
+                diff_list.append(name + ".Pprox")
+        if (
+            other._Pjoule is not None
+            and self._Pjoule is not None
+            and isnan(other._Pjoule)
+            and isnan(self._Pjoule)
+        ):
+            pass
+        elif other._Pjoule != self._Pjoule:
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._Pjoule)
+                    + ", other="
+                    + str(other._Pjoule)
+                    + ")"
+                )
+                diff_list.append(name + ".Pjoule" + val_str)
+            else:
+                diff_list.append(name + ".Pjoule")
+        if other._coeff_dict != self._coeff_dict:
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._coeff_dict)
+                    + ", other="
+                    + str(other._coeff_dict)
+                    + ")"
+                )
+                diff_list.append(name + ".coeff_dict" + val_str)
+            else:
+                diff_list.append(name + ".coeff_dict")
         # Filter ignore differences
         diff_list = list(filter(lambda x: x not in ignore_list, diff_list))
         return diff_list
@@ -203,6 +461,17 @@ class OutLoss(FrozenClass):
             for key, value in self.loss_index.items():
                 S += getsizeof(value) + getsizeof(key)
         S += getsizeof(self.logger_name)
+        if self.axes_dict is not None:
+            for key, value in self.axes_dict.items():
+                S += getsizeof(value) + getsizeof(key)
+        S += getsizeof(self.Pstator)
+        S += getsizeof(self.Protor)
+        S += getsizeof(self.Pmagnet)
+        S += getsizeof(self.Pprox)
+        S += getsizeof(self.Pjoule)
+        if self.coeff_dict is not None:
+            for key, value in self.coeff_dict.items():
+                S += getsizeof(value) + getsizeof(key)
         return S
 
     def as_dict(self, type_handle_ndarray=0, keep_function=False, **kwargs):
@@ -251,9 +520,82 @@ class OutLoss(FrozenClass):
             self.loss_index.copy() if self.loss_index is not None else None
         )
         OutLoss_dict["logger_name"] = self.logger_name
+        if self.axes_dict is None:
+            OutLoss_dict["axes_dict"] = None
+        else:
+            OutLoss_dict["axes_dict"] = dict()
+            for key, obj in self.axes_dict.items():
+                if obj is not None:
+                    OutLoss_dict["axes_dict"][key] = obj.as_dict(
+                        type_handle_ndarray=type_handle_ndarray,
+                        keep_function=keep_function,
+                        **kwargs
+                    )
+                else:
+                    OutLoss_dict["axes_dict"][key] = None
+        OutLoss_dict["Pstator"] = self.Pstator
+        OutLoss_dict["Protor"] = self.Protor
+        OutLoss_dict["Pmagnet"] = self.Pmagnet
+        OutLoss_dict["Pprox"] = self.Pprox
+        OutLoss_dict["Pjoule"] = self.Pjoule
+        OutLoss_dict["coeff_dict"] = (
+            self.coeff_dict.copy() if self.coeff_dict is not None else None
+        )
         # The class name is added to the dict for deserialisation purpose
         OutLoss_dict["__class__"] = "OutLoss"
         return OutLoss_dict
+
+    def copy(self):
+        """Creates a deepcopy of the object"""
+
+        # Handle deepcopy of all the properties
+        if self.loss_list is None:
+            loss_list_val = None
+        else:
+            loss_list_val = list()
+            for obj in self.loss_list:
+                loss_list_val.append(obj.copy())
+        if self.meshsol_list is None:
+            meshsol_list_val = None
+        else:
+            meshsol_list_val = list()
+            for obj in self.meshsol_list:
+                meshsol_list_val.append(obj.copy())
+        if self.loss_index is None:
+            loss_index_val = None
+        else:
+            loss_index_val = self.loss_index.copy()
+        logger_name_val = self.logger_name
+        if self.axes_dict is None:
+            axes_dict_val = None
+        else:
+            axes_dict_val = dict()
+            for key, obj in self.axes_dict.items():
+                axes_dict_val[key] = obj.copy()
+        Pstator_val = self.Pstator
+        Protor_val = self.Protor
+        Pmagnet_val = self.Pmagnet
+        Pprox_val = self.Pprox
+        Pjoule_val = self.Pjoule
+        if self.coeff_dict is None:
+            coeff_dict_val = None
+        else:
+            coeff_dict_val = self.coeff_dict.copy()
+        # Creates new object of the same type with the copied properties
+        obj_copy = type(self)(
+            loss_list=loss_list_val,
+            meshsol_list=meshsol_list_val,
+            loss_index=loss_index_val,
+            logger_name=logger_name_val,
+            axes_dict=axes_dict_val,
+            Pstator=Pstator_val,
+            Protor=Protor_val,
+            Pmagnet=Pmagnet_val,
+            Pprox=Pprox_val,
+            Pjoule=Pjoule_val,
+            coeff_dict=coeff_dict_val,
+        )
+        return obj_copy
 
     def _set_None(self):
         """Set all the properties to None (except pyleecan object)"""
@@ -262,6 +604,13 @@ class OutLoss(FrozenClass):
         self.meshsol_list = None
         self.loss_index = None
         self.logger_name = None
+        self.axes_dict = None
+        self.Pstator = None
+        self.Protor = None
+        self.Pmagnet = None
+        self.Pprox = None
+        self.Pjoule = None
+        self.coeff_dict = None
 
     def _get_loss_list(self):
         """getter of loss_list"""
@@ -275,6 +624,15 @@ class OutLoss(FrozenClass):
         """setter of loss_list"""
         if type(value) is list:
             for ii, obj in enumerate(value):
+                if isinstance(obj, str):  # Load from file
+                    try:
+                        obj = load_init_dict(obj)[1]
+                    except Exception as e:
+                        self.get_logger().error(
+                            "Error while loading " + obj + ", setting None instead"
+                        )
+                        obj = None
+                        value[ii] = None
                 if type(obj) is dict:
                     class_obj = import_class(
                         "SciDataTool.Classes", obj.get("__class__"), "loss_list"
@@ -308,6 +666,15 @@ class OutLoss(FrozenClass):
         """setter of meshsol_list"""
         if type(value) is list:
             for ii, obj in enumerate(value):
+                if isinstance(obj, str):  # Load from file
+                    try:
+                        obj = load_init_dict(obj)[1]
+                    except Exception as e:
+                        self.get_logger().error(
+                            "Error while loading " + obj + ", setting None instead"
+                        )
+                        obj = None
+                        value[ii] = None
                 if type(obj) is dict:
                     class_obj = import_class(
                         "pyleecan.Classes", obj.get("__class__"), "meshsol_list"
@@ -364,5 +731,155 @@ class OutLoss(FrozenClass):
         doc=u"""Name of the logger to use
 
         :Type: str
+        """,
+    )
+
+    def _get_axes_dict(self):
+        """getter of axes_dict"""
+        if self._axes_dict is not None:
+            for key, obj in self._axes_dict.items():
+                if obj is not None:
+                    obj.parent = self
+        return self._axes_dict
+
+    def _set_axes_dict(self, value):
+        """setter of axes_dict"""
+        if type(value) is dict:
+            for key, obj in value.items():
+                if isinstance(obj, str):  # Load from file
+                    try:
+                        obj = load_init_dict(obj)[1]
+                    except Exception as e:
+                        self.get_logger().error(
+                            "Error while loading " + obj + ", setting None instead"
+                        )
+                        obj = None
+                        value[key] = None
+                if type(obj) is dict:
+                    class_obj = import_class(
+                        "SciDataTool.Classes", obj.get("__class__"), "axes_dict"
+                    )
+                    value[key] = class_obj(init_dict=obj)
+        if type(value) is int and value == -1:
+            value = dict()
+        check_var("axes_dict", value, "{Data}")
+        self._axes_dict = value
+
+    axes_dict = property(
+        fget=_get_axes_dict,
+        fset=_set_axes_dict,
+        doc=u"""Dict containing axes data used for Magnetics
+
+        :Type: {SciDataTool.Classes.DataND.Data}
+        """,
+    )
+
+    def _get_Pstator(self):
+        """getter of Pstator"""
+        return self._Pstator
+
+    def _set_Pstator(self, value):
+        """setter of Pstator"""
+        check_var("Pstator", value, "float")
+        self._Pstator = value
+
+    Pstator = property(
+        fget=_get_Pstator,
+        fset=_set_Pstator,
+        doc=u"""Stator core losses due to hysteresis and eddy currents
+
+        :Type: float
+        """,
+    )
+
+    def _get_Protor(self):
+        """getter of Protor"""
+        return self._Protor
+
+    def _set_Protor(self, value):
+        """setter of Protor"""
+        check_var("Protor", value, "float")
+        self._Protor = value
+
+    Protor = property(
+        fget=_get_Protor,
+        fset=_set_Protor,
+        doc=u"""Rotor core losses due to hysteresis and eddy currents
+
+        :Type: float
+        """,
+    )
+
+    def _get_Pmagnet(self):
+        """getter of Pmagnet"""
+        return self._Pmagnet
+
+    def _set_Pmagnet(self, value):
+        """setter of Pmagnet"""
+        check_var("Pmagnet", value, "float")
+        self._Pmagnet = value
+
+    Pmagnet = property(
+        fget=_get_Pmagnet,
+        fset=_set_Pmagnet,
+        doc=u"""Magnet eddy current losses
+
+        :Type: float
+        """,
+    )
+
+    def _get_Pprox(self):
+        """getter of Pprox"""
+        return self._Pprox
+
+    def _set_Pprox(self, value):
+        """setter of Pprox"""
+        check_var("Pprox", value, "float")
+        self._Pprox = value
+
+    Pprox = property(
+        fget=_get_Pprox,
+        fset=_set_Pprox,
+        doc=u"""Stator core losses
+
+        :Type: float
+        """,
+    )
+
+    def _get_Pjoule(self):
+        """getter of Pjoule"""
+        return self._Pjoule
+
+    def _set_Pjoule(self, value):
+        """setter of Pjoule"""
+        check_var("Pjoule", value, "float")
+        self._Pjoule = value
+
+    Pjoule = property(
+        fget=_get_Pjoule,
+        fset=_set_Pjoule,
+        doc=u"""Stator core losses
+
+        :Type: float
+        """,
+    )
+
+    def _get_coeff_dict(self):
+        """getter of coeff_dict"""
+        return self._coeff_dict
+
+    def _set_coeff_dict(self, value):
+        """setter of coeff_dict"""
+        if type(value) is int and value == -1:
+            value = dict()
+        check_var("coeff_dict", value, "dict")
+        self._coeff_dict = value
+
+    coeff_dict = property(
+        fget=_get_coeff_dict,
+        fset=_set_coeff_dict,
+        doc=u"""Dict containing coefficients to rebuild loss polynom function of frequency
+
+        :Type: dict
         """,
     )

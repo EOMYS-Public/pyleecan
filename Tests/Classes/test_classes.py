@@ -199,7 +199,9 @@ def test_class_as_dict(class_dict):
     try:
         result_dict = test_obj.as_dict(type_handle_ndarray=0, keep_function=False)
     except Exception as e:
-        raise Exception("Error while calling as_dict for "+class_dict["name"]+":\n"+str(e))
+        raise Exception(
+            "Error while calling as_dict for " + class_dict["name"] + ":\n" + str(e)
+        )
     for key in result_dict:
         assert d[key] == result_dict[key], (
             "Error for class "
@@ -332,12 +334,19 @@ def test_class_type_float(class_dict):
             test_obj.__setattr__(prop["name"], value)
 
             assert test_obj.__getattribute__(prop["name"]) == value, msg
+        elif (
+            prop["type"] == "int"
+            and prop["min"] not in ["", None]
+            and prop["max"] not in ["", None]
+            and prop["min"] == prop["max"]
+        ):
+            # Integer with only one value possible => find_test_value returns this value as float so it passes
+            test_obj.__setattr__(prop["name"], value)
+            assert test_obj.__getattribute__(prop["name"]) == value, msg
         else:
             # CheckTypeError expected
-            with pytest.raises(
-                CheckTypeError,
-            ):
-                # print(msg)
+            with pytest.raises(CheckTypeError):
+                # print(msg + " value " + str(value) + " type " + str(type(value)))
                 test_obj.__setattr__(prop["name"], value)
 
 
@@ -412,6 +421,9 @@ def test_class_prop_doc(class_dict):
             else:
                 type_index += 1
         assert result[: type_index - 1] == prop["desc"].split("\\n")
+        # assert [res.split(" [")[0] for res in result[: type_index - 1]] == [
+        #     p.split(" [")[0] for p in prop["desc"].split("\\n")
+        # ]
 
 
 @pytest.mark.parametrize("class_dict", class_list)
@@ -424,4 +436,5 @@ def test_class_copy(class_dict):
 
 
 if __name__ == "__main__":
-    test_class_as_dict(class_list[144])
+    # test_class_as_dict(class_list[116])
+    test_class_prop_doc(class_list[160])

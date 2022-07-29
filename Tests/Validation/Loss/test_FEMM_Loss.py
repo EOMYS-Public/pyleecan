@@ -2,6 +2,7 @@ from os.path import join
 
 import pytest
 from Tests import save_validation_path as save_path
+from pyleecan.Classes.OPdq import OPdq
 
 from pyleecan.Classes.Simu1 import Simu1
 from pyleecan.Classes.InputCurrent import InputCurrent
@@ -21,6 +22,7 @@ from pyleecan.definitions import DATA_DIR
 
 @pytest.mark.long_5s
 @pytest.mark.long_1m
+@pytest.mark.long_10m
 @pytest.mark.FEMM
 @pytest.mark.MagFEMM
 @pytest.mark.periodicity
@@ -46,7 +48,7 @@ def test_FEMM_Loss():
     Id_ref = 0
     Iq_ref = 2 ** (1 / 2)
 
-    n_step = 180
+    n_step = 176
     Nrev = 1 / 2
 
     # readability
@@ -56,18 +58,26 @@ def test_FEMM_Loss():
     simu = Simu1(name="test_FEMM_Loss", machine=machine)
 
     # Definition of the enforced output of the electrical module
-    simu.input = InputCurrent(Id_ref=Id_ref, Iq_ref=Iq_ref, Na_tot=2048, N0=rotor_speed)
+    simu.input = InputCurrent(
+        OP=OPdq(N0=rotor_speed, Id_ref=Id_ref, Iq_ref=Iq_ref),
+        Na_tot=2048,
+        Nt_tot=n_step,
+    )
 
     # time discretization [s]
     # TODO without explicit time def. there is an error
-    simu.input.time = ImportMatrixVal()
-    simu.input.time.value = linspace(
-        start=0, stop=60 / rotor_speed * Nrev, num=n_step, endpoint=False
-    )  # n_step timesteps
+    # simu.input.time = ImportMatrixVal()
+    # simu.input.time.value = linspace(
+    #     start=0, stop=60 / rotor_speed * Nrev, num=n_step, endpoint=False
+    # )  # n_step timesteps
 
     # Definition of the magnetic simulation: with periodicity
     simu.mag = MagFEMM(
-        type_BH_stator=0, type_BH_rotor=0, is_periodicity_a=True, nb_worker=4
+        type_BH_stator=0,
+        type_BH_rotor=0,
+        is_periodicity_a=True,
+        is_periodicity_t=True,
+        nb_worker=4,
     )
 
     simu.mag.is_get_meshsolution = True  # To get FEA mesh for latter post-procesing
@@ -124,7 +134,7 @@ def test_FEMM_Loss():
     # mshsol.plot_contour(label="LossDens", itime=7)
     # mshsol.plot_contour(label="LossDensSum", itime=0)
 
-    P_mech = 2 * pi * rotor_speed / 60 * out.mag.Tem_av
+    P_mech = out.mag.Pem_av  # Tem is now negative...
 
     loss_stator_iron = loss.get_loss(part_label="Stator", index=0)
     loss_rotor_iron = loss.get_loss(part_label="Rotor", index=0)
@@ -132,12 +142,12 @@ def test_FEMM_Loss():
 
     loss_st_iron = loss_stator_iron.get_along("Speed=4000", "time")["Loss"].mean()
     loss_ro_iron = loss_rotor_iron.get_along("Speed=4000", "time")["Loss"].mean()
-    loss_st_wdg = loss_stator_wind.get_along("time", "phase")["Loss"].mean()
+    loss_st_wdg = loss_stator_wind.get_along("time", "phase=sum")["Loss"].mean()
 
     print(f"mechanical power = {P_mech} W")
     print(f"stator iron loss = {loss_st_iron} W")
     print(f"rotor iron loss = {loss_ro_iron} W")
-    print(f"stator winding loss = {qs*loss_st_wdg} W")
+    print(f"stator winding loss = {loss_st_wdg} W")
 
     delta = 5 / 100  # arbitary allowed relative difference
 

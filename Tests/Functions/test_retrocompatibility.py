@@ -7,8 +7,39 @@ import pytest
 from numpy import array_equal
 from pyleecan.definitions import DATA_DIR
 from pyleecan.Functions.load import load
+from pyleecan.Functions.Load.retrocompatibility import is_before_version
 from Tests import TEST_DATA_DIR
 
+# 4: OP_matrix convertion (ndarray to object)
+OPM_list = list()
+OPM_list.append(  # VarParam of VarLoadCurrent (OP Id/Iq)
+    {
+        "ref": join(
+            TEST_DATA_DIR,
+            "Retrocompatibility",
+            "OP_matrix",
+            "new",
+            "test_multi_multi.json",
+        ),
+        "old": join(
+            TEST_DATA_DIR,
+            "Retrocompatibility",
+            "OP_matrix",
+            "old",
+            "test_multi_multi.json",
+        ),
+    }
+)
+OPM_list.append(  # VarLoadCurrent (I0/Phi0/Tem)
+    {
+        "ref": join(
+            TEST_DATA_DIR, "Retrocompatibility", "OP_matrix", "new", "test_varload.json"
+        ),
+        "old": join(
+            TEST_DATA_DIR, "Retrocompatibility", "OP_matrix", "old", "test_varload.json"
+        ),
+    }
+)
 
 # 3: HoleUD convertion (label update)
 hole_list = list()
@@ -60,14 +91,35 @@ wind_list.append(  # WindingDW1L
     }
 )
 
-# 1: LamSlotMag convertion (magnet from slot to lamination)
-mag_list = list()
-mag_list.append(
-    {
-        "ref": join(DATA_DIR, "Machine", "SPMSM_001.json"),
-        "old": join(TEST_DATA_DIR, "Retrocompatibility", "Magnet", "SPMSM_001.json"),
-    }
-)
+
+def test_save_OPM_None_retro():
+    """Check that the OP_matrix convertion works with None"""
+    simu = load(
+        join(TEST_DATA_DIR, "Retrocompatibility", "OP_matrix", "test_OPM_None.json",),
+    )
+    assert simu.var_simu.OP_matrix is None
+
+
+@pytest.mark.parametrize("file_dict", OPM_list)
+def test_save_OPM_retro(file_dict):
+    """Check that the OP_matrix convertion works"""
+    ref = load(file_dict["ref"])
+    old = load(file_dict["old"])
+
+    ref_var = ref.get_var_load()
+    old_var = old.get_var_load()
+    # Datakeeper were added between the 2 versions
+    ref_var.datakeeper_list = None
+    old_var.datakeeper_list = None
+
+    # Check old file is converted to current version
+    msg = (
+        "Error for "
+        + ref.name
+        + ": "
+        + str(ref_var.compare(old_var, "var_load", is_add_value=True))
+    )
+    assert ref_var == old_var, msg
 
 
 @pytest.mark.parametrize("file_dict", hole_list)
@@ -82,23 +134,6 @@ def test_save_load_hole_retro(file_dict):
     # Check old file is converted to current version
     msg = "Error for " + ref.name + ": " + str(hole_ref.compare(hole_old, "hole"))
     assert hole_ref == hole_old, msg
-
-
-@pytest.mark.parametrize("file_dict", mag_list)
-def test_save_load_mag_retro(file_dict):
-    """Check that the LamSlotMag convertion works"""
-    ref = load(file_dict["ref"])
-    old = load(file_dict["old"])
-
-    # Don't track material update
-    ref.rotor.mat_type = None
-    ref.rotor.magnet.mat_type = None
-    old.rotor.mat_type = None
-    old.rotor.magnet.mat_type = None
-
-    # Check old file is converted to current version
-    msg = "Error for " + ref.name + ": " + str(ref.rotor.compare(old.rotor, "rotor"))
-    assert ref.rotor == old.rotor, msg
 
 
 @pytest.mark.parametrize("file_dict", wind_list)
@@ -130,12 +165,27 @@ def test_save_load_wind_retro(file_dict):
     ), msg
 
 
-if __name__ == "__main__":
-    for file_dict in hole_list:
-        test_save_load_hole_retro(file_dict)
-    for file_dict in mag_list:
-        test_save_load_mag_retro(file_dict)
+def test_before_version():
+    """Check that we can detect previous version"""
+    assert is_before_version("1.2.3", "1.2.1")
+    assert is_before_version("1.2.3", "1.1.3")
+    assert is_before_version("1.2.3", "0.2.3")
+    assert not is_before_version("1.2.3", "2.2.3")
+    assert not is_before_version("1.2.3", "1.3.0")
+    assert not is_before_version("1.2.3", "1.2.4")
+    assert not is_before_version("1.2.3", "1.2.3")
+    assert not is_before_version("1.2.3", "1.2.3.2")
+    assert is_before_version("1.2.3.2", "1.2.3")
 
-    for file_dict in wind_list:
-        test_save_load_wind_retro(file_dict)
+
+if __name__ == "__main__":
+    test_save_OPM_None_retro()
+    for file_dict in OPM_list:
+        test_save_OPM_retro(file_dict)
+
+    # for file_dict in hole_list:
+    #     test_save_load_hole_retro(file_dict)
+
+    # for file_dict in wind_list:
+    #     test_save_load_wind_retro(file_dict)
     print("Done")

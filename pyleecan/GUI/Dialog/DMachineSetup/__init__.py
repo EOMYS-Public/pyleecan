@@ -19,7 +19,7 @@ from ....Classes.SlotM10 import SlotM10
 from ....Classes.Winding import Winding
 from ....Classes.WindingSC import WindingSC
 from ....GUI.Dialog.DMachineSetup.SBar.SBar import SBar
-from ....GUI.Dialog.DMachineSetup.SLamParam.SLamParam import SLamParam
+from ....GUI.Dialog.DMachineSetup.SLamShape.SLamShape import SLamShape
 from ....GUI.Dialog.DMachineSetup.SMachineDimension.SMachineDimension import (
     SMachineDimension,
 )
@@ -30,22 +30,23 @@ from ....GUI.Dialog.DMachineSetup.SWindCond.SWindCond import SWindCond
 from ....GUI.Dialog.DMachineSetup.SWinding.SWinding import SWinding
 from ....GUI.Dialog.DMachineSetup.SWPole.SWPole import SWPole
 from ....GUI.Dialog.DMachineSetup.SWSlot.SWSlot import SWSlot
+from ....GUI.Dialog.DMachineSetup.SSkew.SSkew import SSkew
 from ....GUI.Resources import pixmap_dict
 
 # Steps needed to setup a LamSlotWind
-LSW_step = [SLamParam, SWSlot, SWinding, SWindCond]
+LSW_step = [SWSlot, SWinding, SWindCond, SLamShape]
 # Steps needed to setup a LamSlotWind for the rotor of a WRSM
-LP_step = [SLamParam, SWPole, SWinding, SWindCond]
+LP_step = [SWPole, SWinding, SWindCond, SLamShape, SSkew]
 # Steps needed to setup a LamSquirrelCage
-LSC_step = [SLamParam, SWSlot, SBar]
+LSC_step = [SWSlot, SBar, SLamShape, SSkew]
 # Steps needed to setup a LamSquirrelCageMag
-LSCM_step = [SLamParam, SWSlot, SBar, SMHoleMag]
+LSCM_step = [SWSlot, SBar, SMHoleMag, SLamShape, SSkew]
 # Steps needed to setup a LamHole
-LH_step = [SLamParam, SMHoleMag]
+LH_step = [SMHoleMag, SLamShape, SSkew]
 # Steps needed to setup a LamSlot
-LS_step = [SLamParam, SWSlot]
+LS_step = [SWSlot, SLamShape, SSkew]
 # Steps needed to setup a LamSlotMag
-LSM_step = [SLamParam, SMSlot]
+LSM_step = [SMSlot, SLamShape, SSkew]
 # Steps to start the design of a machine with 2 laminations
 S_step = [SMachineType, SMachineDimension]
 
@@ -149,7 +150,7 @@ DFIM_dict = {
     "init_machine": machine4,
     "start_step": S_step,
     "stator_step": LSW_step,
-    "rotor_step": LSW_step,
+    "rotor_step": LSW_step + [SSkew],
     "name": "DFIM",
     "img": pixmap_dict["DFIM"],
     "txt": "DFIM (Doubly Fed Induction Machine)",

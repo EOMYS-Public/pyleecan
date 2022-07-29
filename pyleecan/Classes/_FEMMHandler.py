@@ -1,8 +1,9 @@
-import win32com.client
 import os
-from six import string_types
-import pythoncom
 from math import exp
+
+import pythoncom
+import win32com.client
+from six import string_types
 
 
 class _FEMMHandler(object):
@@ -27,7 +28,10 @@ class _FEMMHandler(object):
         _FEMMHandler_dict["HandleToFEMM"] = None
         return _FEMMHandler_dict
 
-    def compare(self, other, name="self"):
+    def copy(self):
+        return _FEMMHandler(HandleToFEMM=None)
+
+    def compare(self, other, ignore_list=list(), name="self", is_add_value=False):
         """Compare two objects and return list of differences"""
         return list()
 
@@ -2118,6 +2122,11 @@ class _FEMMHandler(object):
     def mi_readdxf(self, docname):
         self.callfemm("print(mi_readdxf(" + self.quote(docname) + "))")
 
+    def mi_readdxf2(self, docname, tol):
+        self.callfemm(
+            "print(mi_readdxf(" + self.quote(docname) + ", " + str(tol) + "))"
+        )
+
     def mi_refreshview(self):
         self.callfemm("mi_refreshview()")
 
@@ -2135,6 +2144,11 @@ class _FEMMHandler(object):
 
     def mi_savedxf(self, docname):
         self.callfemm_noeval("mi_savedxf(" + self.quote(docname) + ")")
+
+    def mi_savedxf2(self, docname, tol):
+        self.callfemm(
+            "print(mi_savedxf(" + self.quote(docname) + ", " + str(tol) + "))"
+        )
 
     def mi_savemetafile(self, n):
         self.callfemm("mi_savemetafile(" + self.quote(n) + ")")

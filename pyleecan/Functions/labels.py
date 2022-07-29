@@ -13,6 +13,8 @@ BORE_LAB = "Bore"
 YOKE_LAB = "Yoke"
 SLID_LAB = "SlidingBand"
 WIND_LAB = "Winding"
+SOP_LAB = "SlotOpening"
+WEDGE_LAB = "SlotWedge"
 BAR_LAB = "Bar"
 HOLEV_LAB = "HoleVoid"
 HOLEM_LAB = "HoleMag"
@@ -22,6 +24,7 @@ NO_MESH_LAB = "NoMesh"
 VENT_LAB = "Ventilation"
 TOOTH_LAB = "Tooth"
 AIRBOX_LAB = "Airbox"
+NOTCH_LAB = "Notch"
 # Short Surface label alternative
 LAM_LAB_S = "Lam"
 HOLEV_LAB_S = "HV"
@@ -30,14 +33,21 @@ HOLEM_LAB_S = "HM"
 VENT_LAB_S = "Vent"
 
 ## Line Property dict
+DRAW_PROP_LAB = "IS_DRAW"
 BOUNDARY_PROP_LAB = "Boundary"
 RIGHT_LAB = "Right"  # Right is 0x line
 LEFT_LAB = "Left"
 BOT_LAB = "Bot"
 TOP_LAB = "Top"
 YS_LAB = "YokeSide"
+YSN_LAB = YS_LAB + NOTCH_LAB
+YSM_LAB = YS_LAB + MAG_LAB
 YSR_LAB = YS_LAB + "-" + RIGHT_LAB
 YSL_LAB = YS_LAB + "-" + LEFT_LAB
+YSNR_LAB = YSN_LAB + "-" + RIGHT_LAB
+YSNL_LAB = YSN_LAB + "-" + LEFT_LAB
+YSMR_LAB = YSM_LAB + "-" + RIGHT_LAB
+YSML_LAB = YSM_LAB + "-" + LEFT_LAB
 # Shaft BC properties
 SHAFTS_LAB = "ShaftSide"
 SHAFTSR_LAB = SHAFTS_LAB + "-" + RIGHT_LAB
@@ -97,9 +107,26 @@ def decode_label(label):
     return label_dict
 
 
-def update_RTS_index(label=None, label_dict=None, R_id=None, T_id=None, S_id=None):
+def update_RTS_index(
+    label=None, label_dict=None, R_id=None, T_id=None, S_id=None, surf_type_label=None
+):
     """Update the index part of a label
     Stator_Winding_R0-T0-S0 => Stator_Winding_RX-TY-SZ
+
+    Parameters
+    ----------
+    label : str
+        Label to update
+    label_dict : dict
+        Split dict of the label (to avoid decoding twice)
+    R_id : int
+        Radial index to use
+    T_id : int
+        Tangantial index to use
+    S_id : int
+        Slot index to use
+    surf_type_label : str
+        To overwritte the surf_type part of the label
     """
     if label_dict is None:
         label_dict = decode_label(label)
@@ -110,6 +137,8 @@ def update_RTS_index(label=None, label_dict=None, R_id=None, T_id=None, S_id=Non
         label_dict["T_id"] = T_id
     if S_id is not None:
         label_dict["S_id"] = S_id
+    if surf_type_label is not None:
+        label_dict["surf_type"] = surf_type_label
 
     return (
         label_dict["lam_label"]
@@ -143,9 +172,9 @@ def get_obj_from_label(machine, label=None, label_dict=None):
     elif VENT_LAB in label_dict["surf_type"]:
         return lam_obj.axial_vent[label_dict["R_id"]]
     elif HOLEV_LAB in label_dict["surf_type"] or HOLEV_LAB_S in label_dict["surf_type"]:
-        return lam_obj.hole[label_dict["R_id"]]
+        return lam_obj.get_hole_list()[label_dict["R_id"]]
     elif HOLEM_LAB in label_dict["surf_type"] or HOLEM_LAB_S in label_dict["surf_type"]:
-        hole = lam_obj.hole[label_dict["R_id"]]
+        hole = lam_obj.get_hole_list()[label_dict["R_id"]]
         return hole.get_magnet_dict()["magnet_" + str(label_dict["T_id"])]
     elif MAG_LAB in label_dict["surf_type"]:
         return lam_obj.magnet
