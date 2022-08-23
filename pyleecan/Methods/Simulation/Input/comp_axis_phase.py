@@ -62,7 +62,7 @@ def comp_axis_phase(self, lamination, per_a=None, is_apera=None, Phase_in=None):
                     values=name_phase,
                     is_components=True,
                     is_overlay=True,
-                    filter={"Phase": []},
+                    #filter={"Phase": []},
                 )
 
     return Phase

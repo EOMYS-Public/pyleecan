@@ -34,7 +34,9 @@ def solve_PWM(self, output, is_dqh_freq=False, is_skin_effect_inductance=False):
     qs = output.simu.machine.stator.winding.qs
 
     # Get PWM frequencies in abc frame
-    freqs_n = output.elec.Us.get_axes("freqs")[0].values
+
+    test=freqs_n = output.elec.Us.get_axes()
+    freqs_n = output.elec.get_Us().get_axes("freqs")[0].values
 
     # Get stator voltage harmonics in dqh frame
     Us_PWM = output.elec.get_Us(is_dqh=True, is_harm_only=True, is_freq=True)

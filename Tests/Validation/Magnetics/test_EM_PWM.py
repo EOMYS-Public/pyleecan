@@ -13,10 +13,10 @@ from pyleecan.Classes.MagFEMM import MagFEMM
 #from pyleecan.Classes.MagPMMF import MagPMMF
 from pyleecan.Classes.ImportGenPWM import ImportGenPWM
 from pyleecan.Classes.Simu1 import Simu1
-#from pyleecan.Classes.InputVoltage import InputVoltage
+from pyleecan.Classes.InputVoltage import InputVoltage
 from pyleecan.Classes.Electrical import Electrical
 from pyleecan.Classes.EEC_PMSM import EEC_PMSM
-#from pyleecan.Classes.OPdq import OPdq
+from pyleecan.Classes.OPdq import OPdq
 from pyleecan.Classes.ImportGenVectLin import ImportGenVectLin
 from pyleecan.Classes.ImportGenVectLin import ImportGenVectLin
 from pyleecan.Classes.ImportMatrixVal import ImportMatrixVal
@@ -43,25 +43,25 @@ def test_EM_PWM():
     fig=plt.subplot()
     machine.plot()
     #plt.savefig('hah.png',bbox_inches='tight',dpi=fig.dpi,pad_inches=0.0)
-    plt.show()
+
     name = "test_EM_PWM"
 
     simu = Simu1(name=name + "", machine=machine)
 
     Vdc1 = 500
-    fswi = 100
-    freq_max = 1000
-    N0=60
+    fswi = 10
+    freq_max=10
+    N0=15
     Phi0=pi
 
     # Definition of the input
     simu.input = InputCurrent(
         OP=OPdq(N0=N0, Id_ref=0, Iq_ref=6), ##4.64
-        Na_tot=360*10,
-        Nt_tot=2000,
+        Na_tot=10,
+        Nt_tot=10,
         # Na_tot=256 * 8,
         # Nt_tot=256 * 8,
-        PWM=ImportGenPWM(fmax=2 * freq_max, fswi=fswi, Vdc1=Vdc1, typePWM=SPWM),
+        PWM=ImportGenPWM(fmax=2 * freq_max,fswi=fswi, Vdc1=Vdc1, typePWM=SPWM, Phi0=Phi0),
     )
 
     # simu.input = InputVoltage(
@@ -75,30 +75,25 @@ def test_EM_PWM():
 
     simu.elec = Electrical(
         eec=EEC_PMSM(
-            parameters={
-                "Ld": 20.8*1e-3,
-                "Lq": 20.8*1e-3,
-                "Phid_mag": 0,
-                "Phiq_mag": 0,
-                "Phid": 0,
-                "Phiq": 0,
-            }
+                Ld= 20.8*1e-3,
+                Lq= 20.8*1e-3,
+  
         ),
-        freq_max=freq_max,
+        freq_max=freq_max
     )
-
     FEMM_dict = dict()
+    FEMM_dict["mesh"] = dict()
     # rotor yoke region mesh and segments max element size parameter
-    FEMM_dict["meshsize_yokeR"] = 0.005
-    FEMM_dict["elementsize_yokeR"] = 0.005
+    FEMM_dict["mesh"]["meshsize_yokeR"] = 0.005
+    FEMM_dict["mesh"]["elementsize_yokeR"] = 0.005
 
-    FEMM_dict["elementsize_slotR"] = 0.0001
-    FEMM_dict["elementsize_slotS"] = 0.0005
+    FEMM_dict["mesh"]["elementsize_slotR"] = 0.0001
+    FEMM_dict["mesh"]["elementsize_slotS"] = 0.0005
     # FEMM_dict["arcspan"] = 5  # max span of arc element in degrees
 
     # airgap region mesh and segments max element size parameter
-    FEMM_dict["meshsize_airgap"] = 0.0001
-    FEMM_dict["elementsize_airgap"] = 0.0001
+    FEMM_dict["mesh"]["meshsize_airgap"] = 0.0001
+    FEMM_dict["mesh"]["elementsize_airgap"] = 0.0001
 
     # Definition of the magnetic simulation (permeance mmf / FEA)
     #simu.mag = MagPMMF(is_periodicity_a=True, is_periodicity_t=True)
@@ -106,7 +101,7 @@ def test_EM_PWM():
 
 
     out = simu.run()
-    out.save("D:/StageSijie/PrototypeEOMYS/Test_data/test_16_03_2022.h5")
+    out.save("D:/StageSijie/PrototypeEOMYS/Test_data/test_29_07_2022.h5")
 
     #out = load("D:/StageSijie/PrototypeEOMYS/Test_data/test_23_02_2022.h5")
 
