@@ -51,17 +51,6 @@ def right_member_assembly(
         mur_windings.append(material_dict["winding" + str(j + 1)])
 
     #######################################################################################
-    # Information regarding the magnet
-    #######################################################################################
-    # Magnet dimensions
-    magnet_height = Machine.rotor.slot.comp_height_active()
-    magnet_angle_deg = Machine.rotor.slot.comp_angle_active_eq() * (180 / np.pi)
-
-    # Number of elements (TO BE used directly)
-    # N_elements_magnet_theta = N_point_theta
-    # N_elements_magnet_r = self.magnet_elements_r
-
-    #######################################################################################
     # Modeling the PM regions and calculating the FEMM (PM), PM_Magnetization_Direction = y
     #######################################################################################
 
@@ -73,7 +62,7 @@ def right_member_assembly(
 
     N_unknowns = Num_Unknowns.max() + 1
 
-    # Calculation of the phi_PM according to the coordinate system type
+    # Calculation of the Phi_PM according to the coordinate system type
     # Linear : Ref 1: https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9473194
     if type_coord_sys == 1:
 
@@ -93,7 +82,7 @@ def right_member_assembly(
         index_unknowns_2 = defaultdict(float)
         index_unknowns_3 = defaultdict(float)
         index_unknowns_4 = defaultdict(float)
-        phi_PM = defaultdict(float)
+        Phi_PM = defaultdict(float)
 
         for hh in range(nb_PM_per_period):
 
@@ -104,14 +93,8 @@ def right_member_assembly(
                 Magnetization = -1  # negative magnetization direction
 
             # Determination of the flux of the one magnet
-            phi_PM["PM" + str(hh + 1)] = (
-                Magnetization
-                * 2
-                * Br
-                * h_y[mask_magnet["PM" + str(hh + 1)]]
-                * la
-                / mur_PM[hh]
-            )
+            # FEMM is independent of la, however the result is prop. to la
+            Phi_PM["PM" + str(hh + 1)] = Magnetization * 2 * la * Br / mur_PM[hh]
 
             # Determination of the indexes of the unknowns
             index_unknowns_1["PM" + str(hh + 1)] = Num_Unknowns[
@@ -129,19 +112,19 @@ def right_member_assembly(
 
             # Determination of the contribution of the PMs in the RHS vector
             RHS[index_unknowns_1["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
+                Phi_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
             )
             RHS[index_unknowns_2["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
+                Phi_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
             )
             RHS[index_unknowns_3["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
+                Phi_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
             )
             RHS[index_unknowns_4["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
+                Phi_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
             )
 
@@ -153,6 +136,7 @@ def right_member_assembly(
         R2 = list_coord[list_elem[:, -1], 1]
 
         sigma_R = np.abs(R2 - R1)  # step according to r
+        r = (R1 + R2) / 2
 
         sigma_theta = np.abs(
             list_coord[list_elem[:, 1], 0] - list_coord[list_elem[:, 0], 0]
@@ -166,7 +150,7 @@ def right_member_assembly(
         index_unknowns_2 = defaultdict(float)
         index_unknowns_3 = defaultdict(float)
         index_unknowns_4 = defaultdict(float)
-        phi_PM = defaultdict(float)
+        Phi_PM = defaultdict(float)
 
         for hh in range(nb_PM_per_period):
 
@@ -176,17 +160,19 @@ def right_member_assembly(
             else:
                 Magnetization = -1  # negative magnetization direction
 
-            # Determination of the flux of the one magnet
-            phi_PM["PM" + str(hh + 1)] = (
+            # Determination of the local flux due to magnet
+            Phi_PM["PM" + str(hh + 1)] = (
                 Magnetization
                 * 2
                 * Br
-                * sigma_R[mask_magnet["PM" + str(hh + 1)]]
                 * la
+                * r[mask_magnet["PM" + str(hh + 1)]]
+                * sigma_theta[mask_magnet["PM" + str(hh + 1)]]
                 / mur_PM[hh]
             )
 
             # Determination of the indexes of the unknowns
+            # (4 reluctances per cell)
             index_unknowns_1["PM" + str(hh + 1)] = Num_Unknowns[
                 list_elem[mask_magnet["PM" + str(hh + 1)], 0]
             ]
@@ -201,22 +187,26 @@ def right_member_assembly(
             ]
 
             # Determination of the contribution of the PMs in the RHS vector
-            RHS[index_unknowns_1["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
-                * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
-            )
-            RHS[index_unknowns_2["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
-                * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
-            )
-            RHS[index_unknowns_3["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
-                * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
-            )
-            RHS[index_unknowns_4["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
-                * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
-            )
+            # RHS[index_unknowns_1["PM" + str(hh + 1)]] += (
+            #     Phi_PM["PM" + str(hh + 1)]
+            #     * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            # )
+            # RHS[index_unknowns_2["PM" + str(hh + 1)]] -= (
+            #     Phi_PM["PM" + str(hh + 1)]
+            #     * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            # )
+            # RHS[index_unknowns_3["PM" + str(hh + 1)]] -= (
+            #     Phi_PM["PM" + str(hh + 1)]
+            #     * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            # )
+            # RHS[index_unknowns_4["PM" + str(hh + 1)]] += (
+            #     Phi_PM["PM" + str(hh + 1)]
+            #     * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            # )
+            RHS[index_unknowns_1["PM" + str(hh + 1)]] += Phi_PM["PM" + str(hh + 1)]
+            RHS[index_unknowns_2["PM" + str(hh + 1)]] -= Phi_PM["PM" + str(hh + 1)]
+            RHS[index_unknowns_3["PM" + str(hh + 1)]] -= Phi_PM["PM" + str(hh + 1)]
+            RHS[index_unknowns_4["PM" + str(hh + 1)]] += Phi_PM["PM" + str(hh + 1)]
 
     #######################################################################################
     # Calculating the contribution of the windings in the RHS #TODO

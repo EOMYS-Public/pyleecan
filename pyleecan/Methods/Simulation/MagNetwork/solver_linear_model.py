@@ -141,6 +141,7 @@ def solver_linear_model(
     mu0 = material_dict["vacuum"]
     reluc_list = self.init_reluc(list_elem, list_coord, mu0, la, type_coord_sys)
 
+    # assembly of reluctance matrix
     M_csr = self.assembly(
         reluc_list,
         Num_Unknowns,

@@ -38,6 +38,7 @@ def assembly(
 
     N_unknowns = Num_Unknowns.max() + 1
 
+    # permeabilit_element is the relative permeability mu_r
     reluc_upper = reluc_list[:, 0] / permeability_element
     reluc_right = reluc_list[:, 1] / permeability_element
     reluc_down = reluc_list[:, 2] / permeability_element

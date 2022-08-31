@@ -42,15 +42,6 @@ def init_reluc(self, list_elem, list_coord, mu0, la, type_coord_sys):
     # Reluctances in the case of the polar coordiante system
     # Ref : http://lib.tkk.fi/Diss/2002/isbn9512260905/isbn9512260905.pdf (p24)
     elif type_coord_sys == 2:
-        # theta = np.abs(list_coord[list_elem[:, 0], 0] - list_coord[list_elem[:, 1], 0])
-        # R0 = list_coord[list_elem[:, 0], 1]
-        # R1 = list_coord[list_elem[:, 3], 1]
-
-        # ln = np.log(R1 / R0)
-        # Reluc_list[:, 0] = 0.5 * ln / (mu0 * theta * la)
-        # Reluc_list[:, 1] = 0.5 * theta / (mu0 * la * ln)
-        # Reluc_list[:, 2] = Reluc_list[:, 0]
-        # Reluc_list[:, 3] = Reluc_list[:, 1]
 
         # Ref : https://www.researchgate.net/publication/321237892_Reluctance_network_-_Lumped_mechanical_thermal_models_for_the_modeling_of_concentrated_flux_synchronous_machine
         theta = np.abs(list_coord[list_elem[:, 0], 0] - list_coord[list_elem[:, 1], 0])
