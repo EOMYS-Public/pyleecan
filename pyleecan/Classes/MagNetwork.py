@@ -23,62 +23,6 @@ except ImportError as error:
     geometry_motor = error
 
 try:
-    from ..Methods.Simulation.MagNetwork.geometry_linear_motor_separetion import (
-        geometry_linear_motor_separetion,
-    )
-except ImportError as error:
-    geometry_linear_motor_separetion = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.plot.Plot_B import Plot_B
-except ImportError as error:
-    Plot_B = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.plot.view_contour_flux import view_contour_flux
-except ImportError as error:
-    view_contour_flux = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.plot.view_contour_flux2 import (
-        view_contour_flux2,
-    )
-except ImportError as error:
-    view_contour_flux2 = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.post_processing import post_processing
-except ImportError as error:
-    post_processing = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.run_cartesian import run_cartesian
-except ImportError as error:
-    run_cartesian = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.run_non_linear import run_non_linear
-except ImportError as error:
-    run_non_linear = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.run_radial import run_radial
-except ImportError as error:
-    run_radial = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.solver_linear_model import solver_linear_model
-except ImportError as error:
-    solver_linear_model = error
-
-try:
-    from ..Methods.Simulation.MagNetwork.solver_non_linear_model import (
-        solver_non_linear_model,
-    )
-except ImportError as error:
-    solver_non_linear_model = error
-
-try:
     from ..Methods.Simulation.MagNetwork.pre_processing.init_cell import init_cell
 except ImportError as error:
     init_cell = error
@@ -147,9 +91,31 @@ except ImportError as error:
     compute_B = error
 
 try:
-    from ..Methods.Simulation.MagNetwork.comp_flux_airgap import comp_flux_airgap
+    from ..Methods.Simulation.MagNetwork.solver_linear_model import solver_linear_model
 except ImportError as error:
-    comp_flux_airgap = error
+    solver_linear_model = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.run_radial import run_radial
+except ImportError as error:
+    run_radial = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.plot.Plot_B import Plot_B
+except ImportError as error:
+    Plot_B = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.plot.view_contour_flux import view_contour_flux
+except ImportError as error:
+    view_contour_flux = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.plot.view_contour_flux2 import (
+        view_contour_flux2,
+    )
+except ImportError as error:
+    view_contour_flux2 = error
 
 try:
     from ..Methods.Simulation.MagNetwork.comp_flux_airgap_local import (
@@ -159,6 +125,33 @@ except ImportError as error:
     comp_flux_airgap_local = error
 
 try:
+    from ..Methods.Simulation.MagNetwork.comp_flux_airgap import comp_flux_airgap
+except ImportError as error:
+    comp_flux_airgap = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.comp_axes import comp_axes
+except ImportError as error:
+    comp_axes = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.run_cartesian import run_cartesian
+except ImportError as error:
+    run_cartesian = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.run_non_linear import run_non_linear
+except ImportError as error:
+    run_non_linear = error
+
+try:
+    from ..Methods.Simulation.MagNetwork.solver_non_linear_model import (
+        solver_non_linear_model,
+    )
+except ImportError as error:
+    solver_non_linear_model = error
+
+try:
     from ..Methods.Simulation.MagNetwork.cartesianmeshclass_pyleecan import (
         cartesianmeshclass_pyleecan,
     )
@@ -166,9 +159,11 @@ except ImportError as error:
     cartesianmeshclass_pyleecan = error
 
 try:
-    from ..Methods.Simulation.MagNetwork.comp_axes import comp_axes
+    from ..Methods.Simulation.MagNetwork.geometry_linear_motor_separetion import (
+        geometry_linear_motor_separetion,
+    )
 except ImportError as error:
-    comp_axes = error
+    geometry_linear_motor_separetion = error
 
 
 from numpy import isnan
@@ -192,120 +187,6 @@ class MagNetwork(Magnetics):
         )
     else:
         geometry_motor = geometry_motor
-    # cf Methods.Simulation.MagNetwork.geometry_linear_motor_separetion
-    if isinstance(geometry_linear_motor_separetion, ImportError):
-        geometry_linear_motor_separetion = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method geometry_linear_motor_separetion: "
-                    + str(geometry_linear_motor_separetion)
-                )
-            )
-        )
-    else:
-        geometry_linear_motor_separetion = geometry_linear_motor_separetion
-    # cf Methods.Simulation.MagNetwork.plot.Plot_B
-    if isinstance(Plot_B, ImportError):
-        Plot_B = property(
-            fget=lambda x: raise_(
-                ImportError("Can't use MagNetwork method Plot_B: " + str(Plot_B))
-            )
-        )
-    else:
-        Plot_B = Plot_B
-    # cf Methods.Simulation.MagNetwork.plot.view_contour_flux
-    if isinstance(view_contour_flux, ImportError):
-        view_contour_flux = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method view_contour_flux: "
-                    + str(view_contour_flux)
-                )
-            )
-        )
-    else:
-        view_contour_flux = view_contour_flux
-    # cf Methods.Simulation.MagNetwork.plot.view_contour_flux2
-    if isinstance(view_contour_flux2, ImportError):
-        view_contour_flux2 = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method view_contour_flux2: "
-                    + str(view_contour_flux2)
-                )
-            )
-        )
-    else:
-        view_contour_flux2 = view_contour_flux2
-    # cf Methods.Simulation.MagNetwork.post_processing
-    if isinstance(post_processing, ImportError):
-        post_processing = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method post_processing: "
-                    + str(post_processing)
-                )
-            )
-        )
-    else:
-        post_processing = post_processing
-    # cf Methods.Simulation.MagNetwork.run_cartesian
-    if isinstance(run_cartesian, ImportError):
-        run_cartesian = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method run_cartesian: " + str(run_cartesian)
-                )
-            )
-        )
-    else:
-        run_cartesian = run_cartesian
-    # cf Methods.Simulation.MagNetwork.run_non_linear
-    if isinstance(run_non_linear, ImportError):
-        run_non_linear = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method run_non_linear: " + str(run_non_linear)
-                )
-            )
-        )
-    else:
-        run_non_linear = run_non_linear
-    # cf Methods.Simulation.MagNetwork.run_radial
-    if isinstance(run_radial, ImportError):
-        run_radial = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method run_radial: " + str(run_radial)
-                )
-            )
-        )
-    else:
-        run_radial = run_radial
-    # cf Methods.Simulation.MagNetwork.solver_linear_model
-    if isinstance(solver_linear_model, ImportError):
-        solver_linear_model = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method solver_linear_model: "
-                    + str(solver_linear_model)
-                )
-            )
-        )
-    else:
-        solver_linear_model = solver_linear_model
-    # cf Methods.Simulation.MagNetwork.solver_non_linear_model
-    if isinstance(solver_non_linear_model, ImportError):
-        solver_non_linear_model = property(
-            fget=lambda x: raise_(
-                ImportError(
-                    "Can't use MagNetwork method solver_non_linear_model: "
-                    + str(solver_non_linear_model)
-                )
-            )
-        )
-    else:
-        solver_non_linear_model = solver_non_linear_model
     # cf Methods.Simulation.MagNetwork.pre_processing.init_cell
     if isinstance(init_cell, ImportError):
         init_cell = property(
@@ -431,18 +312,62 @@ class MagNetwork(Magnetics):
         )
     else:
         compute_B = compute_B
-    # cf Methods.Simulation.MagNetwork.comp_flux_airgap
-    if isinstance(comp_flux_airgap, ImportError):
-        comp_flux_airgap = property(
+    # cf Methods.Simulation.MagNetwork.solver_linear_model
+    if isinstance(solver_linear_model, ImportError):
+        solver_linear_model = property(
             fget=lambda x: raise_(
                 ImportError(
-                    "Can't use MagNetwork method comp_flux_airgap: "
-                    + str(comp_flux_airgap)
+                    "Can't use MagNetwork method solver_linear_model: "
+                    + str(solver_linear_model)
                 )
             )
         )
     else:
-        comp_flux_airgap = comp_flux_airgap
+        solver_linear_model = solver_linear_model
+    # cf Methods.Simulation.MagNetwork.run_radial
+    if isinstance(run_radial, ImportError):
+        run_radial = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use MagNetwork method run_radial: " + str(run_radial)
+                )
+            )
+        )
+    else:
+        run_radial = run_radial
+    # cf Methods.Simulation.MagNetwork.plot.Plot_B
+    if isinstance(Plot_B, ImportError):
+        Plot_B = property(
+            fget=lambda x: raise_(
+                ImportError("Can't use MagNetwork method Plot_B: " + str(Plot_B))
+            )
+        )
+    else:
+        Plot_B = Plot_B
+    # cf Methods.Simulation.MagNetwork.plot.view_contour_flux
+    if isinstance(view_contour_flux, ImportError):
+        view_contour_flux = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use MagNetwork method view_contour_flux: "
+                    + str(view_contour_flux)
+                )
+            )
+        )
+    else:
+        view_contour_flux = view_contour_flux
+    # cf Methods.Simulation.MagNetwork.plot.view_contour_flux2
+    if isinstance(view_contour_flux2, ImportError):
+        view_contour_flux2 = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use MagNetwork method view_contour_flux2: "
+                    + str(view_contour_flux2)
+                )
+            )
+        )
+    else:
+        view_contour_flux2 = view_contour_flux2
     # cf Methods.Simulation.MagNetwork.comp_flux_airgap_local
     if isinstance(comp_flux_airgap_local, ImportError):
         comp_flux_airgap_local = property(
@@ -455,6 +380,61 @@ class MagNetwork(Magnetics):
         )
     else:
         comp_flux_airgap_local = comp_flux_airgap_local
+    # cf Methods.Simulation.MagNetwork.comp_flux_airgap
+    if isinstance(comp_flux_airgap, ImportError):
+        comp_flux_airgap = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use MagNetwork method comp_flux_airgap: "
+                    + str(comp_flux_airgap)
+                )
+            )
+        )
+    else:
+        comp_flux_airgap = comp_flux_airgap
+    # cf Methods.Simulation.MagNetwork.comp_axes
+    if isinstance(comp_axes, ImportError):
+        comp_axes = property(
+            fget=lambda x: raise_(
+                ImportError("Can't use MagNetwork method comp_axes: " + str(comp_axes))
+            )
+        )
+    else:
+        comp_axes = comp_axes
+    # cf Methods.Simulation.MagNetwork.run_cartesian
+    if isinstance(run_cartesian, ImportError):
+        run_cartesian = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use MagNetwork method run_cartesian: " + str(run_cartesian)
+                )
+            )
+        )
+    else:
+        run_cartesian = run_cartesian
+    # cf Methods.Simulation.MagNetwork.run_non_linear
+    if isinstance(run_non_linear, ImportError):
+        run_non_linear = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use MagNetwork method run_non_linear: " + str(run_non_linear)
+                )
+            )
+        )
+    else:
+        run_non_linear = run_non_linear
+    # cf Methods.Simulation.MagNetwork.solver_non_linear_model
+    if isinstance(solver_non_linear_model, ImportError):
+        solver_non_linear_model = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use MagNetwork method solver_non_linear_model: "
+                    + str(solver_non_linear_model)
+                )
+            )
+        )
+    else:
+        solver_non_linear_model = solver_non_linear_model
     # cf Methods.Simulation.MagNetwork.cartesianmeshclass_pyleecan
     if isinstance(cartesianmeshclass_pyleecan, ImportError):
         cartesianmeshclass_pyleecan = property(
@@ -467,15 +447,18 @@ class MagNetwork(Magnetics):
         )
     else:
         cartesianmeshclass_pyleecan = cartesianmeshclass_pyleecan
-    # cf Methods.Simulation.MagNetwork.comp_axes
-    if isinstance(comp_axes, ImportError):
-        comp_axes = property(
+    # cf Methods.Simulation.MagNetwork.geometry_linear_motor_separetion
+    if isinstance(geometry_linear_motor_separetion, ImportError):
+        geometry_linear_motor_separetion = property(
             fget=lambda x: raise_(
-                ImportError("Can't use MagNetwork method comp_axes: " + str(comp_axes))
+                ImportError(
+                    "Can't use MagNetwork method geometry_linear_motor_separetion: "
+                    + str(geometry_linear_motor_separetion)
+                )
             )
         )
     else:
-        comp_axes = comp_axes
+        geometry_linear_motor_separetion = geometry_linear_motor_separetion
     # generic save method is available in all object
     save = save
     # get_logger method is available in all object
@@ -971,7 +954,7 @@ class MagNetwork(Magnetics):
     type_model = property(
         fget=_get_type_model,
         fset=_set_type_model,
-        doc=u"""Type of the model to be solved: linear (1) or non-linear (1)
+        doc=u"""Type of the model to be solved: linear (1) or non-linear (2)
 
         :Type: int
         :min: 1
@@ -1011,7 +994,7 @@ class MagNetwork(Magnetics):
     Kmesh_fineness = property(
         fget=_get_Kmesh_fineness,
         fset=_set_Kmesh_fineness,
-        doc=u"""Mesh density
+        doc=u"""Mesh density according to theta-direction
 
         :Type: int
         """,

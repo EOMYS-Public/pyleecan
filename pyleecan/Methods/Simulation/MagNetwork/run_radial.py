@@ -185,6 +185,19 @@ def run_radial(self, axes_dict, Is_val=None, type_coord_sys=2):
     # computing the flux density B
     ###############################################################################
     Bx, By = self.compute_B(Phi, list_elem, list_coord, la, type_coord_sys)
+    index_airgap = self.geometry_motor(N_point_theta)[7]
+    self.Plot_B(
+        Bx,
+        By,
+        theta,
+        r,
+        theta_dual,
+        r_dual,
+        list_geometry,
+        type_coord_sys,
+        list_coord,
+        index_airgap,
+    )
 
     B = np.stack((Bx, By), axis=-1)
 
@@ -199,7 +212,6 @@ def run_radial(self, axes_dict, Is_val=None, type_coord_sys=2):
     print("mesh saved", list_coord.shape, list_elem.shape)
 
     # Compute 2D curve of the airgap flux density
-    index_airgap = self.geometry_motor(N_point_theta)[7]
     Bx_airgap, By_airgap = self.comp_flux_airgap_local(
         # r,
         # theta,

@@ -124,6 +124,11 @@ try:
 except ImportError as error:
     set_pole_pair_number = error
 
+try:
+    from ..Methods.Machine.LamSlotWind.build_geometry_polar import build_geometry_polar
+except ImportError as error:
+    build_geometry_polar = error
+
 
 from numpy import isnan
 from ._check import InitUnKnowClassError
@@ -373,6 +378,18 @@ class LamSlotWind(LamSlot):
         )
     else:
         set_pole_pair_number = set_pole_pair_number
+    # cf Methods.Machine.LamSlotWind.build_geometry_polar
+    if isinstance(build_geometry_polar, ImportError):
+        build_geometry_polar = property(
+            fget=lambda x: raise_(
+                ImportError(
+                    "Can't use LamSlotWind method build_geometry_polar: "
+                    + str(build_geometry_polar)
+                )
+            )
+        )
+    else:
+        build_geometry_polar = build_geometry_polar
     # generic save method is available in all object
     save = save
     # get_logger method is available in all object

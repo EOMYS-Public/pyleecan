@@ -75,15 +75,21 @@ def draw_FEMM_lamination(
 
             if is_antiper_a:
                 sym_draw *= 2
-
-            surf_list = lam.build_geometry(sym=sym_draw, is_circular_radius=True)
+            if lam.is_stator == True:
+                surf_list = lam.build_geometry_polar(sym=sym)
+            else:
+                surf_list = lam.build_geometry(sym=sym_draw, is_circular_radius=True)
             is_draw = False
             type_set_BC = 1
             # Disabling the assign on the build_geometry with sym_draw (done later on build_geometry with sym)
             type_assign = 2
         else:
             sym_draw = sym
-            surf_list = lam.build_geometry(sym=sym, is_circular_radius=True)
+            if lam.is_stator == True:
+                surf_list = lam.build_geometry_polar(sym=sym)
+            else:
+                surf_list = lam.build_geometry(sym=sym, is_circular_radius=True)
+            # surf_list = lam.build_geometry(sym=sym, is_circular_radius=True)
             is_draw = True
             type_set_BC = 0
             type_assign = 0

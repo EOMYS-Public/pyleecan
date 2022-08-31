@@ -157,6 +157,7 @@ def solver_linear_model(
     ###############################################################################
 
     mask_magnet = self.geometry_motor(N_point_theta)[4]
+    magnet_elements_theta = self.geometry_motor(N_point_theta)[8]
 
     RHS = self.right_member_assembly(
         list_elem_permability,
@@ -169,7 +170,7 @@ def solver_linear_model(
         mask_magnet,
         la,
         type_coord_sys,
-        N_point_theta,
+        magnet_elements_theta,
         JA=JA,
         JB=JB,
         JC=JC,

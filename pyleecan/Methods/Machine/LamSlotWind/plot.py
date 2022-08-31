@@ -35,6 +35,7 @@ def plot(
     save_path=None,
     win_title=None,
     is_legend=True,
+    is_add_ref=False,
 ):
     """Plot the Lamination in a matplotlib fig
 
@@ -136,6 +137,11 @@ def plot(
             patches.extend(
                 surf.get_patches(is_edge_only=is_edge_only, edgecolor=edgecolor)
             )
+
+    # Add reference point
+    if is_add_ref:
+        for surf in self.surf_list:
+            ax.plot(surf.point_ref.real, surf.point_ref.imag, "rx")
 
     if is_display:
 

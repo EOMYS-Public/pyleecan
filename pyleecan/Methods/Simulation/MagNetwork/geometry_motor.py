@@ -44,7 +44,7 @@ def geometry_motor(self, N_point_theta):
     Machine = self.parent.machine
 
     # Conversion
-    rad_to_deg = 180 / np.pi
+    # rad_to_deg = 180 / np.pi
 
     # Machine periodicity
     if Machine.comp_periodicity_spatial()[1] == True:
@@ -53,7 +53,8 @@ def geometry_motor(self, N_point_theta):
         periodicity = Machine.comp_periodicity_spatial()[0] / 2
 
     # Pole pitch angle
-    angle_tp = (np.pi / periodicity) * rad_to_deg
+    # angle_tp = (np.pi / periodicity) * rad_to_deg
+    angle_tp = np.pi / periodicity
 
     # Number of PMs per period
     nb_PM_per_period = round(Machine.rotor.get_pole_pair_number() / periodicity)
@@ -65,7 +66,7 @@ def geometry_motor(self, N_point_theta):
     nb_layers = Machine.stator.winding.Nlayer
 
     # Active length (m)
-    la = Machine.rotor.L1
+    # la = Machine.rotor.L1
 
     #######################################################################################
     # Material properties definition
@@ -126,11 +127,13 @@ def geometry_motor(self, N_point_theta):
 
     """ Rotor geometry angular dimensions in deg"""
     # Angular opening of the rotor magnet
-    angle_magnet = Machine.rotor.slot.comp_angle_active_eq() * rad_to_deg
+    # angle_magnet = Machine.rotor.slot.comp_angle_active_eq() * rad_to_deg
+    angle_magnet = Machine.rotor.slot.comp_angle_active_eq()
 
     """ Stator geometry angular dimensions in deg"""
     # Angular opening of the stator slot
-    angle_stator_slot = Machine.stator.slot.comp_angle_active_eq() * rad_to_deg
+    # angle_stator_slot = Machine.stator.slot.comp_angle_active_eq() * rad_to_deg
+    angle_stator_slot = Machine.stator.slot.comp_angle_active_eq()
 
     """ Geometry discretization according to the theta-axis """
     """ Discritized stator """
@@ -200,14 +203,14 @@ def geometry_motor(self, N_point_theta):
     )
 
     # Height of the stator slot
-    height_stator_slot = radius_stator_slot_exterior - radius_stator_slot_interior
+    # height_stator_slot = radius_stator_slot_exterior - radius_stator_slot_interior
 
     # Stator yoke
-    height_stator_yoke = Machine.stator.comp_height_yoke()
+    # height_stator_yoke = Machine.stator.comp_height_yoke()
 
     # Height of the air between the interior radius of the stator slot and the interior radius of the stator
     # Null in case radius_stator_slot_interior = radius_stator_interior
-    height_stator_isthmus = radius_stator_slot_interior - radius_stator_interior
+    # height_stator_isthmus = radius_stator_slot_interior - radius_stator_interior
 
     """ Geometry discretization according to the r-axis """
     """ Discritized stator """
@@ -228,7 +231,7 @@ def geometry_motor(self, N_point_theta):
     # dr_airgap = round(e / self.airgap_elements_r)
     # dr_magnet = round(height_magnet / self.magnet_elements_r)
 
-    airgap_and_magnet_elements_r = self.airgap_elements_r + self.magnet_elements_r
+    # airgap_and_magnet_elements_r = self.airgap_elements_r + self.magnet_elements_r
 
     """ Elements characteristics according to the r-axis of the geometry (in a dict):
     characteristics_elements_r = {nbr_elements_r, element_height}"""
@@ -268,7 +271,7 @@ def geometry_motor(self, N_point_theta):
             radius_stator_slot_interior,
             (self.stator_isthmus_elements_r + 1),
         )
-        axes_r["stator_isthmus"] = np.delete(axes_r["stator_air"], -1)
+        axes_r["stator_isthmus"] = np.delete(axes_r["stator_isthmus"], -1)
     else:
         axes_r["stator_isthmus"] = []
 
@@ -327,9 +330,12 @@ def geometry_motor(self, N_point_theta):
         N_element_theta_kk = N_element_theta * kk
         N_point_theta = N_element_theta_kk + 1
         h_theta = x / (N_point_theta - 1)
+        # stator_slot_elements_theta = nb_layers * round(
+        #     (Machine.stator.slot.comp_angle_active_eq() * rad_to_deg / h_theta)
+        #     / nb_layers
+        # )
         stator_slot_elements_theta = nb_layers * round(
-            (Machine.stator.slot.comp_angle_active_eq() * rad_to_deg / h_theta)
-            / nb_layers
+            (Machine.stator.slot.comp_angle_active_eq() / h_theta) / nb_layers
         )
 
         stator_tooth_opening = (
@@ -448,7 +454,9 @@ def geometry_motor(self, N_point_theta):
                     geometry_disctint[num_element] = 2
 
         # Assignment of the airgap between the PMs and the stator
-        elif i < (self.rotor_yoke_elements_r + airgap_and_magnet_elements_r):
+        elif i < (
+            self.rotor_yoke_elements_r + self.airgap_elements_r + self.magnet_elements_r
+        ):
             for j in range(N_element_theta_kk):
                 num_element = N_element_theta_kk * i + j
                 cells_materials[num_element] = material_dict["air"]  # air
@@ -461,9 +469,10 @@ def geometry_motor(self, N_point_theta):
             if radius_stator_slot_interior != radius_stator_interior:
                 if (
                     i
-                    <= self.stator_air_elements_r
+                    <= self.stator_isthmus_elements_r
                     + self.rotor_yoke_elements_r
-                    + airgap_and_magnet_elements_r
+                    + self.airgap_elements_r
+                    + self.magnet_elements_r
                 ):
                     for j in range(N_element_theta_kk):
                         num_element = N_element_theta_kk * i + j
@@ -714,4 +723,5 @@ def geometry_motor(self, N_point_theta):
         N_point_r,
         axes_r,
         index_middle_airgap,
+        magnet_elements_theta,
     )

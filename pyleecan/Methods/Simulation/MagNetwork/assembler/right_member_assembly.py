@@ -51,29 +51,12 @@ def right_member_assembly(
         mur_windings.append(material_dict["winding" + str(j + 1)])
 
     #######################################################################################
-    # Information regarding the magnet
-    #######################################################################################
-    # Magnet dimensions
-    magnet_height = Machine.rotor.slot.comp_height_active()
-    magnet_angle_deg = Machine.rotor.slot.comp_angle_active_eq() * (180 / np.pi)
-
-    # Number of elements (TO BE used directly)
-    # N_elements_magnet_theta = N_point_theta
-    # N_elements_magnet_r = self.magnet_elements_r
-
-    #######################################################################################
     # Modeling the PM regions and calculating the FEMM (PM), PM_Magnetization_Direction = y
     #######################################################################################
 
-    # Masking the magnet : mask_magnet is true if the permeability is equal to mur_PM
-    # mask_magnet = list_permeability_cell == mur_PM[0]
-    # mask_magnet_1p = []
-    # for ii in range(nb_PM_per_period):
-    #     mask_magnet_1p[str(ii)] = mask_magnet[ii]
-
     N_unknowns = Num_Unknowns.max() + 1
 
-    # Calculation of the phi_PM according to the coordinate system type
+    # Calculation of the FMM_PM according to the coordinate system type
     # Linear : Ref 1: https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9473194
     if type_coord_sys == 1:
 
@@ -93,7 +76,7 @@ def right_member_assembly(
         index_unknowns_2 = defaultdict(float)
         index_unknowns_3 = defaultdict(float)
         index_unknowns_4 = defaultdict(float)
-        phi_PM = defaultdict(float)
+        FMM_PM = defaultdict(float)
 
         for hh in range(nb_PM_per_period):
 
@@ -104,9 +87,8 @@ def right_member_assembly(
                 Magnetization = -1  # negative magnetization direction
 
             # Determination of the flux of the one magnet
-            phi_PM["PM" + str(hh + 1)] = (
+            FMM_PM["PM" + str(hh + 1)] = (
                 Magnetization
-                * 2
                 * Br
                 * h_y[mask_magnet["PM" + str(hh + 1)]]
                 * la
@@ -129,19 +111,21 @@ def right_member_assembly(
 
             # Determination of the contribution of the PMs in the RHS vector
             RHS[index_unknowns_1["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
+                FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
             )
             RHS[index_unknowns_2["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
+                FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
             )
             RHS[index_unknowns_3["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
+                0.5
+                * FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
             )
             RHS[index_unknowns_4["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
+                0.5
+                * FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
             )
 
@@ -166,7 +150,7 @@ def right_member_assembly(
         index_unknowns_2 = defaultdict(float)
         index_unknowns_3 = defaultdict(float)
         index_unknowns_4 = defaultdict(float)
-        phi_PM = defaultdict(float)
+        FMM_PM = defaultdict(float)
 
         for hh in range(nb_PM_per_period):
 
@@ -176,13 +160,10 @@ def right_member_assembly(
             else:
                 Magnetization = -1  # negative magnetization direction
 
-            # Determination of the flux of the one magnet
-            phi_PM["PM" + str(hh + 1)] = (
+            FMM_PM["PM" + str(hh + 1)] = (
                 Magnetization
-                * 2
                 * Br
                 * sigma_R[mask_magnet["PM" + str(hh + 1)]]
-                * la
                 / mur_PM[hh]
             )
 
@@ -201,20 +182,73 @@ def right_member_assembly(
             ]
 
             # Determination of the contribution of the PMs in the RHS vector
+            # RHS[index_unknowns_1["PM" + str(hh + 1)]] += (
+            #     FMM_PM["PM" + str(hh + 1)]
+            #     * (
+            #         (
+            #             reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            #             + reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            #         )
+            #         / mur_PM[hh]
+            #     )
+            #     + Br * la * sigma_theta[mask_magnet["PM" + str(hh + 1)]] / 2
+            # )
+            # RHS[index_unknowns_2["PM" + str(hh + 1)]] -= (
+            #     FMM_PM["PM" + str(hh + 1)]
+            #     * (
+            #         (
+            #             reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            #             + reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            #         )
+            #         / mur_PM[hh]
+            #     )
+            #     + Br * la * sigma_theta[mask_magnet["PM" + str(hh + 1)]] / 2
+            # )
+            # RHS[index_unknowns_3["PM" + str(hh + 1)]] -= (
+            #     FMM_PM["PM" + str(hh + 1)]
+            #     * (
+            #         (
+            #             reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            #             / reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            #         )
+            #         * (
+            #             2 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            #             + 2 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            #         )
+            #         / mur_PM[hh]
+            #     )
+            #     + Br * la * sigma_theta[mask_magnet["PM" + str(hh + 1)]] / 2
+            # )
+            # RHS[index_unknowns_4["PM" + str(hh + 1)]] += (
+            #     FMM_PM["PM" + str(hh + 1)]
+            #     * (
+            #         (
+            #             reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            #             / reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            #         )
+            #         * (
+            #             2 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
+            #             + 2 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
+            #         )
+            #         / mur_PM[hh]
+            #     )
+            #     + Br * la * sigma_theta[mask_magnet["PM" + str(hh + 1)]] / 2
+            # )
+
             RHS[index_unknowns_1["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
+                FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
             )
             RHS[index_unknowns_2["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
+                FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
             )
             RHS[index_unknowns_3["PM" + str(hh + 1)]] -= (
-                phi_PM["PM" + str(hh + 1)]
+                FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 1]
             )
             RHS[index_unknowns_4["PM" + str(hh + 1)]] += (
-                phi_PM["PM" + str(hh + 1)]
+                FMM_PM["PM" + str(hh + 1)]
                 * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
             )
 
@@ -222,75 +256,75 @@ def right_member_assembly(
     # Calculating the contribution of the windings in the RHS #TODO
     #######################################################################################
 
-    if JA is None and JB is None and JC is None:
-        # Phase 1
-        mask_winding = list_permeability_cell == mur_windings[0]
+    # if JA is None and JB is None and JC is None:
+    #     # Phase 1
+    #     mask_winding = list_permeability_cell == mur_windings[0]
 
-        if type_coord_sys == 1:
-            S = h_x[mask_winding] * h_y[mask_winding] / 4
-        elif type_coord_sys == 2:
-            S = (
-                0.5
-                * sigma_theta[mask_winding]
-                * (R2[mask_winding] ** 2 - R1[mask_winding] ** 2)
-                / 4
-            )
+    #     if type_coord_sys == 1:
+    #         S = h_x[mask_winding] * h_y[mask_winding] / 4
+    #     elif type_coord_sys == 2:
+    #         S = (
+    #             0.5
+    #             * sigma_theta[mask_winding]
+    #             * (R2[mask_winding] ** 2 - R1[mask_winding] ** 2)
+    #             / 4
+    #         )
 
-        index_unknowns_1 = Num_Unknowns[list_elem[mask_winding, 0]]
-        index_unknowns_2 = Num_Unknowns[list_elem[mask_winding, 1]]
-        index_unknowns_3 = Num_Unknowns[list_elem[mask_winding, 2]]
-        index_unknowns_4 = Num_Unknowns[list_elem[mask_winding, 3]]
+    #     index_unknowns_1 = Num_Unknowns[list_elem[mask_winding, 0]]
+    #     index_unknowns_2 = Num_Unknowns[list_elem[mask_winding, 1]]
+    #     index_unknowns_3 = Num_Unknowns[list_elem[mask_winding, 2]]
+    #     index_unknowns_4 = Num_Unknowns[list_elem[mask_winding, 3]]
 
-        RHS[index_unknowns_1] += JA * S
-        RHS[index_unknowns_2] += JA * S
-        RHS[index_unknowns_3] += JA * S
-        RHS[index_unknowns_4] += JA * S
+    #     RHS[index_unknowns_1] += JA * S
+    #     RHS[index_unknowns_2] += JA * S
+    #     RHS[index_unknowns_3] += JA * S
+    #     RHS[index_unknowns_4] += JA * S
 
-        # Phase 2
-        mask_winding = list_permeability_cell == mur_windings[1]
-        # here to be changed by the winding number bob1, bob2..
+    #     # Phase 2
+    #     mask_winding = list_permeability_cell == mur_windings[1]
+    #     # here to be changed by the winding number bob1, bob2..
 
-        if type_coord_sys == 1:
-            S = h_x[mask_winding] * h_y[mask_winding] / 4
-        elif type_coord_sys == 2:
-            S = (
-                0.5
-                * sigma_theta[mask_winding]
-                * (R2[mask_winding] ** 2 - R1[mask_winding] ** 2)
-                / 4
-            )
+    #     if type_coord_sys == 1:
+    #         S = h_x[mask_winding] * h_y[mask_winding] / 4
+    #     elif type_coord_sys == 2:
+    #         S = (
+    #             0.5
+    #             * sigma_theta[mask_winding]
+    #             * (R2[mask_winding] ** 2 - R1[mask_winding] ** 2)
+    #             / 4
+    #         )
 
-        index_unknowns_1 = Num_Unknowns[list_elem[mask_winding, 0]]
-        index_unknowns_2 = Num_Unknowns[list_elem[mask_winding, 1]]
-        index_unknowns_3 = Num_Unknowns[list_elem[mask_winding, 2]]
-        index_unknowns_4 = Num_Unknowns[list_elem[mask_winding, 3]]
+    #     index_unknowns_1 = Num_Unknowns[list_elem[mask_winding, 0]]
+    #     index_unknowns_2 = Num_Unknowns[list_elem[mask_winding, 1]]
+    #     index_unknowns_3 = Num_Unknowns[list_elem[mask_winding, 2]]
+    #     index_unknowns_4 = Num_Unknowns[list_elem[mask_winding, 3]]
 
-        RHS[index_unknowns_1] += JB * S
-        RHS[index_unknowns_2] += JB * S
-        RHS[index_unknowns_3] += JB * S
-        RHS[index_unknowns_4] += JB * S
+    #     RHS[index_unknowns_1] += JB * S
+    #     RHS[index_unknowns_2] += JB * S
+    #     RHS[index_unknowns_3] += JB * S
+    #     RHS[index_unknowns_4] += JB * S
 
-        ###Phase 3
-        mask_winding = list_permeability_cell == mur_windings[2]
-        if type_coord_sys == 1:
-            S = h_x[mask_winding] * h_y[mask_winding] / 4
-        elif type_coord_sys == 2:
-            S = (
-                0.5
-                * sigma_theta[mask_winding]
-                * (R2[mask_winding] ** 2 - R1[mask_winding] ** 2)
-                / 4
-            )
+    #     ###Phase 3
+    #     mask_winding = list_permeability_cell == mur_windings[2]
+    #     if type_coord_sys == 1:
+    #         S = h_x[mask_winding] * h_y[mask_winding] / 4
+    #     elif type_coord_sys == 2:
+    #         S = (
+    #             0.5
+    #             * sigma_theta[mask_winding]
+    #             * (R2[mask_winding] ** 2 - R1[mask_winding] ** 2)
+    #             / 4
+    #         )
 
-        index_unknowns_1 = Num_Unknowns[list_elem[mask_winding, 0]]
-        index_unknowns_2 = Num_Unknowns[list_elem[mask_winding, 1]]
-        index_unknowns_3 = Num_Unknowns[list_elem[mask_winding, 2]]
-        index_unknowns_4 = Num_Unknowns[list_elem[mask_winding, 3]]
+    #     index_unknowns_1 = Num_Unknowns[list_elem[mask_winding, 0]]
+    #     index_unknowns_2 = Num_Unknowns[list_elem[mask_winding, 1]]
+    #     index_unknowns_3 = Num_Unknowns[list_elem[mask_winding, 2]]
+    #     index_unknowns_4 = Num_Unknowns[list_elem[mask_winding, 3]]
 
-        RHS[index_unknowns_1] += JC * S
-        RHS[index_unknowns_2] += JC * S
-        RHS[index_unknowns_3] += JC * S
-        RHS[index_unknowns_4] += JC * S
+    #     RHS[index_unknowns_1] += JC * S
+    #     RHS[index_unknowns_2] += JC * S
+    #     RHS[index_unknowns_3] += JC * S
+    #     RHS[index_unknowns_4] += JC * S
     # np.savetxt("Everif.csv",RHS.reshape((50,60)),fmt="%5.2f")
 
     return RHS

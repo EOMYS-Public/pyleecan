@@ -5414,7 +5414,8 @@
             "comp_lengths_winding",
             "comp_number_phase_eq",
             "comp_periodicity_spatial",
-            "set_pole_pair_number"
+            "set_pole_pair_number",
+            "build_geometry_polar"
         ],
         "mother": "LamSlot",
         "name": "LamSlotWind",
@@ -7013,6 +7014,16 @@
                 "type": "bool",
                 "unit": "",
                 "value": 1
+            },
+            {
+                "as_dict": "",
+                "desc": "True if we consider the polar geometry of the motor",
+                "max": "",
+                "min": "",
+                "name": "is_polar_geo",
+                "type": "bool",
+                "unit": "",
+                "value": 0
             }
         ]
     },
@@ -7028,16 +7039,6 @@
         "is_internal": false,
         "methods": [
             "geometry_motor",
-            "geometry_linear_motor_separetion",
-            "plot.Plot_B",
-            "plot.view_contour_flux",
-            "plot.view_contour_flux2",
-            "post_processing",
-            "run_cartesian",
-            "run_non_linear",
-            "run_radial",
-            "solver_linear_model",
-            "solver_non_linear_model",
             "pre_processing.init_cell",
             "pre_processing.init_mesh_BC",
             "pre_processing.init_point",
@@ -7050,10 +7051,19 @@
             "assembler.right_member_assembly",
             "post_processing.add_BC_to_Phi",
             "post_processing.compute_B",
-            "comp_flux_airgap",
+            "solver_linear_model",
+            "run_radial",
+            "plot.Plot_B",
+            "plot.view_contour_flux",
+            "plot.view_contour_flux2",
             "comp_flux_airgap_local",
+            "comp_flux_airgap",
+            "comp_axes",
+            "run_cartesian",
+            "run_non_linear",
+            "solver_non_linear_model",
             "cartesianmeshclass_pyleecan",
-            "comp_axes"
+            "geometry_linear_motor_separetion"
         ],
         "mother": "Magnetics",
         "name": "MagNetwork",
@@ -7062,7 +7072,7 @@
         "properties": [
             {
                 "as_dict": "",
-                "desc": "Type of the model to be solved: linear (1) or non-linear (1)",
+                "desc": "Type of the model to be solved: linear (1) or non-linear (2)",
                 "max": "2",
                 "min": "1",
                 "name": "type_model",
@@ -7082,7 +7092,7 @@
             },
             {
                 "as_dict": "",
-                "desc": "Mesh density",
+                "desc": "Mesh density according to theta-direction",
                 "max": "",
                 "min": "",
                 "name": "Kmesh_fineness",

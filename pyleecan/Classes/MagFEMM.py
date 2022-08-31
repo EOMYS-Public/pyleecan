@@ -151,6 +151,7 @@ class MagFEMM(Magnetics):
         is_set_previous=True,
         is_fast_draw=True,
         is_calc_torque_energy=True,
+        is_polar_geo=False,
         is_remove_slotS=False,
         is_remove_slotR=False,
         is_remove_ventS=False,
@@ -224,6 +225,8 @@ class MagFEMM(Magnetics):
                 is_fast_draw = init_dict["is_fast_draw"]
             if "is_calc_torque_energy" in list(init_dict.keys()):
                 is_calc_torque_energy = init_dict["is_calc_torque_energy"]
+            if "is_polar_geo" in list(init_dict.keys()):
+                is_polar_geo = init_dict["is_polar_geo"]
             if "is_remove_slotS" in list(init_dict.keys()):
                 is_remove_slotS = init_dict["is_remove_slotS"]
             if "is_remove_slotR" in list(init_dict.keys()):
@@ -281,6 +284,7 @@ class MagFEMM(Magnetics):
         self.is_set_previous = is_set_previous
         self.is_fast_draw = is_fast_draw
         self.is_calc_torque_energy = is_calc_torque_energy
+        self.is_polar_geo = is_polar_geo
         # Call Magnetics init
         super(MagFEMM, self).__init__(
             is_remove_slotS=is_remove_slotS,
@@ -353,6 +357,7 @@ class MagFEMM(Magnetics):
         MagFEMM_str += (
             "is_calc_torque_energy = " + str(self.is_calc_torque_energy) + linesep
         )
+        MagFEMM_str += "is_polar_geo = " + str(self.is_polar_geo) + linesep
         return MagFEMM_str
 
     def __eq__(self, other):
@@ -399,6 +404,8 @@ class MagFEMM(Magnetics):
         if other.is_fast_draw != self.is_fast_draw:
             return False
         if other.is_calc_torque_energy != self.is_calc_torque_energy:
+            return False
+        if other.is_polar_geo != self.is_polar_geo:
             return False
         return True
 
@@ -656,6 +663,18 @@ class MagFEMM(Magnetics):
                 diff_list.append(name + ".is_calc_torque_energy" + val_str)
             else:
                 diff_list.append(name + ".is_calc_torque_energy")
+        if other._is_polar_geo != self._is_polar_geo:
+            if is_add_value:
+                val_str = (
+                    " (self="
+                    + str(self._is_polar_geo)
+                    + ", other="
+                    + str(other._is_polar_geo)
+                    + ")"
+                )
+                diff_list.append(name + ".is_polar_geo" + val_str)
+            else:
+                diff_list.append(name + ".is_polar_geo")
         # Filter ignore differences
         diff_list = list(filter(lambda x: x not in ignore_list, diff_list))
         return diff_list
@@ -689,6 +708,7 @@ class MagFEMM(Magnetics):
         S += getsizeof(self.is_set_previous)
         S += getsizeof(self.is_fast_draw)
         S += getsizeof(self.is_calc_torque_energy)
+        S += getsizeof(self.is_polar_geo)
         return S
 
     def as_dict(self, type_handle_ndarray=0, keep_function=False, **kwargs):
@@ -746,6 +766,7 @@ class MagFEMM(Magnetics):
         MagFEMM_dict["is_set_previous"] = self.is_set_previous
         MagFEMM_dict["is_fast_draw"] = self.is_fast_draw
         MagFEMM_dict["is_calc_torque_energy"] = self.is_calc_torque_energy
+        MagFEMM_dict["is_polar_geo"] = self.is_polar_geo
         # The class name is added to the dict for deserialisation purpose
         # Overwrite the mother class name
         MagFEMM_dict["__class__"] = "MagFEMM"
@@ -785,6 +806,7 @@ class MagFEMM(Magnetics):
         is_set_previous_val = self.is_set_previous
         is_fast_draw_val = self.is_fast_draw
         is_calc_torque_energy_val = self.is_calc_torque_energy
+        is_polar_geo_val = self.is_polar_geo
         is_remove_slotS_val = self.is_remove_slotS
         is_remove_slotR_val = self.is_remove_slotR
         is_remove_ventS_val = self.is_remove_ventS
@@ -827,6 +849,7 @@ class MagFEMM(Magnetics):
             is_set_previous=is_set_previous_val,
             is_fast_draw=is_fast_draw_val,
             is_calc_torque_energy=is_calc_torque_energy_val,
+            is_polar_geo=is_polar_geo_val,
             is_remove_slotS=is_remove_slotS_val,
             is_remove_slotR=is_remove_slotR_val,
             is_remove_ventS=is_remove_ventS_val,
@@ -872,6 +895,7 @@ class MagFEMM(Magnetics):
         self.is_set_previous = None
         self.is_fast_draw = None
         self.is_calc_torque_energy = None
+        self.is_polar_geo = None
         # Set to None the properties inherited from Magnetics
         super(MagFEMM, self)._set_None()
 
@@ -1238,6 +1262,24 @@ class MagFEMM(Magnetics):
         fget=_get_is_calc_torque_energy,
         fset=_set_is_calc_torque_energy,
         doc=u"""True to calculate torque from integration of energy derivate over rotor elements
+
+        :Type: bool
+        """,
+    )
+
+    def _get_is_polar_geo(self):
+        """getter of is_polar_geo"""
+        return self._is_polar_geo
+
+    def _set_is_polar_geo(self, value):
+        """setter of is_polar_geo"""
+        check_var("is_polar_geo", value, "bool")
+        self._is_polar_geo = value
+
+    is_polar_geo = property(
+        fget=_get_is_polar_geo,
+        fset=_set_is_polar_geo,
+        doc=u"""True if we consider the polar geometry of the motor
 
         :Type: bool
         """,
