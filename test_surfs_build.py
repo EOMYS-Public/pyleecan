@@ -9,20 +9,20 @@ from pyleecan.Classes.InputCurrent import InputCurrent
 from pyleecan.Classes.OPdq import OPdq
 
 # Testing cases file paths
-# file_path = "C:/Users/pc/Downloads/SPMSM_val.json"
-file_path = "C:/Users/pc/Downloads/SPMSM_val_H0_isth.json"
+file_path = "C:/Users/pc/Downloads/SPMSM_val.json"
 # file_path = "C:/Users/pc/Downloads/SPMSM_val_isth.json"
+# file_path = "C:/Users/pc/Downloads/SPMSM_val_H0_isth.json"
 machine = load(file_path)
 
 # Machine get_lam_list method
-machine.stator.build_geometry_polar(sym=1)
+# machine.stator.build_geometry_polar(sym=1)
 
 # Verify one surface
 # surf = machine.stator.build_geometry_polar()[0]
 # fig, ax = surf.plot()
 
 # Plot the stator yoke
-surf_list = machine.stator.build_geometry_polar(sym=12)
+surf_list = machine.stator.build_geometry_polar(sym=4)
 fig, ax = surf_list[0].plot(is_disp_point_ref=True)
 for surf in surf_list:
     surf.plot(fig=fig, ax=ax, is_disp_point_ref=True)

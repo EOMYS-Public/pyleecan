@@ -130,7 +130,10 @@ def draw_FEMM_lamination(
 
     # BC + Assigning surface with the machine symetry instead of the lam symetry
     if is_fast_draw:
-        surf_list_2 = lam.build_geometry(sym=sym, is_circular_radius=True)
+        if lam.is_stator == True:
+            surf_list_2 = lam.build_geometry_polar(sym=sym)
+        else:
+            surf_list_2 = lam.build_geometry(sym=sym, is_circular_radius=True)
 
         FEMM_dict = draw_FEMM_surfaces(
             femm,
