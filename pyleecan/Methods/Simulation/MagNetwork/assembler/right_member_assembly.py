@@ -150,7 +150,8 @@ def right_member_assembly(
         index_unknowns_2 = defaultdict(float)
         index_unknowns_3 = defaultdict(float)
         index_unknowns_4 = defaultdict(float)
-        Phi_PM = defaultdict(float)
+        # Phi_PM = defaultdict(float)
+        FEMM_PM = defaultdict(float)
 
         for hh in range(nb_PM_per_period):
 
@@ -161,14 +162,20 @@ def right_member_assembly(
                 Magnetization = -1  # negative magnetization direction
 
             # Determination of the local flux due to magnet
-            Phi_PM["PM" + str(hh + 1)] = (
+            # Phi_PM["PM" + str(hh + 1)] = (
+            #     Magnetization
+            #     * 2
+            #     * Br
+            #     * la
+            #     * r[mask_magnet["PM" + str(hh + 1)]]
+            #     * sigma_theta[mask_magnet["PM" + str(hh + 1)]]
+            #     / mur_PM[hh]
+            # )
+            FEMM_PM["PM" + str(hh + 1)] = (
                 Magnetization
-                * 2
                 * Br
-                * la
-                * r[mask_magnet["PM" + str(hh + 1)]]
-                * sigma_theta[mask_magnet["PM" + str(hh + 1)]]
-                / mur_PM[hh]
+                * sigma_R[mask_magnet["PM" + str(hh + 1)]]
+                / (mur_PM[hh] * material_dict["vacuum"])
             )
 
             # Determination of the indexes of the unknowns
@@ -203,10 +210,10 @@ def right_member_assembly(
             #     Phi_PM["PM" + str(hh + 1)]
             #     * reluc_list[mask_magnet["PM" + str(hh + 1)], 3]
             # )
-            RHS[index_unknowns_1["PM" + str(hh + 1)]] += Phi_PM["PM" + str(hh + 1)]
-            RHS[index_unknowns_2["PM" + str(hh + 1)]] -= Phi_PM["PM" + str(hh + 1)]
-            RHS[index_unknowns_3["PM" + str(hh + 1)]] -= Phi_PM["PM" + str(hh + 1)]
-            RHS[index_unknowns_4["PM" + str(hh + 1)]] += Phi_PM["PM" + str(hh + 1)]
+            RHS[index_unknowns_1["PM" + str(hh + 1)]] += FEMM_PM["PM" + str(hh + 1)] / 2
+            RHS[index_unknowns_2["PM" + str(hh + 1)]] -= FEMM_PM["PM" + str(hh + 1)] / 2
+            RHS[index_unknowns_3["PM" + str(hh + 1)]] -= FEMM_PM["PM" + str(hh + 1)] / 2
+            RHS[index_unknowns_4["PM" + str(hh + 1)]] += FEMM_PM["PM" + str(hh + 1)] / 2
 
     #######################################################################################
     # Calculating the contribution of the windings in the RHS #TODO

@@ -46,7 +46,7 @@ def test_MagNetwork_initial_validation():
         rotor_yoke_elements_r=2,
         stator_isthmus_elements_r=1,
         stator_tooth_elements_r=11,
-        magnet_elements_r=22,  ###
+        magnet_elements_r=11,  ###
         Kmesh_fineness=2,
         rotor_shift=8,
     )
