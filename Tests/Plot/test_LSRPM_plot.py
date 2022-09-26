@@ -192,7 +192,7 @@ def test_LSRPM():
     # Loading Materials
     M600_65A_50Hz = load(join(DATA_DIR, "Material", "M600-65A-50Hz.json"))
     Copper1 = load(join(DATA_DIR, "Material", "Copper1.json"))
-    MagnetLSRPM = load(join(DATA_DIR, "Material", "CY-N28AH-20DEG.json"))
+    MagnetLSRPM = load(join(DATA_DIR, "Material", "Air.json"))
 
     # Set Materials
     stator.mat_type = M600_65A_50Hz
@@ -220,7 +220,7 @@ def test_LSRPM():
         name="LSRPM LSEE", stator=stator, rotor=rotor, shaft=shaft, frame=None
     )
 
-    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_Winding_Inverse.json"))
+    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_No_Magnet.json"))
 
     LSRPM.plot(is_show_fig=True,save_path=join(save_path, "test_LSRPM.png"))
     stator.plot(is_lam_only=True)
