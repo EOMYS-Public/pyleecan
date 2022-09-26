@@ -103,20 +103,39 @@ def test_LSRPM():
     # ).T
 
     # Winding setup (only stator)
+
+    # wind_mat_LSRPM = zeros((1, 2, 12, 3))  # Nrad, Ntan, Zs, qs
+
+    # wind_mat_LSRPM[0, 1, :, :] = array(
+    #     [
+    #         [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+    #         [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0],
+    #         [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+    #     ]
+    # ).T
+    # wind_mat_LSRPM[0, 0, :, :] = array(
+    #     [   
+    #         [-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0],
+    #         [0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0],
+    #         [0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1],
+    #     ]
+    # ).T
+
+    ##########################Generate an inverse winding matrix
     wind_mat_LSRPM = zeros((1, 2, 12, 3))  # Nrad, Ntan, Zs, qs
 
     wind_mat_LSRPM[0, 1, :, :] = array(
         [
-            [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-            [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0],
-            [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+            [0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1],
+            [-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0],
+            [0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0],
         ]
     ).T
     wind_mat_LSRPM[0, 0, :, :] = array(
         [   
-            [-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0],
-            [0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0],
-            [0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1],
+            [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0],
+            [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
         ]
     ).T
 
@@ -201,7 +220,7 @@ def test_LSRPM():
         name="LSRPM LSEE", stator=stator, rotor=rotor, shaft=shaft, frame=None
     )
 
-    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_005.json"))
+    LSRPM.save(join(DATA_DIR, "Machine", "LSRPM_Winding_Inverse.json"))
 
     LSRPM.plot(is_show_fig=True,save_path=join(save_path, "test_LSRPM.png"))
     stator.plot(is_lam_only=True)
