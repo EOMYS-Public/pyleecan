@@ -37,6 +37,11 @@ try:
 except ImportError as error:
     solve_MTPA = error
 
+try:
+    from ..Methods.Simulation.ElecLUTdq.solve_post import solve_post
+except ImportError as error:
+    solve_post = error
+
 
 from numpy import isnan
 from ._check import InitUnKnowClassError
@@ -86,6 +91,15 @@ class ElecLUTdq(Electrical):
         )
     else:
         solve_MTPA = solve_MTPA
+    # cf Methods.Simulation.ElecLUTdq.solve_post
+    if isinstance(solve_post, ImportError):
+        solve_post = property(
+            fget=lambda x: raise_(
+                ImportError("Can't use ElecLUTdq method solve_post: " + str(solve_post))
+            )
+        )
+    else:
+        solve_post = solve_post
     # generic save method is available in all object
     save = save
     # get_logger method is available in all object

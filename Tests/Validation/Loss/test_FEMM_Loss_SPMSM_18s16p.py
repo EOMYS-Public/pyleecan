@@ -24,7 +24,7 @@ is_show_fig = False
 
 
 def test_LossFEMM_SPMSM():
-    """Test to calculate losses in SPMSM using LossFEMM model from https://www.femm.info/wiki/SPMLoss """
+    """Test to calculate losses in SPMSM using LossFEMM model from https://www.femm.info/wiki/SPMLoss"""
 
     machine = load(join(DATA_DIR, "Machine", "SPMSM_18s16p_loss.json"))
 

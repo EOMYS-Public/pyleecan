@@ -169,47 +169,11 @@ def solve_MTPA(self, LUT, Rs):
     if Imax_interp[i0][imin] > Irms_max:
         self.get_logger().warning("Current constraint cannot be reached")
 
-    out_dict = dict()
+    # calculate and store some quantities
+    Tem = Tem_interp[i0][imin]
 
-    # Calculate efficiency
-    out_dict["P_in"] = P_in[i0][imin]
-    out_dict["P_out"] = P_out[i0][imin]
-    eff = out_dict["P_out"] / out_dict["P_in"]
-    out_dict["efficiency"] = eff if eff > 0 else 0
-    # out_dict["efficiency"] = out_dict["P_out"] / out_dict["P_in"]
-
-    # Calculate torque from output power
-    out_dict["Tem_av"] = Tem_interp[i0][imin]
-
-    # Store voltage and currents
-    out_dict["Id"] = Id[i0][imin]
-    out_dict["Iq"] = Iq[i0][imin]
-    out_dict["Ud"] = Ud[i0][imin]
-    out_dict["Uq"] = Uq[i0][imin]
-
-    # Store dq fluxes
-    out_dict["Phid"] = Phid[i0][imin]
-    out_dict["Phiq"] = Phiq[i0][imin]
-
-    # Calculate flux linkage and back-emf
-    Phidqh_mag = LUT.get_Phi_dqh_mag_mean()
-    out_dict["Phid_mag"] = Phidqh_mag[0]
-    out_dict["Phiq_mag"] = Phidqh_mag[1]
-    out_dict["Erms"] = ws * Phidqh_mag[0]
-
-    # Calculate inductances
-    if Id[i0][imin] != 0:
-        out_dict["Ld"] = (Phid[i0][imin] - out_dict["Phid_mag"]) / Id[i0][imin]
-    if Iq[i0][imin] != 0:
-        out_dict["Lq"] = Phiq[i0][imin] / Iq[i0][imin]
-
-    # Calculate torque ripple
-    Tem_rip_pp = LUT.interp_Tem_rip_dqh(Id[i0][imin], Iq[i0][imin])
-    if Tem_rip_pp is not None:
-        out_dict["Tem_rip_pp"] = float(Tem_rip_pp)
-        if out_dict["Tem_av"] == 0:
-            out_dict["Tem_rip_norm"] = 0
-        else:
-            out_dict["Tem_rip_norm"] = np.abs(Tem_rip_pp / out_dict["Tem_av"])
+    out_dict = self.solve_post(
+        LUT, ws, Ud, Uq, Iq, Id, Phid, Phiq, P_in, P_out, Tem, i0, imin
+    )
 
     return out_dict

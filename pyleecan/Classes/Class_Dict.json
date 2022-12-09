@@ -1656,7 +1656,8 @@
             "run",
             "comp_LUTdq",
             "solve_power",
-            "solve_MTPA"
+            "solve_MTPA",
+            "solve_post"
         ],
         "mother": "Electrical",
         "name": "ElecLUTdq",

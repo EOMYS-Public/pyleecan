@@ -95,7 +95,12 @@ wind_list.append(  # WindingDW1L
 def test_save_OPM_None_retro():
     """Check that the OP_matrix convertion works with None"""
     simu = load(
-        join(TEST_DATA_DIR, "Retrocompatibility", "OP_matrix", "test_OPM_None.json",),
+        join(
+            TEST_DATA_DIR,
+            "Retrocompatibility",
+            "OP_matrix",
+            "test_OPM_None.json",
+        ),
     )
     assert simu.var_simu.OP_matrix is None
 
