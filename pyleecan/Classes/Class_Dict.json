@@ -11415,6 +11415,209 @@
             }
         ]
     },
+    "Quantity": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [
+            "QuantityData",
+            "QuantityScalar",
+            "QuantityVectorField"
+        ],
+        "desc": "Class for defining the physic quantities",
+        "is_internal": false,
+        "methods": [
+            "is_scalar",
+            "is_vectorField",
+            "is_data",
+            "__eq__"
+        ],
+        "mother": "",
+        "name": "Quantity",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/Quantity.csv",
+        "properties": [
+            {
+                "as_dict": "",
+                "desc": "Symbol of the Quantity",
+                "max": "",
+                "min": "",
+                "name": "symbol",
+                "type": "str",
+                "unit": "-",
+                "value": ""
+            },
+            {
+                "as_dict": "",
+                "desc": "name of the quantity",
+                "max": "",
+                "min": "",
+                "name": "name",
+                "type": "str",
+                "unit": "-",
+                "value": ""
+            },
+            {
+                "as_dict": "",
+                "desc": "Physic of the quantity",
+                "max": "",
+                "min": "",
+                "name": "physic",
+                "type": "str",
+                "unit": "-",
+                "value": ""
+            },
+            {
+                "as_dict": "",
+                "desc": "SI unit of the quantity",
+                "max": "",
+                "min": "",
+                "name": "unit",
+                "type": "str",
+                "unit": "-",
+                "value": ""
+            },
+            {
+                "as_dict": "",
+                "desc": "Default unit when ploting the quantity",
+                "max": "",
+                "min": "",
+                "name": "unit_plot",
+                "type": "str",
+                "unit": "-",
+                "value": ""
+            },
+            {
+                "as_dict": "",
+                "desc": "Name of the getter method",
+                "max": "",
+                "min": "",
+                "name": "getter",
+                "type": "str",
+                "unit": "-",
+                "value": ""
+            }
+        ]
+    },
+    "QuantityData": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Class for defining a data physics quantity",
+        "is_internal": false,
+        "methods": [
+            "is_data"
+        ],
+        "mother": "Quantity",
+        "name": "QuantityData",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityData.csv",
+        "properties": [
+            {
+                "as_dict": "",
+                "desc": "Name of the possible axes",
+                "max": "",
+                "min": "",
+                "name": "axes_name",
+                "type": "[str]",
+                "unit": "-",
+                "value": null
+            }
+        ]
+    },
+    "QuantityMaker": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            },
+            {
+                "name": "unique_instance",
+                "value": "None"
+            }
+        ],
+        "daughters": [],
+        "desc": "Class for make quantities. Every creation of a quantity is achieve by this class",
+        "is_internal": false,
+        "methods": [
+            "create_quantity",
+            "__new__"
+        ],
+        "mother": "",
+        "name": "QuantityMaker",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityMaker.csv",
+        "properties": []
+    },
+    "QuantityScalar": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Class for defining a scalar physics quantity",
+        "is_internal": false,
+        "methods": [
+            "is_scalar",
+            "create_datakeeper"
+        ],
+        "mother": "Quantity",
+        "name": "QuantityScalar",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityScalar.csv",
+        "properties": []
+    },
+    "QuantityVectorField": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Class for defining a vector field physics quantity",
+        "is_internal": false,
+        "methods": [
+            "is_vectorField",
+            "get_component_quantity",
+            "__eq__"
+        ],
+        "mother": "Quantity",
+        "name": "QuantityVectorField",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityVectorField.csv",
+        "properties": [
+            {
+                "as_dict": "",
+                "desc": "Name of the possible axes",
+                "max": "",
+                "min": "",
+                "name": "axes_name",
+                "type": "[str]",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "as_dict": "",
+                "desc": "Name of the component",
+                "max": "",
+                "min": "",
+                "name": "components",
+                "type": "[str]",
+                "unit": "-",
+                "value": ""
+            }
+        ]
+    },
     "RefCell": {
         "constants": [
             {

@@ -176,6 +176,11 @@ from ..Classes.PostFunction import PostFunction
 from ..Classes.PostLUT import PostLUT
 from ..Classes.PostMethod import PostMethod
 from ..Classes.PostPlot import PostPlot
+from ..Classes.Quantity import Quantity
+from ..Classes.QuantityData import QuantityData
+from ..Classes.QuantityMaker import QuantityMaker
+from ..Classes.QuantityScalar import QuantityScalar
+from ..Classes.QuantityVectorField import QuantityVectorField
 from ..Classes.RefCell import RefCell
 from ..Classes.RefLine3 import RefLine3
 from ..Classes.RefQuad4 import RefQuad4

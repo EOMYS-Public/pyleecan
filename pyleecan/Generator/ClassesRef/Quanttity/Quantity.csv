@@ -1,0 +1,13 @@
+Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,as_dict Type
+symbol,-,Symbol of the Quantity,,str,,,,
+name,-,name of the quantity,,str,,,,
+physic,-,Physic of the quantity,,str,,,,
+unit,-,SI unit of the quantity,,str,,,,
+unit_plot,-,Default unit when ploting the quantity,,str,,,,
+getter,-,Name of the getter method,,str,,,,
+,,,,,,,,
+Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
+Quantity,,is_scalar,VERSION,1,Class for defining the physic quantities,,,
+,,is_vectorField,,,,,,
+,,is_data,,,,,,
+,,__eq__,,,,,,

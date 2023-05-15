@@ -1,0 +1,8 @@
+Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,as_dict Type
+axes_name,-,Name of the possible axes,0,[str],None,,,
+components,-,Name of the component,0,[str],,,,
+,,,,,,,,
+Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
+Quantity,Quantity,is_vectorField,VERSION,1,Class for defining a vector field physics quantity,,,
+,,get_component_quantity,,,,,,
+,,__eq__,,,,,,

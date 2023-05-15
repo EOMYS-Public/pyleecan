@@ -1,0 +1,5 @@
+Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,as_dict Type
+,,,,,,,,
+Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
+Quantity,Quantity,is_scalar,VERSION,1,Class for defining a scalar physics quantity,,,
+,,create_datakeeper,,,,,,

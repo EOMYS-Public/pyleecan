@@ -1,0 +1,5 @@
+Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,as_dict Type
+,,,,,,,,
+Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
+Quantity,,create_quantity,VERSION,1,Class for make quantities. Every creation of a quantity is achieve by this class,,,
+,,__new__,unique_instance,None,,,,

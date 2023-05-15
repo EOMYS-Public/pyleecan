@@ -1,0 +1,5 @@
+Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,as_dict Type
+axes_name,-,Name of the possible axes,0,[str],None,,,
+,,,,,,,,
+Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
+Quantity,Quantity,is_data,VERSION,1,Class for defining a data physics quantity,,,
