@@ -1,0 +1,12 @@
+Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,as_dict Type
+container,-,Dict of Dict of Quantity,,dict,{},,,
+,,,,,,,,
+Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
+Quantity,,add_quantity,VERSION,1,Container of Quantity,,,
+,,filter,,,,,,
+,,create_datakeeper,,,,,,
+,,__getitem__,,,,,,
+,,get_quantity_iter,,,,,,
+,,get_physic_iter,,,,,,
+,,__iter__,,,,,,
+,,is_in,,,,,,

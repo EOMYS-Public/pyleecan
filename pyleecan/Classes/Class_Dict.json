@@ -11175,6 +11175,48 @@
             }
         ]
     },
+    "PhysicIterator": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Class for iterate throw the physics of a QuantityList",
+        "is_internal": false,
+        "methods": [
+            "__iter__",
+            "__next__",
+            "init_iterator"
+        ],
+        "mother": "",
+        "name": "PhysicIterator",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/PhysicIterator.csv",
+        "properties": [
+            {
+                "as_dict": "",
+                "desc": "Dict of Dict of Quantity (pointer to a QuantityList container) ",
+                "max": "",
+                "min": "",
+                "name": "container",
+                "type": "dict",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "as_dict": "",
+                "desc": "Remaining physics to iter throw",
+                "max": "",
+                "min": "",
+                "name": "remaining_phy",
+                "type": "list",
+                "unit": "-",
+                "value": null
+            }
+        ]
+    },
     "PolarArc": {
         "constants": [
             {
@@ -11529,6 +11571,105 @@
                 "type": "[str]",
                 "unit": "-",
                 "value": null
+            }
+        ]
+    },
+    "QuantityIterator": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Class for iterate throw the quantity of a QuantityList",
+        "is_internal": false,
+        "methods": [
+            "__iter__",
+            "__next__",
+            "init_iterator"
+        ],
+        "mother": "",
+        "name": "QuantityIterator",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityIterator.csv",
+        "properties": [
+            {
+                "as_dict": "",
+                "desc": "Dict of Dict of Quantity (pointer to a QuantityList container) ",
+                "max": "",
+                "min": "",
+                "name": "container",
+                "type": "dict",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "as_dict": "",
+                "desc": "Remaining qty to iter throw",
+                "max": "",
+                "min": "",
+                "name": "remaining_qty",
+                "type": "list",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "as_dict": "",
+                "desc": "Dict of quantities of the current physic",
+                "max": "",
+                "min": "",
+                "name": "phy_dict",
+                "type": "dict",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "as_dict": "",
+                "desc": "Physic iterator",
+                "max": "",
+                "min": "",
+                "name": "physic_iter",
+                "type": "",
+                "unit": "-",
+                "value": null
+            }
+        ]
+    },
+    "QuantityList": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Container of Quantity",
+        "is_internal": false,
+        "methods": [
+            "add_quantity",
+            "filter",
+            "create_datakeeper",
+            "__getitem__",
+            "get_quantity_iter",
+            "get_physic_iter",
+            "__iter__",
+            "is_in"
+        ],
+        "mother": "",
+        "name": "QuantityList",
+        "package": "Quantity",
+        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityList.csv",
+        "properties": [
+            {
+                "as_dict": "",
+                "desc": "Dict of Dict of Quantity",
+                "max": "",
+                "min": "",
+                "name": "container",
+                "type": "dict",
+                "unit": "-",
+                "value": {}
             }
         ]
     },

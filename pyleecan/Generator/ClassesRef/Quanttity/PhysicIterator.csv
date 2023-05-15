@@ -1,0 +1,8 @@
+Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximum value,as_dict Type
+container,-,Dict of Dict of Quantity (pointer to a QuantityList container) ,,dict,None,,,
+remaining_phy,-,Remaining physics to iter throw,,list,None,,,
+,,,,,,,,
+Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
+Quantity,,__iter__,VERSION,1,Class for iterate throw the physics of a QuantityList,,,
+,,__next__,,,,,,
+,,init_iterator,,,,,,

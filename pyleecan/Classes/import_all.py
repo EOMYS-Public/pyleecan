@@ -170,6 +170,7 @@ from ..Classes.Output import Output
 from ..Classes.ParamExplorer import ParamExplorer
 from ..Classes.ParamExplorerInterval import ParamExplorerInterval
 from ..Classes.ParamExplorerSet import ParamExplorerSet
+from ..Classes.PhysicIterator import PhysicIterator
 from ..Classes.PolarArc import PolarArc
 from ..Classes.Post import Post
 from ..Classes.PostFunction import PostFunction
@@ -178,6 +179,8 @@ from ..Classes.PostMethod import PostMethod
 from ..Classes.PostPlot import PostPlot
 from ..Classes.Quantity import Quantity
 from ..Classes.QuantityData import QuantityData
+from ..Classes.QuantityIterator import QuantityIterator
+from ..Classes.QuantityList import QuantityList
 from ..Classes.QuantityMaker import QuantityMaker
 from ..Classes.QuantityScalar import QuantityScalar
 from ..Classes.QuantityVectorField import QuantityVectorField
