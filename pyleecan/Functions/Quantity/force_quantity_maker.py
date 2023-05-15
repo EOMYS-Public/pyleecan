@@ -11,7 +11,7 @@ def MST__quantity_maker(**kwarg):
         unit="N/m^2",
         unit_plot="N.m^2",
         getter="force.get_AGSF()",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
         components=["rad", "circ", "ax"],
     )
 
@@ -24,7 +24,7 @@ def MST_rad__quantity_maker(**kwarg):
         unit="N/m^2",
         unit_plot="N/m^2",
         getter="force.get_AGSF(component = 'radial')",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
     )
 
 
@@ -36,7 +36,7 @@ def MST_circ__quantity_maker(**kwarg):
         unit="N/m^2",
         unit_plot="N/m^2",
         getter="force.get_AGSF(component = 'tangential')",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
     )
 
 
@@ -48,5 +48,5 @@ def MST_ax__quantity_maker(**kwarg):
         unit="N/m^2",
         unit_plot="N/m^2",
         getter="force.get_AGSF(component = 'axial')",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
     )

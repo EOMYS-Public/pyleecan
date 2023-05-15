@@ -11,7 +11,7 @@ def Is__quantity_maker(**kwarg):
         unit="Arms",
         unit_plot="Arms",
         getter="elec.get_Is()",
-        axes=["time", "phase"],
+        axes_name=["time", "phase"],
     )
 
 

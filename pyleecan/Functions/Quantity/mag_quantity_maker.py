@@ -11,7 +11,7 @@ def B__quantity_maker(**kwarg):
         unit="T",
         unit_plot="T",
         getter="mag.get_B()",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
         components=["rad", "circ", "ax"],
     )
 
@@ -24,7 +24,7 @@ def B_rad__quantity_maker(**kwarg):
         unit="T",
         unit_plot="T",
         getter="mag.get_B(component = 'radial')",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
     )
 
 
@@ -36,7 +36,7 @@ def B_circ__quantity_maker(**kwarg):
         unit="T",
         unit_plot="T",
         getter="mag.get_B(component = 'tangential')",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
     )
 
 
@@ -48,7 +48,7 @@ def B_ax__quantity_maker(**kwarg):
         unit="T",
         unit_plot="T",
         getter="mag.get_B(component = 'axial')",
-        axes=["time", "angle", "z"],
+        axes_name=["time", "angle", "z"],
     )
 
 
@@ -60,7 +60,7 @@ def Tem__quantity_maker(**kwarg):
         unit="N.m",
         unit_plot="N.m",
         getter="mag.get_Tem()",
-        axes=["time"],
+        axes_name=["time"],
     )
 
 
@@ -105,5 +105,5 @@ def Phi_wind_stator__quantity_maker(**kwarg):
         unit="Wb/m",
         unit_plot="Wb/m",
         getter="mag.get_Phi_wind_stator()",
-        axes=["time", "phase"],
+        axes_name=["time", "phase"],
     )
