@@ -35,13 +35,14 @@ from pyleecan.definitions import DATA_DIR, TEST_DIR
 
 
 def harm1(output):
-    """Return the first torque harmonic """
+    """Return the first torque harmonic"""
     harm_list = output.mag.Tem.get_magnitude_along("freqs")["T_{em}"]
 
     # Return the first torque harmonic
     return harm_list[1]
 
-
+@pytest.mark.long_5s
+@pytest.mark.long_1m
 @pytest.mark.SCIM
 @pytest.mark.MagFEMM
 def test_opti_varopti():

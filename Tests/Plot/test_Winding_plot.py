@@ -17,6 +17,8 @@ from Tests import save_plot_path as save_path
 from pyleecan.Functions.load import load
 from pyleecan.definitions import DATA_DIR
 
+import pytest
+
 
 class Test_Winding_plot(object):
     """unittest for Winding connection matrix plot"""
@@ -188,6 +190,7 @@ class Test_Winding_plot(object):
             save_path=join(save_path, "test_unit_mmf.png")
         )
 
+    @pytest.mark.long_5s
     def test_plot_radial(self):
         machine_list = [
             "Toyota_Prius",
@@ -205,6 +208,7 @@ class Test_Winding_plot(object):
                 save_path=join(save_path, "test_plot_radial_" + machine_name + ".png"),
             )
 
+    @pytest.mark.long_5s
     def test_plot_radial_transformation(self):
         machine_list = [
             "Toyota_Prius_6phases",
@@ -275,6 +279,7 @@ class Test_Winding_plot(object):
 
             print(machine_name + " done")
 
+    @pytest.mark.long_5s
     def test_plot_linear(self):
         machine_list = [
             "Toyota_Prius",
@@ -299,6 +304,7 @@ class Test_Winding_plot(object):
             )
             print(machine_name + " done")
 
+    @pytest.mark.long_5s
     def test_plot_linear_transformation(self):
         machine_list = [
             "Toyota_Prius_6phases",

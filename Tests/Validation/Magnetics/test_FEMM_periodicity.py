@@ -522,7 +522,7 @@ def test_FEMM_periodicity_angle():
 
     return out, out2
 
-
+@pytest.mark.long_5s
 def test_Bore_sym():
     """Check that angular periodicity can be applied on Bore shape"""
     res_path = join(save_path, "test_Bore_sym")

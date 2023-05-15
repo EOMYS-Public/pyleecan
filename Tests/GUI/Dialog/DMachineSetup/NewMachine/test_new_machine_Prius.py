@@ -73,6 +73,7 @@ class TestNewMachinePrius(object):
             material_dict=material_dict, machine_path=join(DATA_DIR, "Machine")
         )
 
+    @pytest.mark.long_5s
     @pytest.mark.IPMSM
     def test_Toyota_Prius(self):
         """Create a new machine"""
