@@ -11630,7 +11630,7 @@
                 "max": "",
                 "min": "",
                 "name": "physic_iter",
-                "type": "",
+                "type": "PhysicIterator",
                 "unit": "-",
                 "value": null
             }

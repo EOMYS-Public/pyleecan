@@ -142,9 +142,13 @@ class QuantityIterator(FrozenClass):
             + linesep
         )
         QuantityIterator_str += "phy_dict = " + str(self.phy_dict) + linesep
-        QuantityIterator_str += (
-            "physic_iter = " + str(self.physic_iter) + linesep + linesep
-        )
+        if self.physic_iter is not None:
+            tmp = (
+                self.physic_iter.__str__().replace(linesep, linesep + "\t").rstrip("\t")
+            )
+            QuantityIterator_str += "physic_iter = " + tmp
+        else:
+            QuantityIterator_str += "physic_iter = None" + linesep + linesep
         return QuantityIterator_str
 
     def __eq__(self, other):
@@ -158,11 +162,7 @@ class QuantityIterator(FrozenClass):
             return False
         if other.phy_dict != self.phy_dict:
             return False
-        if isinstance(self.physic_iter, np.ndarray) and not np.array_equal(
-            other.physic_iter, self.physic_iter
-        ):
-            return False
-        elif other.physic_iter != self.physic_iter:
+        if other.physic_iter != self.physic_iter:
             return False
         return True
 
@@ -213,14 +213,8 @@ class QuantityIterator(FrozenClass):
         if (other.physic_iter is None and self.physic_iter is not None) or (
             other.physic_iter is not None and self.physic_iter is None
         ):
-            diff_list.append(name + ".physic_iter")
-        elif self.physic_iter is None:
-            pass
-        elif isinstance(self.physic_iter, np.ndarray) and not np.array_equal(
-            other.physic_iter, self.physic_iter
-        ):
-            diff_list.append(name + ".physic_iter")
-        elif hasattr(self.physic_iter, "compare"):
+            diff_list.append(name + ".physic_iter None mismatch")
+        elif self.physic_iter is not None:
             diff_list.extend(
                 self.physic_iter.compare(
                     other.physic_iter,
@@ -229,8 +223,6 @@ class QuantityIterator(FrozenClass):
                     is_add_value=is_add_value,
                 )
             )
-        elif other._physic_iter != self._physic_iter:
-            diff_list.append(name + ".physic_iter")
         # Filter ignore differences
         diff_list = list(filter(lambda x: x not in ignore_list, diff_list))
         return diff_list
@@ -274,25 +266,12 @@ class QuantityIterator(FrozenClass):
         )
         if self.physic_iter is None:
             QuantityIterator_dict["physic_iter"] = None
-        elif isinstance(self.physic_iter, np.ndarray):
-            if type_handle_ndarray == 0:
-                QuantityIterator_dict["physic_iter"] = self.physic_iter.tolist()
-            elif type_handle_ndarray == 1:
-                QuantityIterator_dict["physic_iter"] = self.physic_iter.copy()
-            elif type_handle_ndarray == 2:
-                QuantityIterator_dict["physic_iter"] = self.physic_iter
-            else:
-                raise Exception(
-                    "Unknown type_handle_ndarray: " + str(type_handle_ndarray)
-                )
-        elif hasattr(self.physic_iter, "as_dict"):
+        else:
             QuantityIterator_dict["physic_iter"] = self.physic_iter.as_dict(
                 type_handle_ndarray=type_handle_ndarray,
                 keep_function=keep_function,
                 **kwargs
             )
-        else:
-            QuantityIterator_dict["physic_iter"] = self.physic_iter
         # The class name is added to the dict for deserialisation purpose
         QuantityIterator_dict["__class__"] = "QuantityIterator"
         return QuantityIterator_dict
@@ -313,10 +292,10 @@ class QuantityIterator(FrozenClass):
             phy_dict_val = None
         else:
             phy_dict_val = self.phy_dict.copy()
-        if hasattr(self.physic_iter, "copy"):
-            physic_iter_val = self.physic_iter.copy()
+        if self.physic_iter is None:
+            physic_iter_val = None
         else:
-            physic_iter_val = self.physic_iter
+            physic_iter_val = self.physic_iter.copy()
         # Creates new object of the same type with the copied properties
         obj_copy = type(self)(
             container=container_val,
@@ -332,10 +311,8 @@ class QuantityIterator(FrozenClass):
         self.container = None
         self.remaining_qty = None
         self.phy_dict = None
-        if hasattr(self.physic_iter, "_set_None"):
+        if self.physic_iter is not None:
             self.physic_iter._set_None()
-        else:
-            self.physic_iter = None
 
     def _get_container(self):
         """getter of container"""
@@ -403,25 +380,28 @@ class QuantityIterator(FrozenClass):
 
     def _set_physic_iter(self, value):
         """setter of physic_iter"""
+        if isinstance(value, str):  # Load from file
+            try:
+                value = load_init_dict(value)[1]
+            except Exception as e:
+                self.get_logger().error(
+                    "Error while loading " + value + ", setting None instead"
+                )
+                value = None
         if isinstance(value, dict) and "__class__" in value:
-            try:
-                class_obj = import_class(
-                    "pyleecan.Classes", value.get("__class__"), "physic_iter"
-                )
-            except:
-                class_obj = import_class(
-                    "SciDataTool.Classes", value.get("__class__"), "physic_iter"
-                )
+            class_obj = import_class(
+                "pyleecan.Classes", value.get("__class__"), "physic_iter"
+            )
             value = class_obj(init_dict=value)
-        elif type(value) is list:
-            try:
-                value = np.array(value)
-            except:
-                pass
-        check_var("physic_iter", value, "")
+        elif type(value) is int and value == -1:  # Default constructor
+            PhysicIterator = import_class(
+                "pyleecan.Classes", "PhysicIterator", "physic_iter"
+            )
+            value = PhysicIterator()
+        check_var("physic_iter", value, "PhysicIterator")
         self._physic_iter = value
 
-        if hasattr(self._physic_iter, "parent"):
+        if self._physic_iter is not None:
             self._physic_iter.parent = self
 
     physic_iter = property(
@@ -429,6 +409,6 @@ class QuantityIterator(FrozenClass):
         fset=_set_physic_iter,
         doc=u"""Physic iterator
 
-        :Type: 
+        :Type: PhysicIterator
         """,
     )

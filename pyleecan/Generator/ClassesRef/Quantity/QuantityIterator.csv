@@ -2,7 +2,7 @@ Variable name,Unit,Description (EN),Size,Type,Default value,Minimum value,Maximu
 container,-,Dict of Dict of Quantity (pointer to a QuantityList container) ,,dict,None,,,
 remaining_qty,-,Remaining qty to iter throw,,list,None,,,
 phy_dict,-,Dict of quantities of the current physic,,dict,None,,,
-physic_iter,-,Physic iterator,,,None,,,
+physic_iter,-,Physic iterator,,PhysicIterator,None,,,
 ,,,,,,,,
 Package,Inherit,Methods,Constant Name,Constant Value,Class description,,,
 Quantity,,__iter__,VERSION,1,Class for iterate throw the quantity of a QuantityList,,,
