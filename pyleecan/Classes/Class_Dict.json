@@ -11193,7 +11193,7 @@
         "mother": "",
         "name": "PhysicIterator",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/PhysicIterator.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/PhysicIterator.csv",
         "properties": [
             {
                 "as_dict": "",
@@ -11480,7 +11480,7 @@
         "mother": "",
         "name": "Quantity",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/Quantity.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/Quantity.csv",
         "properties": [
             {
                 "as_dict": "",
@@ -11560,7 +11560,7 @@
         "mother": "Quantity",
         "name": "QuantityData",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityData.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/QuantityData.csv",
         "properties": [
             {
                 "as_dict": "",
@@ -11592,7 +11592,7 @@
         "mother": "",
         "name": "QuantityIterator",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityIterator.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/QuantityIterator.csv",
         "properties": [
             {
                 "as_dict": "",
@@ -11659,7 +11659,7 @@
         "mother": "",
         "name": "QuantityList",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityList.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/QuantityList.csv",
         "properties": [
             {
                 "as_dict": "",
@@ -11694,7 +11694,7 @@
         "mother": "",
         "name": "QuantityMaker",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityMaker.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/QuantityMaker.csv",
         "properties": []
     },
     "QuantityScalar": {
@@ -11714,7 +11714,7 @@
         "mother": "Quantity",
         "name": "QuantityScalar",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityScalar.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/QuantityScalar.csv",
         "properties": []
     },
     "QuantityVectorField": {
@@ -11735,7 +11735,7 @@
         "mother": "Quantity",
         "name": "QuantityVectorField",
         "package": "Quantity",
-        "path": "pyleecan/Generator/ClassesRef/Quanttity/QuantityVectorField.csv",
+        "path": "pyleecan/Generator/ClassesRef/Quantity/QuantityVectorField.csv",
         "properties": [
             {
                 "as_dict": "",
