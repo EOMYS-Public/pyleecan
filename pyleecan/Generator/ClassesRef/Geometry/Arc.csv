@@ -10,3 +10,4 @@ Geometry,Line,draw_FEMM,VERSION,1,Abstract class for arc
 ,,comp_maxseg,,,
 ,,intersect_obj,,,
 ,,is_arc,,,
+,,add_slot,,,

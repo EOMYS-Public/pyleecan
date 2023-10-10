@@ -22,7 +22,8 @@
             "plot",
             "comp_maxseg",
             "intersect_obj",
-            "is_arc"
+            "is_arc",
+            "add_slot"
         ],
         "mother": "Line",
         "name": "Arc",

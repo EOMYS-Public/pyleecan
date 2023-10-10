@@ -62,6 +62,11 @@ try:
 except ImportError as error:
     is_arc = error
 
+try:
+    from ..Methods.Geometry.Arc.add_slot import add_slot
+except ImportError as error:
+    add_slot = error
+
 
 from numpy import isnan
 from ._check import InitUnKnowClassError
@@ -156,6 +161,15 @@ class Arc(Line):
         )
     else:
         is_arc = is_arc
+    # cf Methods.Geometry.Arc.add_slot
+    if isinstance(add_slot, ImportError):
+        add_slot = property(
+            fget=lambda x: raise_(
+                ImportError("Can't use Arc method add_slot: " + str(add_slot))
+            )
+        )
+    else:
+        add_slot = add_slot
     # generic save method is available in all object
     save = save
     # get_logger method is available in all object
