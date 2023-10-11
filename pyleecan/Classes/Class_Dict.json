@@ -2637,6 +2637,7 @@
             "HoleMag",
             "HoleUD",
             "VentilationCirc",
+            "VentilationNotchW60",
             "VentilationPolar",
             "VentilationTrap"
         ],
@@ -16199,6 +16200,50 @@
                 "type": "float",
                 "unit": "m",
                 "value": 1
+            }
+        ]
+    },
+    "VentilationNotchW60": {
+        "constants": [
+            {
+                "name": "VERSION",
+                "value": "1"
+            }
+        ],
+        "daughters": [],
+        "desc": "Circular axial ventilation duct",
+        "is_internal": false,
+        "methods": [
+            "build_geometry",
+            "check",
+            "comp_radius",
+            "comp_surface",
+            "get_center"
+        ],
+        "mother": "Hole",
+        "name": "VentilationNotchW60",
+        "package": "Slot",
+        "path": "pyleecan/Generator/ClassesRef/Slot/VentilationNotchW60.csv",
+        "properties": [
+            {
+                "as_dict": "",
+                "desc": "Shape of the notch to add on the tooth",
+                "max": "",
+                "min": "",
+                "name": "notch_shape",
+                "type": "Slot",
+                "unit": "-",
+                "value": null
+            },
+            {
+                "as_dict": "",
+                "desc": "Position of the slot [0=Begin of arc, 1=end of arc]",
+                "max": "1",
+                "min": "0",
+                "name": "position",
+                "type": "float",
+                "unit": "-",
+                "value": 0.5
             }
         ]
     },

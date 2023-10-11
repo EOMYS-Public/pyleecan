@@ -1,5 +1,6 @@
 from ....Classes.Segment import Segment
 from ....Classes.Arc1 import Arc1
+from numpy import pi, exp
 
 
 def _comp_line_dict(self):
@@ -74,4 +75,8 @@ def _comp_line_dict(self):
     line_dict["w1s-8"] = Segment(Zw1s, Z8)
     line_dict["6-w3s"] = Segment(Z6, Zw3s)
     line_dict["w4s-9"] = Segment(Zw4s, Z9)
+    # Rotate Z2 to get full tooth top arc
+    Z2t = Z2 * exp(1j * 2 * pi / self.Zs)
+    line_dict["tooth_top"] = Arc1(Z10, Z2t, self.R1)
+    line_dict["tooth_top"].rotate(-pi / self.Zs)  # center on tooth
     return line_dict

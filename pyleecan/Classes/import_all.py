@@ -246,6 +246,7 @@ from ..Classes.VarParam import VarParam
 from ..Classes.VarParamSweep import VarParamSweep
 from ..Classes.VarSimu import VarSimu
 from ..Classes.VentilationCirc import VentilationCirc
+from ..Classes.VentilationNotchW60 import VentilationNotchW60
 from ..Classes.VentilationPolar import VentilationPolar
 from ..Classes.VentilationTrap import VentilationTrap
 from ..Classes.Winding import Winding

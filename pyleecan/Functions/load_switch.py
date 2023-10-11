@@ -248,6 +248,7 @@ load_switch = {
     "VarParamSweep": VarParamSweep,
     "VarSimu": VarSimu,
     "VentilationCirc": VentilationCirc,
+    "VentilationNotchW60": VentilationNotchW60,
     "VentilationPolar": VentilationPolar,
     "VentilationTrap": VentilationTrap,
     "Winding": Winding,

@@ -1,6 +1,5 @@
-from ....Classes.LamSlot import LamSlot
 from numpy import exp, angle
-
+from ....Functions.Load.import_class import import_class
 
 def add_slot(self, position, slot, is_outwards):
     """Add a slot on the arc
@@ -21,7 +20,7 @@ def add_slot(self, position, slot, is_outwards):
     line_list : [Line]
         List of line to draw the arc and the slot
     """
-
+    LamSlot = import_class("pyleecan.Classes", "LamSlot")
     if position > 1 or position < 0:
         raise Exception("Error position should be >0 and <1")
 
@@ -45,7 +44,7 @@ def add_slot(self, position, slot, is_outwards):
     Zb_c = Zb - Zc
     # Position of center of slot opening arc
     Zmid_slot_c = Zb_c * exp(1j * arc_angle * position)
-    if arc_angle <0:
+    if arc_angle < 0:
         Z_slot_begin_c = Zmid_slot_c * exp(1j * slot_op / 2)
         Z_slot_end_c = Zmid_slot_c * exp(-1j * slot_op / 2)
     else:
@@ -59,7 +58,7 @@ def add_slot(self, position, slot, is_outwards):
 
     slot_lines = slot.build_geometry()
     # Reverse the slot to match arc direction
-    if arc_angle <0 :
+    if arc_angle < 0:
         slot_lines = slot_lines[::-1]
         for line in slot_lines:
             line.reverse()
